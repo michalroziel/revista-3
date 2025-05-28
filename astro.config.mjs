@@ -13,7 +13,8 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.erfianugrah.com",
-
+  // 👇👇👇 ADD THIS LINE:
+  base: "/revista-3/",
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
