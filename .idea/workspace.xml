@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28bcdb18-899d-4644-aa04-fbf64d34e142" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/impressum.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Footer.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/short_form/2022-06-13-palaestra.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2022-06-13-palaestra.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-what-is-erfi.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-what-is-erfi.mdx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +74,7 @@
       <workItem from="1749397758395" duration="112000" />
       <workItem from="1749397889665" duration="42000" />
       <workItem from="1749398053087" duration="37000" />
-      <workItem from="1749398122300" duration="1215000" />
+      <workItem from="1749398122300" duration="10145000" />
     </task>
     <servers />
   </component>
