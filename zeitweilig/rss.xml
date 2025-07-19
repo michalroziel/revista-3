@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/rss/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>stoicopa</title><description>My personal hamster wheel.</description><link>https://michalroziel.github.io/</link><language>en-us</language><item><title>Antarctica</title><link>https://michalroziel.github.io/zeitweilig/what-is-erfi/</link><guid isPermaLink="true">https://michalroziel.github.io/zeitweilig/what-is-erfi/</guid><description>The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore.</description><pubDate>Fri, 03 Jun 2022 06:06:06 GMT</pubDate><content:encoded>&lt;p&gt;import { Code } from &apos;astro:components&apos;;
+import since94 from &apos;../../scripts/since94.js&apos;;&lt;/p&gt;
+&lt;h1&gt;The frozen continent&lt;/h1&gt;
+&lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
+&lt;p&gt;&amp;lt;MasonryLayout images={[
+{src : &quot;https://res.cloudinary.com/dzihjnilq/image/upload/IMG_1278_dlcalo.jpg&quot;, alt: &quot;zeitweilig_1&quot; },
+{src : &quot;https://res.cloudinary.com/dzihjnilq/image/upload/IMG_1546_j6gfet.jpg&quot;, alt: &quot;zeitweilig_2&quot; },
+]} /&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Working title: What is Erfi?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Field research conducted by Lena&lt;/p&gt;
+&lt;h2&gt;&lt;strong&gt;Preface&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;The discipline of Erfinism&amp;lt;sup&amp;gt;1&amp;lt;/sup&amp;gt; is a relatively young field of studies, first established in 1994 in Singapore. Even after {since94()} years since its foundation, there are no known experts in the field as of yet due to the sheer complexity of its nature.&lt;/p&gt;
+&lt;p&gt;The author of this exposé would like to establish herself as a respected scholar of Erfinism by attempting to narrow down on possible answers to the central question of &quot;What is Erfi?&quot;. For this, the author conducted both personal field research as well as close monitoring of various test subjects that were brought into contact with the Erfi.&lt;/p&gt;
+&lt;p&gt;The completed PhD dissertation shall include a list of common linguistic Erfinisms and a “Robo Manual” with the most important guidelines to handle the Erfi. While aiming for an eradication of &quot;the Erfi effect&quot;&amp;lt;sup&amp;gt;2&amp;lt;/sup&amp;gt; would be nothing but delusional, this research project might provide helpful resources in terms of lowering the risk of lasting psychological damage for people trying to get into closer contact with the Erfi.&lt;/p&gt;
+&lt;p&gt;The author is well aware of the fact that a dedication to the study of Erfinism is a never-ending work in progress and therefore pledges to forever preserve the mindset of a padawan – a padawan hoping for a PhD title.&lt;/p&gt;
+&lt;p&gt;&amp;lt;sup&amp;gt;1&amp;lt;/sup&amp;gt;&lt;em&gt;Erfinism can refer to both the overall study of the Erfi – hereby centered around the driving question of “What is Erfi?” – as well as the Erfi’s linguistic peculiarities.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;sup&amp;gt;2&amp;lt;/sup&amp;gt;&lt;em&gt;Definition to be found in the following chapter.&lt;/em&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;em&gt;Disclaimer: Not in line with a traditional exposé structure, the following paragraphs provide a brief outline of the possible contents of a dissertation in Erfinism.&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;Research Set-Up&lt;/h2&gt;
+&lt;p&gt;Over the past 1.5 years of field study, numerous test subjects got into touch with the Erfi. The common denominator between these guinea pigs has been their reaction towards this intense experience.&lt;/p&gt;
+&lt;p&gt;While the Erfi is equipped with high levels of charisma, it does not follow social norms in terms of conversation, but instead opts for a technique dubbed as &quot;going stabby on someone&quot;. This tactic consists of:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Wooing the test subject (optional step)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Aiming for weak spots with direct conversational stabs in an attempt to uncover inconsistencies, provoke a reaction and/or get past the superficial and move on to deeper levels of connection.&amp;lt;sup&amp;gt;3&amp;lt;/sup&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In the vast majority of cases, a first encounter with the Erfi therefore proves to be of intimidating and/or challenging nature and the duration of the experiment largely depends on the ability of the subjects to deal with repeated stabs in a non-paggro manner. While many guinea pigs find themselves to be wooed by the intense levels of attention and charisma bestowed upon them (described as &apos;feeling truly &lt;em&gt;seen&lt;/em&gt;&apos;) and therefore get attracted by the study of Erfinism (and to its professor), most end up dropping the challenge within weeks or mere days.&amp;lt;sup&amp;gt;4&amp;lt;/sup&amp;gt;&lt;/p&gt;
+&lt;p&gt;In academic circles this phenomenon is famously dubbed &quot;the Erfi effect&quot;, a serious condition that can send the people affected by it into a deep state of psychological distress. Symptoms are not limited to but often include: a steep rise in passive-aggressive behavior, denial of facts and stress-induced escapism. In addition to this, majority of the victims show PTSD symptoms when presented pictures of highspeed trains.&lt;/p&gt;
+&lt;p&gt;While nearly all test subjects have been lost to &quot;the Erfi effect&quot; at the point of the submission of this exposé, they still provided insights into the dynamics of the Erfi in interpersonal relations and thereby made a valuable contribution to science.&lt;/p&gt;
+&lt;p&gt;&amp;lt;sup&amp;gt;3&amp;lt;/sup&amp;gt;&lt;em&gt;Sometimes it&apos;s also just done for funzies.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;sup&amp;gt;4&amp;lt;/sup&amp;gt;&lt;em&gt;The sensation of &apos;feeling truly seen&apos; is only charming as long as the ugly parts are politely overlooked - but the Erfi sees it all.&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;Definitions&lt;/h2&gt;
+&lt;p&gt;The Erfi is a complex (human) being and as it is so often the case with matters that are difficult to grasp, there is the tendency to try to make sense of it by putting pre-existing simplifying labels on it.&lt;/p&gt;
+&lt;p&gt;A selection of these labels shall be briefly outlined in the following paragraphs.&lt;/p&gt;
+&lt;h3&gt;Not Quite Human&lt;/h3&gt;
+&lt;p&gt;One of the Erfi&apos;s characteristic traits is an immensely high level of rationality, which can lead to the assumption that the Erfi can&apos;t be quite human, but must be a very well-programmed robot instead. An assumption that gets supported by the Erfi&apos;s frequent use of robo sounds (&quot;beep boop&quot;) and robotic-sounding statements like these:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;I think I should be mostly functional by tomorrow.&quot;&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, Feburary 17, 2021. In recovery from LASIK-surgery.*&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The lifestyle of the Erfi is characterized by an inhuman seeming high level of efficiency and routine; spontaneity is carefully planned into the schedule. Activities get tracked and monitored for improvement. This is not limited to, but includes: working out (incl. heart rate), daily water intake, steps walked in a day. Health also gets monitored closely with frequent check-ups planned in to prevent possible future defects to the Erfi system.&lt;/p&gt;
+&lt;p&gt;The living area of the Erfi can be described as &quot;the robo cave&quot;, an indoor space measuring approx. 9m&amp;lt;sup&amp;gt;2&amp;lt;/sup&amp;gt;, equipped with tech gear, cats and limited editions of all sorts. Household chores get partly taken care of by a vacuum robot named robo waifu, further feeding into the theory that the Erfi is in fact not human but a superior work of AI instead, enslaving lower-caste robots.&lt;/p&gt;
+&lt;p&gt;The robo cave functions as a charging station to the Erfi. It is also a workshop for all sorts of tech-tinkering which is mostly targeted towards customization and optimization of various processes in the life of the Erfi (repair of robo waifu / film scanner, smart home installation, router set-up, etc.). Although the Garmin pulse tracker of the Erfi shows spikes when presented with athletic bodies in well-fitting crop tops, the Erfi lights up most when presented with high-quality tech-gear, especially routers, further feeding into the robo theory.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“I’m like Daneel. More perfect than human. (Just short)”&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, March 22, 2021&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;An argument that might contradict the robo definition is the added human touch in form of empathy, flirts&amp;lt;sup&amp;gt;5&amp;lt;/sup&amp;gt; and general charisma. The question of whether the Erfi is a human being equipped with an incredibly stoic mindset or whether we are in fact dealing with superior AI hasn&apos;t been solved yet.&lt;/p&gt;
+&lt;p&gt;&amp;lt;sup&amp;gt;5&amp;lt;/sup&amp;gt;&lt;em&gt;As human-seeming the flirty comments of the Erfi are, they tend to come up a tad too smooth and quickly, sowing the suspicion of a flirt-bot running its program.&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;Stoic Opa&lt;/h3&gt;
+&lt;p&gt;Another label that is frequently put on the Erfi is that of a grandpa.&lt;/p&gt;
+&lt;p&gt;At first glance, this might be fitting since the Erfi follows a sleeping schedule similar to that of an 80-year old: Going to bed at 9-10pm and getting up at 4.30 - 5am. Another trait that plays into the grandpa theory is the fact that the Erfi frequently scolds people and drops wisdom on them, either in the form of stoic-themed quotes (preferred sources: Dune, The Count of Monte Cristo) or personal musings, ending up in Erfi train-styled lectures. The Erfi does not hesitate to do this even when opposite people much older than himself since age alone is no indicator of maturity. Due to the &quot;get shit done - grindset&quot; - mentality of the Erfi, he gives off the impression of having lived more than one life already.&lt;/p&gt;
+&lt;p&gt;While the Opa-label therefore seems to be a fitting one, it wouldn&apos;t include other stereotypical grandpa behavior such as feeding ducks in the park or playing bingo. If the Erfi were a grandpa, Logan from the HBO series Succession would be the most fitting comparison: An extremely powerful grandpa that has built up his kingdom from scratch, challenging his possible successors in the most machiavellian ways (and looking on in disdain as they fail him all), putting his principles over human relationships.&lt;/p&gt;
+&lt;h3&gt;Stranger than Fiction&lt;/h3&gt;
+&lt;p&gt;As unconventional of a person the Erfi may seem, there are some fictional characters that show similarities.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;Rich, smart, fit, funny, good looking. I&apos;m just Batman aren&apos;t I. Sigh.&quot;&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, December 9, 2021&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;At first glance, this label seems like a fitting one since both Batman and the Erfi fall into the category of Enneagram Type 1 personalities: perfectionists challenging the status quo, consistently striving towards an ideal with anger as the subconscious fuel that motivates them. Both Batman and the Erfi place immensely high standards on themselves. In the case of Batman, it goes into the direction of dedicating his life to keep Gotham safe, in the case of the Erfi those standards apply to self-optimization in all aspects of life. To some degree, this also includes the people the Erfi cares about, which can be perceived as overly critical and thereby result in a case of &quot;the Erfi effect&quot;. To soften the impact of the crash with the approaching Erfi train, it is recommended to not see critique as an insult but rather as a form of care.&lt;/p&gt;
+&lt;p&gt;Despite the similarities in their personalities, there&apos;s a major difference between the two of them: While Batman’s empire is built upon the legacy of his parents – both financially and in regards to the trauma associated with their deaths – the Erfi made it on its own. You could go so far as to say that the Erfi not only harbors a liking for various DIY-projects, but that the whole path of the Erfi is a DIY project of its own.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;discipline baby.&quot;&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, June 8, 2021&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Therefore, a comparison to Edmond Dantes might be a more fitting one: Growing up in a restricting environment which gave fuel to the Erfis levels of discipline, driving him towards success, no matter the task.&lt;/p&gt;
+&lt;h3&gt;...So What IS Erfi?&lt;/h3&gt;
+&lt;p&gt;The Erfi is a creature not easily described by the limiting quality of pre-existing labels. Even in the face of the many years filled with the study of Erfinism that are yet to come, it is unlikely that scholars will ever find a truly satisfying answer to the question of &quot;What is Erfi?&quot;.&lt;/p&gt;
+&lt;p&gt;Perhaps the image of a matroshka puppet would be most fitting: A never-ending series of boxes within boxes, only unlocked by sincere curiousity.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;The closer we are to something (...) The less we see. Myopic is a good analogy for it. So we have to take a step back right?&quot;&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, Expression and Acceptance&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There is always a certain level of uncertainty in regards to where the author - or anyone really - stands with the Erfi. It is a common misconception of scholars of Erfinism to assume they&apos;re being in too close of a distance to the Erfi already, which prompts them to take a few steps back to get the full view in. Lost in their ignorance, they might never notice they&apos;ve been miles apart this whole time.&lt;/p&gt;
+&lt;p&gt;...&lt;/p&gt;
+&lt;p&gt;Since this exposé does not quite follow the structure of a common exposé and since the author runs danger of digressing too much by now, let&apos;s just go with another quote by the one and only:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;Anyways, I digress. But what is there to digress from anyway, and who reads this shit?&quot;&lt;/p&gt;
+&lt;p&gt;- Erfi Anugrah, Printing&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Appendix&lt;/h2&gt;
+&lt;h4&gt;&lt;em&gt;Robo Manual (draft)&lt;/em&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;The robo is equipped with methods to detect all types of inconsistencies and bs. Don’t try to find a loophole. There is none. Never forget: This is some superior AI you&apos;re dealing with here.&lt;/li&gt;
+&lt;li&gt;There&apos;s no brake pedal to the Erfi train. There is no safe zone: The Erfi train lays its own tracks as it approaches.&lt;/li&gt;
+&lt;li&gt;Beware: High amounts of aggressiveness. Practice the skill of rowing back to seek for the source of an argument.&lt;/li&gt;
+&lt;li&gt;Match its weirdness to see the robo beam.&lt;/li&gt;
+&lt;li&gt;Frequent recharging time in the robo cave needed.&lt;/li&gt;
+&lt;li&gt;Do NOT touch anything in the robo cave.&lt;/li&gt;
+&lt;li&gt;Appropriate robo fuel (selection): Five Guys burgers, protein powder, good dosa, Lantchips, Lidl-Berliner, pizza, kanelbullar.&lt;/li&gt;
+&lt;li&gt;No additional supplies of caffeinated drinks. The system of the robo is running at high speeds on its own, caffeine should be dosed carefully since it can send its system into overdrive. Warning signs: hectic robo sounds in high frequency (&quot;bbrrrreeeeeeehhhh brrrboopbeepboopbeep&quot;)&lt;/li&gt;
+&lt;li&gt;Don’t ask to ask – but ask! Curiousity switches the robo on.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;&lt;em&gt;Linguistic Peculiarities&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;Extensive field study unveiled a myriad of linguistic peculiarities characteristic of the Erfi, some of which are so distinct they can fall under the category of so-called “Erfinisms” (see list of selected quotes)&lt;/p&gt;
+&lt;h3&gt;Robo sounds&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Beep boop
+
+Brrrr beep 
+
+brbrbrbbr
+
+Skepticism / Probing for inconsistencies
+
+“Is it?”
+
+“sus”
+
+“Trust but verify”
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;Slang&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;“This meshuggah album *fucks*”
+
+&quot;it&apos;s in my nature to trust and verify. *Yeet*&quot;
+
+The ability to turn anything into
+  a self-compliment (which can’t be negated since it’s true)
+
+“i like your hands - i have nice hands. So i know how nice hands
+  should be.&quot;
+
+&quot;I&apos;m more impressed at myself.&quot;
+
+(for further examples refer to the list of Erfinisms)
+
+Sneking
+
+“buy buy”
+
+“heheheh”
+
+(accompanied by links to and/or
+  videos about various products)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;&lt;em&gt;Erfinisms (selected quotes)&lt;/em&gt;&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;&quot;How am I single? It&apos;s by choice.&quot; (March 30, 2021)
+
+&quot;I robo for everyone. But where’s my thanks. No oil.&quot; (September 23, 2021)
+
+&quot;Yes I would see you die as long as I&apos;m right. It justifies everything.&quot; (November 30, 2021)
+
+&quot;I should have a civil partnership. With myself.&quot; (December 9, 2021)
+
+&quot;I flirt and do stuff at the same time. Efficient.&quot; (December 11, 2021)
+
+&quot;Never use absolute terms. I can though.&quot; (April 4, 2022)
+
+“End of the day, it’s hard to live with God.” (April 24, 2022)
+
+“I’m a catalyst. Of Evil. Neyehehhe” (April 24, 2022)
+
+“I don’t care about anyone else but I need to be beyond doubt (...) it’s never me, always you” (May 6, 2022)
+
+&quot;God looking for servants&quot; (May 13, 2022)
+
+&quot;She needs a boat to cross the river. And I&apos;ll shoot it down. With incendiary arrows.&quot; (May 20, 2022)
+
+&quot;I think I give less of a fuck now. And I already give so little&quot; (May 30, 2022)
+&lt;/code&gt;&lt;/pre&gt;
+</content:encoded><author>Lena</author></item></channel></rss>
