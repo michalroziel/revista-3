@@ -10,9 +10,17 @@ import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 import undiciRetry from "./src/scripts/undici-retry.js";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
-// https://astro.build/config
+
+// Detect GitHub Pages build environment
+const isGitHub = process.env.DEPLOY_ENV === "gh-pages";
+
+// Main export
 export default defineConfig({
-  site: "https://www.erfianugrah.com",
+  site: isGitHub
+      ? "https://michalroziel.github.io"
+      : "http://localhost:4321", // or your dev server URL
+
+  base: isGitHub ? "/revista-3/" : "/",
 
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
@@ -92,8 +100,6 @@ export default defineConfig({
         optimizedFallbacks: true,
       },
     ],
-    // responsiveImages: true,
-    // directRenderScript: true
   },
 
   build: {
