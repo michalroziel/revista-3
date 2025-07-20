@@ -20,8 +20,7 @@ export default defineConfig({
       ? "https://michalroziel.github.io"
       : "http://localhost:4321", // or your dev server URL
 
-  base: isGitHub ? "/revista-3/" : "/",
-
+  base: "/revista-3/",
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
