@@ -1,29 +1,30 @@
-import { defineConfig, fontProviders } from "astro/config";
-import sitemap from "@astrojs/sitemap";
-import mdx from "@astrojs/mdx";
-import markdoc from "@astrojs/markdoc";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import icon from "astro-icon";
-import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
-import undiciRetry from "./src/scripts/undici-retry.js";
-import react from "@astrojs/react";
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, fontProviders } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
+import markdoc from '@astrojs/markdoc';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import icon from 'astro-icon';
+import { remarkReadingTime } from './src/scripts/remark-reading-time.mjs';
+import undiciRetry from './src/scripts/undici-retry.js';
+import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 
-// Detect GitHub Pages build environment
-const repo = "revista-3";
+// Name of your repository (used for the GitHub Pages sub-path)
+const repo = 'revista-3';
 
-// Main export
 export default defineConfig({
-  site: "https://michalroziel.github.io/${repo}",
+  // Full URL where your site will be hosted
+  site: `https://michalroziel.github.io/${repo}`,
 
-  base: "/${repo}",
+  // Base path for pages and assets (no trailing slash)
+  base: `/${repo}`,
 
   image: {
-    domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
+    domains: ['erfianugrah.com', 'cdn.erfianugrah.com'],
     service: {
-      entrypoint: "astro/assets/services/sharp",
+      entrypoint: 'astro/assets/services/sharp',
       config: {
         limitInputPixels: false,
       },
@@ -34,13 +35,13 @@ export default defineConfig({
     icon(),
     sitemap(),
     mdx({
-      syntaxHighlight: "shiki",
+      syntaxHighlight: 'shiki',
       shikiConfig: {
-        theme: "rose-pine-dawn",
+        theme: 'rose-pine-dawn',
         defaultColor: false,
         themes: {
-          light: "rose-pine-dawn",
-          dark: "tokyo-night",
+          light: 'rose-pine-dawn',
+          dark: 'tokyo-night',
         },
         langs: [],
         wrap: true,
@@ -55,13 +56,13 @@ export default defineConfig({
   ],
 
   markdown: {
-    syntaxHighlight: "shiki",
+    syntaxHighlight: 'shiki',
     shikiConfig: {
-      theme: "rose-pine-dawn",
+      theme: 'rose-pine-dawn',
       defaultColor: false,
       themes: {
-        light: "rose-pine-dawn",
-        dark: "tokyo-night",
+        light: 'rose-pine-dawn',
+        dark: 'tokyo-night',
       },
       langs: [],
       wrap: true,
@@ -73,7 +74,7 @@ export default defineConfig({
 
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "viewport",
+    defaultStrategy: 'viewport',
   },
 
   experimental: {
@@ -81,19 +82,19 @@ export default defineConfig({
     fonts: [
       {
         provider: fontProviders.fontsource(),
-        name: "Inconsolata",
-        cssVariable: "--font-inconsolata",
-        display: "swap",
-        fallbacks: ["monospace"],
+        name: 'Inconsolata',
+        cssVariable: '--font-inconsolata',
+        display: 'swap',
+        fallbacks: ['monospace'],
         weights: [200, 400, 700, 900],
         optimizedFallbacks: true,
       },
       {
         provider: fontProviders.fontsource(),
-        name: "Overpass Mono",
-        cssVariable: "--font-overpass-mono",
-        display: "swap",
-        fallbacks: ["monospace"],
+        name: 'Overpass Mono',
+        cssVariable: '--font-overpass-mono',
+        display: 'swap',
+        fallbacks: ['monospace'],
         weights: [300, 400, 700],
         optimizedFallbacks: true,
       },
