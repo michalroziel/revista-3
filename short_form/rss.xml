@@ -1,20 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/rss/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>stoicopa</title><description>My personal hamster wheel.</description><link>http://localhost:4321/</link><language>en-us</language><item><title>Hypnagogia</title><link>http://localhost:4321/short_form/hypnagogia/</link><guid isPermaLink="true">http://localhost:4321/short_form/hypnagogia/</guid><description>The perception of time has changed for me, rather drastically in fact. I started seeing things a little bit differently, moments of wonder and awe was had even for the smallest of occurences, which normally would have been something I just ignore.</description><pubDate>Mon, 08 Mar 2021 07:15:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;noun&lt;/em&gt; | hip-nuh-GAH-jia&lt;/p&gt;
-&lt;p&gt;The perception of time has changed for me, rather drastically in fact. I started seeing things a little differently, moments of wonder and awe were had even for the smallest of occurrences, which normally would have been something I just ignore. This perceived oddity led me to think about being in between states (hence the title).&lt;/p&gt;
-&lt;p&gt;I have often referred to myself in the third person, occasionally looked upon my own hands and think to myself, &quot;Right, I do exist right now, in this moment, as a person&quot;. Taken around a place I grew up in, I wanted to evoke that sense of derealisation in this series of images.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
-&lt;p&gt;&amp;lt;MasonryLayout images={[
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_1.JPG&quot;, alt: &quot;hypnagogia 1&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_2.JPG&quot;, alt: &quot;hypnagogia 2&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_3.JPG&quot;, alt: &quot;hypnagogia 3&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_4.JPG&quot;, alt: &quot;hypnagogia 4&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_5.JPG&quot;, alt: &quot;hypnagogia 5&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_6.JPG&quot;, alt: &quot;hypnagogia 6&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_7.JPG&quot;, alt: &quot;hypnagogia 7&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_8.JPG&quot;, alt: &quot;hypnagogia 8&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_9.JPG&quot;, alt: &quot;hypnagogia 9&quot; },
-]} /&amp;gt;&lt;/p&gt;
-</content:encoded><author>Erfi Anugrah</author></item><item><title>Mundane</title><link>http://localhost:4321/short_form/mundane/</link><guid isPermaLink="true">http://localhost:4321/short_form/mundane/</guid><description>In most senses of the word - places that I have been to over the years. Places that I have not really stopped to think about, and have just passed by.</description><pubDate>Sun, 17 Oct 2021 04:14:27 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;adjective&lt;/em&gt; | /ˈmʌndeɪn,mʌnˈdeɪn/&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/rss/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>stoicopa</title><description>My personal hamster wheel.</description><link>https://michalroziel.github.io/$%7Brepo%7D/</link><language>en-us</language><item><title>Mundane</title><link>https://michalroziel.github.io/short_form/mundane/</link><guid isPermaLink="true">https://michalroziel.github.io/short_form/mundane/</guid><description>In most senses of the word - places that I have been to over the years. Places that I have not really stopped to think about, and have just passed by.</description><pubDate>Sun, 17 Oct 2021 04:14:27 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;adjective&lt;/em&gt; | /ˈmʌndeɪn,mʌnˈdeɪn/&lt;/p&gt;
 &lt;p&gt;In most senses of the word - places that I have been to over the years. Places that I have not really stopped to think about, and have just passed by.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
@@ -37,23 +21,23 @@
 { src: &quot;https://cdn.erfianugrah.com/mundane_16.JPG&quot;, alt: &quot;Mundane 16&quot; },
 { src: &quot;https://cdn.erfianugrah.com/mundane_17.JPG&quot;, alt: &quot;Mundane 17&quot; },
 ]} /&amp;gt;&lt;/p&gt;
-</content:encoded><author>Erfi Anugrah</author></item><item><title>Faroe islands</title><link>http://localhost:4321/short_form/palaestra/</link><guid isPermaLink="true">http://localhost:4321/short_form/palaestra/</guid><description>Muted sounds, tiny waves crashing. My limbs wading, cutting through. For a time, the only instance for when I could sequester myself away from the world.</description><pubDate>Mon, 13 Jun 2022 06:27:15 GMT</pubDate><content:encoded>&lt;p&gt;noun | /pəˈliːstɹə/, /pəˈlʌɪstɹə/&lt;/p&gt;
-&lt;p&gt;Muted sounds, tiny waves crashing. My limbs wading, cutting through. For a time, the only instance for when I could sequester myself away from the world.&lt;/p&gt;
+</content:encoded><author>Erfi Anugrah</author></item><item><title>Hypnagogia</title><link>https://michalroziel.github.io/short_form/hypnagogia/</link><guid isPermaLink="true">https://michalroziel.github.io/short_form/hypnagogia/</guid><description>The perception of time has changed for me, rather drastically in fact. I started seeing things a little bit differently, moments of wonder and awe was had even for the smallest of occurences, which normally would have been something I just ignore.</description><pubDate>Mon, 08 Mar 2021 07:15:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;noun&lt;/em&gt; | hip-nuh-GAH-jia&lt;/p&gt;
+&lt;p&gt;The perception of time has changed for me, rather drastically in fact. I started seeing things a little differently, moments of wonder and awe were had even for the smallest of occurrences, which normally would have been something I just ignore. This perceived oddity led me to think about being in between states (hence the title).&lt;/p&gt;
+&lt;p&gt;I have often referred to myself in the third person, occasionally looked upon my own hands and think to myself, &quot;Right, I do exist right now, in this moment, as a person&quot;. Taken around a place I grew up in, I wanted to evoke that sense of derealisation in this series of images.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
 &lt;p&gt;&amp;lt;MasonryLayout images={[
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_1.jpg&quot;, alt: &quot;Palaestra 1&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_2.jpg&quot;, alt: &quot;Palaestra 2&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_3.jpg&quot;, alt: &quot;Palaestra 3&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_4.jpg&quot;, alt: &quot;Palaestra 4&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_5.jpg&quot;, alt: &quot;Palaestra 5&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_6.jpg&quot;, alt: &quot;Palaestra 6&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_7.jpg&quot;, alt: &quot;Palaestra 7&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_8.jpg&quot;, alt: &quot;Palaestra 8&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_9.jpg&quot;, alt: &quot;Palaestra 9&quot; },
-{ src: &quot;https://cdn.erfianugrah.com/palaestra_10.jpg&quot;, alt: &quot;Palaestra 10&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_1.JPG&quot;, alt: &quot;hypnagogia 1&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_2.JPG&quot;, alt: &quot;hypnagogia 2&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_3.JPG&quot;, alt: &quot;hypnagogia 3&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_4.JPG&quot;, alt: &quot;hypnagogia 4&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_5.JPG&quot;, alt: &quot;hypnagogia 5&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_6.JPG&quot;, alt: &quot;hypnagogia 6&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_7.JPG&quot;, alt: &quot;hypnagogia 7&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_8.JPG&quot;, alt: &quot;hypnagogia 8&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/hypnagogia_9.JPG&quot;, alt: &quot;hypnagogia 9&quot; },
 ]} /&amp;gt;&lt;/p&gt;
-</content:encoded><author>Michal Roziel</author></item><item><title>Obsolescence</title><link>http://localhost:4321/short_form/obsolescence/</link><guid isPermaLink="true">http://localhost:4321/short_form/obsolescence/</guid><description>The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.</description><pubDate>Tue, 02 Nov 2021 11:15:00 GMT</pubDate><content:encoded>&lt;p&gt;noun | /ˌɑːbsəˈlesns/&lt;/p&gt;
+</content:encoded><author>Erfi Anugrah</author></item><item><title>Obsolescence</title><link>https://michalroziel.github.io/short_form/obsolescence/</link><guid isPermaLink="true">https://michalroziel.github.io/short_form/obsolescence/</guid><description>The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.</description><pubDate>Tue, 02 Nov 2021 11:15:00 GMT</pubDate><content:encoded>&lt;p&gt;noun | /ˌɑːbsəˈlesns/&lt;/p&gt;
 &lt;p&gt;The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
@@ -71,4 +55,20 @@
 { src: &quot;https://cdn.erfianugrah.com/obsolescence_11.jpg&quot;, alt: &quot;Obsolescence 11&quot; },
 { src: &quot;https://cdn.erfianugrah.com/obsolescence_12.jpg&quot;, alt: &quot;Obsolescence 12&quot; },
 ]} /&amp;gt;&lt;/p&gt;
-</content:encoded><author>Erfi Anugrah</author></item></channel></rss>
+</content:encoded><author>Erfi Anugrah</author></item><item><title>Faroe islands</title><link>https://michalroziel.github.io/short_form/palaestra/</link><guid isPermaLink="true">https://michalroziel.github.io/short_form/palaestra/</guid><description>Muted sounds, tiny waves crashing. My limbs wading, cutting through. For a time, the only instance for when I could sequester myself away from the world.</description><pubDate>Mon, 13 Jun 2022 06:27:15 GMT</pubDate><content:encoded>&lt;p&gt;noun | /pəˈliːstɹə/, /pəˈlʌɪstɹə/&lt;/p&gt;
+&lt;p&gt;Muted sounds, tiny waves crashing. My limbs wading, cutting through. For a time, the only instance for when I could sequester myself away from the world.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
+&lt;p&gt;&amp;lt;MasonryLayout images={[
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_1.jpg&quot;, alt: &quot;Palaestra 1&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_2.jpg&quot;, alt: &quot;Palaestra 2&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_3.jpg&quot;, alt: &quot;Palaestra 3&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_4.jpg&quot;, alt: &quot;Palaestra 4&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_5.jpg&quot;, alt: &quot;Palaestra 5&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_6.jpg&quot;, alt: &quot;Palaestra 6&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_7.jpg&quot;, alt: &quot;Palaestra 7&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_8.jpg&quot;, alt: &quot;Palaestra 8&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_9.jpg&quot;, alt: &quot;Palaestra 9&quot; },
+{ src: &quot;https://cdn.erfianugrah.com/palaestra_10.jpg&quot;, alt: &quot;Palaestra 10&quot; },
+]} /&amp;gt;&lt;/p&gt;
+</content:encoded><author>Michal Roziel</author></item></channel></rss>
