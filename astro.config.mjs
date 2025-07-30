@@ -12,15 +12,14 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
 // Detect GitHub Pages build environment
-const isGitHub = process.env.DEPLOY_ENV === "gh-pages";
+const repo = "revista-3";
 
 // Main export
 export default defineConfig({
-  site: isGitHub
-      ? "https://michalroziel.github.io"
-      : "http://localhost:4321", // or your dev server URL
+  site: "https://michalroziel.github.io/${repo}",
 
-  base: "/revista-3/",
+  base: "/${repo}",
+
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
