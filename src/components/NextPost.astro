@@ -1,3 +1,6 @@
+Here you go — complete **NextPost.astro** wired to your `withBasePath` helper (no missing slashes, works on GitHub Pages subpath):
+
+```astro
 ---
 // NextPost.astro
 import { getCollection } from 'astro:content';
@@ -7,44 +10,41 @@ import Prose from './Prose.astro';
 export interface Props {
   currentId: string;
   collection: string;
-}
+  }
 
 const { currentId, collection } = Astro.props;
 const allPosts = await getCollection(collection);
 
-// Normalize BASE_URL so it always ends with exactly one "/"
-const rawBase = import.meta.env.BASE_URL ?? '';
-const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
-
+// Exclude the current post
 const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
 async function optimizeImage(src: string, alt: string) {
   return await getImage({
-    src,
-    alt,
-    width: 640,
-    height: 360,
-    format: 'avif',
-    quality: 65,
-    decoding: 'async',
+  src,
+  alt,
+  width: 640,
+  height: 360,
+  format: 'avif',
+  quality: 65,
+  decoding: 'async',
   });
-}
+  }
 
 const postsData = await Promise.all(
-  otherPosts.map(async (post) => {
-    const imageData = post.data.image
-      ? await optimizeImage(post.data.image.src, post.data.image.alt || post.data.title)
-      : null;
+otherPosts.map(async (post) => {
+  const imageData = post.data.image
+  ? await optimizeImage(post.data.image.src, post.data.image.alt || post.data.title)
+  : null;
 
-    return {
-      id: post.id,
-      slug: post.slug ?? post.id, // prefer slug if present
+  return {
+  id: post.id,
+  slug: post.slug ?? post.id, // prefer slug if present
       title: post.data.title,
-      description: post.data.description,
-      image: imageData ? imageData.src : null,
-      alt: post.data.image?.alt || post.data.title,
-    };
+  description: post.data.description,
+  image: imageData ? imageData.src : null,
+  alt: post.data.image?.alt || post.data.title,
+  };
   })
 );
 
@@ -72,7 +72,6 @@ const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png'
       style="min-width: min-content;"
       data-posts={JSON.stringify(postsData)}
       data-collection={collection}
-      data-base={base}
       data-favicon={JSON.stringify({
         src: favicon.src,
         width: favicon.attributes.width,
@@ -108,7 +107,10 @@ const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png'
 </Prose>
   )}
 
-<script>
+<script type="module">
+  // adjust the import path if your component folder differs:
+  import { withBasePath } from '../utils/withBasePath';
+
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -122,15 +124,10 @@ const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png'
     if (!container) return;
 
     const posts = JSON.parse(container.dataset.posts || '[]');
-
-    // normalize base (belt & suspenders)
-    const rawBase = container.dataset.base || '/';
-    const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
-
-    // strip any leading/trailing slashes on collection
-    const coll = (container.dataset.collection || '').replace(/^\/+|\/+$/g, '');
-
     const favicon = JSON.parse(container.dataset.favicon || '{}');
+
+    // sanitize collection (remove leading/trailing slashes)
+    const coll = (container.dataset.collection || '').replace(/^\/+|\/+$/g, '');
 
     const selected = shuffleArray([...posts]).slice(0, 3);
     const els = container.querySelectorAll('.post-item');
@@ -140,7 +137,8 @@ const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png'
       if (!el) return;
 
       const slug = post.slug || post.id;
-      el.href = `${base}${coll}/${slug}/`;
+      // guarantees exactly one "/" after base and before collection
+      el.href = withBasePath(`/${coll}/${slug}/`);
       el.style.display = 'block';
 
       const img = el.querySelector('img');
@@ -162,3 +160,4 @@ const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png'
   document.addEventListener('DOMContentLoaded', updatePosts);
   document.addEventListener('astro:page-load', updatePosts);
 </script>
+```
