@@ -109,7 +109,8 @@ jobs:
         id: git-info
         run: |
           echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/["\$`\\]/\\&/g')
+          echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_OUTPUT
           echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
           echo "COMMIT_DIRTY=$(if [[ -n $(git status -s) ]]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
 
