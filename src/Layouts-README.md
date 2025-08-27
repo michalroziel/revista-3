@@ -1,6 +1,7 @@
 # Astro Layouts
 
 ### Refer to [Astro docs on Layouts](https://docs.astro.build/en/basics/layouts/)
+
 ---
 
 ## Overview

@@ -1,50 +1,47 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Hamburger() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handlePageLoad = () => {
-      const navLinks = document.getElementById('nav-links')
+      const navLinks = document.getElementById('nav-links');
       if (navLinks) {
-        navLinks.classList.remove('open', 'collapsed')
-        navLinks.classList.add(isOpen ? 'open' : 'collapsed')
+        navLinks.classList.remove('open', 'collapsed');
+        navLinks.classList.add(isOpen ? 'open' : 'collapsed');
       }
-    }
+    };
 
-    document.addEventListener('astro:page-load', handlePageLoad)
+    document.addEventListener('astro:page-load', handlePageLoad);
     return () => {
-      document.removeEventListener('astro:page-load', handlePageLoad)
-    }
-  }, [isOpen])
+      document.removeEventListener('astro:page-load', handlePageLoad);
+    };
+  }, [isOpen]);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen)
-    const navLinks = document.getElementById('nav-links')
+    setIsOpen(!isOpen);
+    const navLinks = document.getElementById('nav-links');
     if (navLinks) {
       if (navLinks.classList.contains('open')) {
-        navLinks.classList.remove('open')
-        navLinks.classList.add('collapsed')
+        navLinks.classList.remove('open');
+        navLinks.classList.add('collapsed');
       } else {
-        navLinks.classList.remove('collapsed')
-        navLinks.classList.add('open')
+        navLinks.classList.remove('collapsed');
+        navLinks.classList.add('open');
       }
     }
-  }
+  };
 
   return (
     <button
       onClick={toggleMenu}
       className="w-[30px] h-[30px] bg-transparent border-0 p-0 cursor-pointer relative hamburger flex items-center justify-center"
-      aria-label={isOpen ? "Close menu" : "Open menu"}
+      aria-label={isOpen ? 'Close menu' : 'Open menu'}
     >
-      <motion.div
-        className="relative w-[24px] h-[18px]"
-        animate={isOpen ? "open" : "closed"}
-      >
+      <motion.div className="relative w-[24px] h-[18px]" animate={isOpen ? 'open' : 'closed'}>
         <motion.span
           className="absolute h-[2px] w-full bg-current left-0"
           variants={{
@@ -71,5 +68,5 @@ export default function Hamburger() {
         />
       </motion.div>
     </button>
-  )
+  );
 }

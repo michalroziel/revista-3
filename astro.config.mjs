@@ -13,10 +13,10 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: process.env.GITHUB_PAGES === "true"
-    ? "https://erfianugrah.github.io"
+    ? "https://erfianugrah.github.io/revista-3"
     : "https://www.erfianugrah.com",
-  base: process.env.GITHUB_PAGES === "true" ? "/revista-3/" : "",
-
+  base: process.env.GITHUB_PAGES === "true" ? "/revista-3" : "",
+  trailingSlash: "never",
   image: {
     // responsiveStyles: true,
     // layout: "full-width",

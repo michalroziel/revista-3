@@ -1,6 +1,7 @@
 # CI/CD Implementation
 
 ### Continuous Integration/Deployment for the Revista project
+
 ---
 
 ## Overview
@@ -13,20 +14,20 @@ The CI/CD pipeline consists of the following stages:
 
 ```mermaid
 graph TD
-    A["Check & Setup"] --> B["Build"] 
+    A["Check & Setup"] --> B["Build"]
     B --> C["Test"]
     C --> D["Deploy"]
-    D --> E1["Cloudflare Pages"]  
+    D --> E1["Cloudflare Pages"]
     D --> E2["Deno Deploy"]
     D --> E3["GitHub Pages"]
     D --> E4["Docker Hub"]
-    
+
     classDef setup fill:#f5d6c3,stroke:#333,stroke-width:1px
     classDef build fill:#c3e8f5,stroke:#333,stroke-width:1px
     classDef test fill:#d6f5c3,stroke:#333,stroke-width:1px
     classDef deploy fill:#f5c3e8,stroke:#333,stroke-width:1px
     classDef target fill:#f5f5c3,stroke:#333,stroke-width:1px
-    
+
     class A setup
     class B build
     class C test
@@ -50,10 +51,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
-      
+
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -63,13 +64,13 @@ jobs:
             .astro
             dist
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('src/**') }}
-      
+
       - name: Install dependencies
         run: bun install
-      
+
       - name: Build site
         run: bun run build
-        
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -87,6 +88,7 @@ GITHUB_PAGES=true astro build && pagefind --site dist
 ```
 
 This approach ensures:
+
 - **Standard deployments** use `site: "https://www.erfianugrah.com"` with no base path
 - **GitHub Pages** uses `site: "https://erfianugrah.github.io"` with `base: "/revista-3"`
 - **Complete isolation** between deployment configurations
@@ -108,21 +110,22 @@ test:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
-    
+
     - name: Download build
       uses: actions/download-artifact@v3
       with:
         name: build-output
         path: dist
-    
+
     - name: Validate HTML
       run: npx html-validate dist/**/*.html
-    
+
     - name: Check for broken links
       run: npx hyperlink dist/index.html --skip-external
 ```
 
 Tests include:
+
 1. HTML validation for standards compliance
 2. Internal link checking to prevent broken navigation
 
@@ -140,7 +143,7 @@ deploy-cloudflare:
       with:
         name: build-output
         path: dist
-    
+
     - name: Publish to Cloudflare Pages
       uses: cloudflare/wrangler-action@2.0.0
       with:
@@ -157,6 +160,7 @@ deploy-cloudflare:
 ```
 
 Key points:
+
 1. Uses Cloudflare's Wrangler tool to upload the built site
 2. Purges the CDN cache to ensure visitors see the latest content
 
@@ -172,7 +176,7 @@ deploy-deno:
       with:
         name: build-output
         path: dist
-    
+
     - name: Deploy to Deno Deploy
       uses: denoland/deployctl@v1
       with:
@@ -194,7 +198,7 @@ deploy-to-github-pages:
     pages: write
     id-token: write
   concurrency:
-    group: "pages"
+    group: 'pages'
     cancel-in-progress: false
   environment:
     name: github-pages
@@ -237,6 +241,7 @@ deploy-to-github-pages:
 ```
 
 Key features:
+
 1. **Independent Build Process**: Unlike other deployments, GitHub Pages builds from source with its own environment
 2. **Environment-Specific Configuration**: Uses `GITHUB_PAGES=true` environment variable to set correct `site` and `base` paths
 3. **Dedicated Build Command**: Uses `build:github-pages` npm script for proper base path configuration
@@ -252,22 +257,22 @@ deploy-docker:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
-    
+
     - name: Download build
       uses: actions/download-artifact@v3
       with:
         name: build-output
         path: dist
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    
+
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
+
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
@@ -280,6 +285,7 @@ deploy-docker:
 ```
 
 Key aspects:
+
 1. Multi-architecture build for broad compatibility
 2. Build caching to speed up subsequent builds
 3. Automatic tagging and pushing to Docker Hub
@@ -296,6 +302,7 @@ The workflow uses GitHub Secrets for sensitive information:
 - `DOCKERHUB_TOKEN` - Authentication for Docker Hub
 
 **GitHub Pages Specific:**
+
 - No additional secrets required (uses built-in OIDC with `id-token: write`)
 - Environment variable `GITHUB_PAGES=true` automatically set during GitHub Pages build
 
@@ -306,14 +313,15 @@ The workflow runs automatically on:
 ```yaml
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
     - cron: '0 0 * * 0' # Weekly builds for freshness
 ```
 
 This ensures:
+
 1. Automatic deployment when code is merged to main
 2. Preview builds for pull requests
 3. Regular rebuilds to keep dependencies current
@@ -344,6 +352,7 @@ The CI/CD pipeline is optimized for speed:
 5. Concurrent deployment jobs that run simultaneously for faster overall pipeline execution
 
 Typical build and deploy times:
+
 - Full pipeline execution: ~4-6 minutes
 - Standard build job: ~1-2 minutes (shared by Cloudflare, Deno, Docker)
 - GitHub Pages independent build: ~2-3 minutes (includes full build + image processing)

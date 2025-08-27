@@ -1,29 +1,27 @@
 ---
-import Homepage from "../components/Homepage.astro";
+import Homepage from '../components/Homepage.astro';
 const { pageTitle } = Astro.props;
-import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 
-const collections = ["long_form", "short_form", "muses", "zeitweilig"];
+const collections = ['long_form', 'short_form', 'muses', 'zeitweilig'];
 let allImages = { large: [], medium: [], small: [] };
 let allAlts = [];
 let allUrls = [];
 
 for (let collection of collections) {
   const allContent = await getCollection(collection);
-  const postsWithImages = allContent.filter(
-    (post) => post.data.image?.src && post.data.image?.alt,
-  );
+  const postsWithImages = allContent.filter(post => post.data.image?.src && post.data.image?.alt);
 
-  const imagePromises = postsWithImages.map(async (post) => {
+  const imagePromises = postsWithImages.map(async post => {
     const [largeImage, mediumImage, smallImage] = await Promise.all([
       getImage({
         src: post.data.image.src,
         alt: post.data.image.alt,
         width: 1920,
         height: 1080,
-        decoding: "async",
-        format: "avif",
+        decoding: 'async',
+        format: 'avif',
         quality: 65,
       }),
       getImage({
@@ -31,8 +29,8 @@ for (let collection of collections) {
         alt: post.data.image.alt,
         width: 1280,
         height: 720,
-        decoding: "async",
-        format: "avif",
+        decoding: 'async',
+        format: 'avif',
         quality: 65,
       }),
       getImage({
@@ -40,8 +38,8 @@ for (let collection of collections) {
         alt: post.data.image.alt,
         width: 854,
         height: 480,
-        decoding: "async",
-        format: "avif",
+        decoding: 'async',
+        format: 'avif',
         quality: 65,
       }),
     ]);
@@ -51,13 +49,13 @@ for (let collection of collections) {
       medium: mediumImage.src,
       small: smallImage.src,
       alt: post.data.image.alt,
-      url: `/${collection}/${post.id}`,
+      url: `${import.meta.env.BASE_URL || ''}/${collection}/${post.id}`,
     };
   });
 
   const results = await Promise.all(imagePromises);
 
-  results.forEach((result) => {
+  results.forEach(result => {
     allImages.large.push(result.large);
     allImages.medium.push(result.medium);
     allImages.small.push(result.small);

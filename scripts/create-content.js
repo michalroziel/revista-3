@@ -2,7 +2,7 @@
 
 /**
  * Revista Content Creator CLI
- * 
+ *
  * A command-line tool for creating new content files with the proper
  * frontmatter according to the schema defined in content.config.ts.
  */
@@ -29,7 +29,10 @@ program
   .name('create-content')
   .description(chalk.blue('CLI to create content files for Revista with proper frontmatter'))
   .version('1.0.0')
-  .option('-t, --type <type>', 'content type (muses, short_form, long_form, zeitweilig, authors, cv)')
+  .option(
+    '-t, --type <type>',
+    'content type (muses, short_form, long_form, zeitweilig, authors, cv)'
+  )
   .option('-d, --dry-run', 'preview frontmatter without creating the file')
   .option('--debug', 'show debug information')
   .option('--non-interactive', 'run in non-interactive mode with provided options')
@@ -53,9 +56,9 @@ const options = program.opts();
 function slugify(title) {
   return title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')  // Remove special characters
-    .replace(/[\s_-]+/g, '-')   // Replace spaces and underscores with hyphens
-    .replace(/^-+|-+$/g, '');   // Remove leading/trailing hyphens
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
 }
 
 /**
@@ -73,11 +76,13 @@ function getFormattedDate() {
 async function main() {
   try {
     console.log(chalk.blue.bold('🌟 Revista Content Creator 🌟'));
-    console.log(chalk.gray('Creates content files with proper frontmatter based on content.config.ts\n'));
+    console.log(
+      chalk.gray('Creates content files with proper frontmatter based on content.config.ts\n')
+    );
 
     // Parse schemas from content.config.ts
     const schemas = await parseTS(contentConfigPath);
-    
+
     if (options.debug) {
       console.log(chalk.gray('Parsed schemas:'));
       console.log(schemas);
@@ -86,10 +91,14 @@ async function main() {
     // Check for non-interactive mode
     if (options.nonInteractive) {
       if (!options.type || !options.title || !options.description) {
-        console.error(chalk.red('Error: In non-interactive mode, --type, --title, and --description are required'));
+        console.error(
+          chalk.red(
+            'Error: In non-interactive mode, --type, --title, and --description are required'
+          )
+        );
         process.exit(1);
       }
-      
+
       return handleNonInteractiveMode(schemas, options);
     }
 
@@ -98,47 +107,47 @@ async function main() {
     if (!collectionType) {
       // Get available collections
       const collections = Object.keys(schemas);
-      
+
       // If no collection type is specified, ask the user
       const response = await inquirer.prompt([
         {
           type: 'list',
           name: 'collectionType',
           message: 'Select content type:',
-          choices: collections
-        }
+          choices: collections,
+        },
       ]);
-      
+
       collectionType = response.collectionType;
     }
-    
+
     // Validate collection type
     if (!schemas[collectionType]) {
       console.error(chalk.red(`Error: Collection type '${collectionType}' not found in schema.`));
       console.log(chalk.yellow(`Available collection types: ${Object.keys(schemas).join(', ')}`));
       process.exit(1);
     }
-    
+
     console.log(chalk.green(`\nCreating new ${chalk.bold(collectionType)} content\n`));
-    
+
     const schema = schemas[collectionType];
-    
+
     // Prepare questions for inquirer
     const questions = [];
-    
+
     // Start with title since we need it for the filename
     questions.push({
       type: 'input',
       name: 'title',
       message: `${chalk.cyan('Title:')}`,
-      validate: input => input ? true : 'Title is required'
+      validate: input => (input ? true : 'Title is required'),
     });
-    
+
     // Add required fields
     for (const field of schema.required) {
       // Skip title since we already asked
       if (field === 'title') continue;
-      
+
       if (field === 'pubDate') {
         // Use current date as default for pubDate
         continue;
@@ -148,21 +157,21 @@ async function main() {
           name: 'tags',
           message: `${chalk.cyan('Tags')} ${chalk.gray('(comma-separated)')}:`,
           default: collectionType,
-          filter: input => input.split(',').map(tag => tag.trim())
+          filter: input => input.split(',').map(tag => tag.trim()),
         });
       } else if (field === 'author') {
         questions.push({
           type: 'input',
           name: 'author',
           message: `${chalk.cyan('Author:')}`,
-          default: 'Erfi Anugrah'
+          default: 'Erfi Anugrah',
         });
       } else if (field === 'description') {
         questions.push({
           type: 'input',
           name: 'description',
           message: `${chalk.cyan('Description:')}`,
-          validate: input => input ? true : 'Description is required'
+          validate: input => (input ? true : 'Description is required'),
         });
       } else {
         // For any other required field
@@ -170,19 +179,19 @@ async function main() {
           type: 'input',
           name: field,
           message: `${chalk.cyan(field + ':')}`,
-          validate: input => input ? true : `${field} is required`
+          validate: input => (input ? true : `${field} is required`),
         });
       }
     }
-    
+
     // Ask if user wants to include image
     questions.push({
       type: 'confirm',
       name: 'includeImage',
       message: 'Include image?',
-      default: false
+      default: false,
     });
-    
+
     // Image properties if user wants to include image
     if (schema.imageProps) {
       const imageQuestions = schema.imageProps.map(prop => ({
@@ -193,9 +202,9 @@ async function main() {
         validate: input => {
           if (!prop.isOptional && !input) return `Image ${prop.name} is required`;
           return true;
-        }
+        },
       }));
-      
+
       questions.push(...imageQuestions);
     } else {
       // Default image properties
@@ -205,44 +214,44 @@ async function main() {
           name: 'image.src',
           message: `${chalk.cyan('Image src:')}`,
           when: answers => answers.includeImage,
-          validate: input => input ? true : 'Image src is required'
+          validate: input => (input ? true : 'Image src is required'),
         },
         {
           type: 'input',
           name: 'image.alt',
           message: `${chalk.cyan('Image alt:')}`,
           when: answers => answers.includeImage,
-          validate: input => input ? true : 'Image alt is required'
+          validate: input => (input ? true : 'Image alt is required'),
         },
         {
           type: 'input',
           name: 'image.positionx',
           message: `${chalk.cyan('Image positionx:')} ${chalk.gray('(optional, e.g., center, 40%)')}`,
-          when: answers => answers.includeImage
+          when: answers => answers.includeImage,
         },
         {
           type: 'input',
           name: 'image.positiony',
           message: `${chalk.cyan('Image positiony:')} ${chalk.gray('(optional, e.g., top, 20%)')}`,
-          when: answers => answers.includeImage
+          when: answers => answers.includeImage,
         }
       );
     }
-    
+
     // Get answers from user
     const answers = await inquirer.prompt(questions);
-    
+
     // Process answers into frontmatter with the correct order
     const frontmatter = {
       title: answers.title,
       slug: slugify(answers.title),
       pubDate: new Date().toISOString(),
-      updatedDate: undefined,  // Will be removed if not set
+      updatedDate: undefined, // Will be removed if not set
       tags: answers.tags,
       author: answers.author,
-      description: answers.description
+      description: answers.description,
     };
-    
+
     // Add image if included
     if (answers.includeImage) {
       frontmatter.image = {};
@@ -254,34 +263,41 @@ async function main() {
         }
       }
     }
-    
+
     // Add other fields from answers
     for (const [key, value] of Object.entries(answers)) {
-      if (key === 'title' || key === 'tags' || key === 'includeImage' || 
-          key === 'author' || key === 'description' || key.startsWith('image.')) continue;
-      
+      if (
+        key === 'title' ||
+        key === 'tags' ||
+        key === 'includeImage' ||
+        key === 'author' ||
+        key === 'description' ||
+        key.startsWith('image.')
+      )
+        continue;
+
       frontmatter[key] = value;
     }
-    
+
     // Remove undefined fields
     Object.keys(frontmatter).forEach(key => {
       if (frontmatter[key] === undefined) {
         delete frontmatter[key];
       }
     });
-    
+
     // Generate filename using date-slug.mdx pattern
     const date = getFormattedDate();
     const filename = `${date}-${frontmatter.slug}.mdx`;
     const filePath = path.join(contentDir, collectionType, filename);
-    
+
     // Generate file content with specific formatting to match existing files
     // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
     let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
-    
+
     // Format author with quotes
     let authorFormatted = `"${frontmatter.author}"`;
-    
+
     // Format image if present
     let imageFormatted = '';
     if (frontmatter.image) {
@@ -290,7 +306,7 @@ async function main() {
         .join(' , ');
       imageFormatted = `{ ${props} }`;
     }
-    
+
     // Create frontmatter with custom formatting
     let formattedFrontmatter = `title: ${frontmatter.title} 
 slug: ${frontmatter.slug} 
@@ -300,19 +316,19 @@ pubDate: ${frontmatter.pubDate}`;
     if (frontmatter.updatedDate) {
       formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
     }
-    
+
     // Add tags and author
     formattedFrontmatter += `\ntags: ${tagsFormatted}
 author: ${authorFormatted}`;
-    
+
     // Add image if present
     if (frontmatter.image) {
       formattedFrontmatter += `\nimage: ${imageFormatted}`;
     }
-    
+
     // Add description
     formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
-    
+
     const fileContent = `---
 ${formattedFrontmatter}
 ---
@@ -326,43 +342,42 @@ Enter your content here.
     console.log(chalk.cyan(formattedFrontmatter));
     console.log(chalk.gray('---'));
     console.log(chalk.gray('Enter your content here.'));
-    
+
     if (options.dryRun) {
       console.log(chalk.yellow('\nDry run - no file created.'));
       return;
     }
-    
+
     // Confirm creation
     const { confirm } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'confirm',
         message: `Create file at ${chalk.cyan(filePath)}?`,
-        default: true
-      }
+        default: true,
+      },
     ]);
-    
+
     if (!confirm) {
       console.log(chalk.yellow('File creation cancelled.'));
       return;
     }
-    
+
     // Ensure directory exists
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     // Write file
     fs.writeFileSync(filePath, fileContent);
     console.log(chalk.green(`\n✅ File created: ${chalk.cyan(filePath)}`));
-    
+
     // Show next steps
     console.log(chalk.blue('\nNext steps:'));
     console.log(`  1. ${chalk.cyan(`Edit ${filename}`)} to add your content`);
     console.log(`  2. Run ${chalk.cyan('bun run dev')} to preview your changes`);
     console.log(`  3. Run ${chalk.cyan('bun run build')} when ready to publish`);
-    
   } catch (error) {
     console.error(chalk.red('\nError:'), error);
     process.exit(1);
@@ -374,16 +389,18 @@ Enter your content here.
  */
 function handleNonInteractiveMode(schemas, options) {
   const collectionType = options.type;
-  
+
   // Validate collection type
   if (!schemas[collectionType]) {
     console.error(chalk.red(`Error: Collection type '${collectionType}' not found in schema.`));
     console.log(chalk.yellow(`Available collection types: ${Object.keys(schemas).join(', ')}`));
     process.exit(1);
   }
-  
-  console.log(chalk.green(`\nCreating new ${chalk.bold(collectionType)} content in non-interactive mode\n`));
-  
+
+  console.log(
+    chalk.green(`\nCreating new ${chalk.bold(collectionType)} content in non-interactive mode\n`)
+  );
+
   // Prepare frontmatter with the correct order
   const frontmatter = {
     title: options.title,
@@ -392,21 +409,19 @@ function handleNonInteractiveMode(schemas, options) {
     // Add updated date if provided
     ...(options.updatedDate && { updatedDate: options.updatedDate }),
     // Convert tags to the [ 'tag1', 'tag2' ] format
-    tags: options.tags ? 
-      options.tags.split(',').map(tag => tag.trim()) : 
-      [collectionType],
+    tags: options.tags ? options.tags.split(',').map(tag => tag.trim()) : [collectionType],
     author: options.author || 'Erfi Anugrah',
-    description: options.description
+    description: options.description,
   };
-  
+
   // Add image if provided
   if (options.imageSrc && options.imageAlt) {
     frontmatter.image = {
       src: options.imageSrc,
-      alt: options.imageAlt
+      alt: options.imageAlt,
     };
   }
-  
+
   // Generate filename using date-slug.mdx pattern
   // If pubDate is provided, use that date for the filename, otherwise use today's date
   let filenameDate;
@@ -417,17 +432,17 @@ function handleNonInteractiveMode(schemas, options) {
   } else {
     filenameDate = getFormattedDate();
   }
-  
+
   const filename = `${filenameDate}-${frontmatter.slug}.mdx`;
   const filePath = path.join(contentDir, collectionType, filename);
-  
+
   // Generate file content with specific formatting to match existing files
   // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
   let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
-  
+
   // Format author with quotes
   let authorFormatted = `"${frontmatter.author}"`;
-  
+
   // Format image if present
   let imageFormatted = '';
   if (frontmatter.image) {
@@ -436,7 +451,7 @@ function handleNonInteractiveMode(schemas, options) {
       .join(' , ');
     imageFormatted = `{ ${props} }`;
   }
-  
+
   // Create frontmatter with custom formatting
   let formattedFrontmatter = `title: ${frontmatter.title} 
 slug: ${frontmatter.slug} 
@@ -446,19 +461,19 @@ pubDate: ${frontmatter.pubDate}`;
   if (frontmatter.updatedDate) {
     formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
   }
-  
+
   // Add tags and author
   formattedFrontmatter += `\ntags: ${tagsFormatted}
 author: ${authorFormatted}`;
-  
+
   // Add image if present
   if (frontmatter.image) {
     formattedFrontmatter += `\nimage: ${imageFormatted}`;
   }
-  
+
   // Add description
   formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
-  
+
   const fileContent = `---
 ${formattedFrontmatter}
 ---
@@ -472,23 +487,23 @@ Enter your content here.
   console.log(chalk.cyan(formattedFrontmatter));
   console.log(chalk.gray('---'));
   console.log(chalk.gray('Enter your content here.'));
-  
+
   if (options.dryRun) {
     console.log(chalk.yellow('\nDry run - no file created.'));
     console.log(chalk.gray(`Would create file: ${chalk.cyan(filePath)}`));
     return;
   }
-  
+
   // Ensure directory exists
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  
+
   // Write file
   fs.writeFileSync(filePath, fileContent);
   console.log(chalk.green(`\n✅ File created: ${chalk.cyan(filePath)}`));
-  
+
   // Show next steps
   console.log(chalk.blue('\nNext steps:'));
   console.log(`  1. ${chalk.cyan(`Edit ${filename}`)} to add your content`);

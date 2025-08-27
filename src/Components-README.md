@@ -1,6 +1,7 @@
 # Astro Components
 
 ### Refer to [Astro docs on Components](https://docs.astro.build/en/basics/astro-components/)
+
 ---
 
 ## Overview
@@ -18,6 +19,7 @@ This project uses Astro v5.7.0 with enhanced component features and Tailwind CSS
 ### Header Components
 
 - **[Header.astro](components/Header.astro)**: Main header component that incorporates:
+
   - **[Hamburger.astro](components/Hamburger.astro)**: Mobile menu toggle
   - **[ThemeToggle.astro](components/ThemeToggle.astro)**: Light/dark mode switcher that wraps the React-based ThemeToggle component
   - **[Navigation.astro](components/Navigation.astro)**: Site navigation menu

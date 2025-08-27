@@ -1,11 +1,11 @@
 function handlePageLoad() {
-  const imageElements = Array.from(document.querySelectorAll("#randomimage"));
+  const imageElements = Array.from(document.querySelectorAll('#randomimage'));
 
   if (imageElements.length === 0) {
     return; // Exit the function if no #randomimage elements are found
   }
 
-  imageElements.forEach((element) => {
+  imageElements.forEach(element => {
     try {
       const imageData = JSON.parse(element.dataset.images);
       const width = JSON.parse(element.dataset.width);
@@ -28,9 +28,9 @@ function handlePageLoad() {
         [items[i], items[j]] = [items[j], items[i]];
       }
 
-      const imgElement = element.querySelector("img");
-      const sourceLarge = element.querySelector("source[data-srcset-large]");
-      const sourceMedium = element.querySelector("source[data-srcset-medium]");
+      const imgElement = element.querySelector('img');
+      const sourceLarge = element.querySelector('source[data-srcset-large]');
+      const sourceMedium = element.querySelector('source[data-srcset-medium]');
 
       if (imgElement && sourceLarge && sourceMedium) {
         const firstItem = items[0];
@@ -43,13 +43,13 @@ function handlePageLoad() {
         imgElement.alt = firstItem.alt;
         imgElement.width = firstItem.width.small;
         imgElement.height = firstItem.height.small;
-        imgElement.classList.remove("hidden");
+        imgElement.classList.remove('hidden');
       }
     } catch (error) {
-      console.error("Error processing random image data:", error);
+      console.error('Error processing random image data:', error);
     }
   });
 }
 
-document.addEventListener("astro:page-load", handlePageLoad);
+document.addEventListener('astro:page-load', handlePageLoad);
 // document.addEventListener('astro:after-swap', handlePageLoad);

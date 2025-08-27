@@ -1,6 +1,7 @@
 # Astro Pages
 
 ### Refer to [Astro docs on Pages](https://docs.astro.build/en/basics/astro-pages/)
+
 ---
 
 ## Overview
@@ -44,7 +45,7 @@ export async function getStaticPaths() {
   const posts = await getCollection('short_form');
   return posts.map(post => ({
     params: { id: post.slug },
-    props: { post }
+    props: { post },
   }));
 }
 

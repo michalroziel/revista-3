@@ -1,12 +1,12 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import GetRandomImage from "../components/getRandomImage.astro";
-import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GetRandomImage from '../components/getRandomImage.astro';
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 
 const { directory, title } = Astro.props;
 const allContent = await getCollection(directory);
-const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
+const tags = [...new Set(allContent.map(post => post.data.tags).flat())];
 
 const imagesByTag = {};
 for (const post of allContent) {
@@ -21,8 +21,8 @@ for (const post of allContent) {
           alt: post.data.image.alt,
           width: 1920,
           height: 1080,
-          decoding: "async",
-          format: "avif",
+          decoding: 'async',
+          format: 'avif',
           quality: 65,
         }),
         getImage({
@@ -30,8 +30,8 @@ for (const post of allContent) {
           alt: post.data.image.alt,
           width: 1280,
           height: 720,
-          decoding: "async",
-          format: "avif",
+          decoding: 'async',
+          format: 'avif',
           quality: 65,
         }),
         getImage({
@@ -39,8 +39,8 @@ for (const post of allContent) {
           alt: post.data.image.alt,
           width: 854,
           height: 480,
-          decoding: "async",
-          format: "avif",
+          decoding: 'async',
+          format: 'avif',
           quality: 65,
         }),
       ]);
@@ -82,7 +82,7 @@ const imageSizes = {
         </div>
       ) : (
         <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-overpass-mono">
-          {tags.map((tag) => (
+          {tags.map(tag => (
             <div class="col-span-1">
               <GetRandomImage
                 images={JSON.stringify(imagesByTag[tag])}

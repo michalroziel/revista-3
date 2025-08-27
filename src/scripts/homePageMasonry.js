@@ -1,7 +1,7 @@
 document.addEventListener('astro:page-load', function () {
   let imageElements = Array.from(document.querySelectorAll('#homepage'));
 
-  imageElements.forEach((element) => {
+  imageElements.forEach(element => {
     let images = JSON.parse(element.dataset.images);
     let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
     let urls = JSON.parse(element.dataset.urls); // Parse the urls
@@ -11,7 +11,7 @@ document.addEventListener('astro:page-load', function () {
       return {
         image: image,
         alt: alt[index],
-        url: urls[index]
+        url: urls[index],
       };
     });
 

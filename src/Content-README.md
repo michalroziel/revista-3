@@ -1,6 +1,7 @@
 # Astro Content Collections
 
 ### Refer to [Astro docs on Content Collections](https://docs.astro.build/en/guides/content-collections/)
+
 ---
 
 ## Overview
@@ -27,18 +28,20 @@ Each collection is defined in [content.config.ts](/src/content.config.ts) with a
 ```typescript
 const short_form = defineCollection({
   // Modern Astro v5.7.0 collection pattern
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/short_form" }),
+  loader: glob({ pattern: '**\/[^_]*.mdx', base: './src/content/short_form' }),
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
-    image: z.object({
-      src: z.string(),
-      alt: z.string(),
-      positionx: z.string().optional(),
-      positiony: z.string().optional()
-    }).optional(),
+    image: z
+      .object({
+        src: z.string(),
+        alt: z.string(),
+        positionx: z.string().optional(),
+        positiony: z.string().optional(),
+      })
+      .optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
   }),
@@ -55,17 +58,17 @@ title: Sisyphean
 id: sisyphean
 pubDate: 2020-12-23T08:10:57.000Z
 updatedDate: 2022-03-17T10:37:55.000Z
-tags: [ 'muses' ]
-author: "Erfi Anugrah"
-image: { 
-  src: https://cdn.erfianugrah.com/sisyphean_1.png, 
-  alt: sisyphean_1, 
-  positionx: 20%, 
-  positiony: 50% 
-}
+tags: ['muses']
+author: 'Erfi Anugrah'
+image:
+  {
+    src: https://cdn.erfianugrah.com/sisyphean_1.png,
+    alt: sisyphean_1,
+    positionx: 20%,
+    positiony: 50%,
+  }
 description: It started with an idea or rather an intention to create something but certain things never come to light. Or rather in our attempt to keep it in the shadows, it would still be inadvertently found. I guess if and when this does go out, that would probably be an ironic statement to start off with.
 ---
-
 <!-- Content goes here -->
 ```
 
@@ -89,13 +92,15 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('short_form');
 ---
 
-{posts.map(post => (
-  <article>
-    <h2>{post.data.title}</h2>
-    <p>{post.data.description}</p>
-    {post.data.image && <img src={post.data.image.src} alt={post.data.image.alt} />}
-  </article>
-))}
+{
+  posts.map(post => (
+    <article>
+      <h2>{post.data.title}</h2>
+      <p>{post.data.description}</p>
+      {post.data.image && <img src={post.data.image.src} alt={post.data.image.alt} />}
+    </article>
+  ))
+}
 ```
 
 This structured approach enables consistent presentation, easier content management, and reliable type safety across the entire project.

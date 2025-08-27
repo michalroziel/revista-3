@@ -51,6 +51,7 @@ The interactive mode will guide you through the process of creating a new conten
 7. If including an image, enter image source URL, alt text, and optional positioning
 
 The tool will then:
+
 1. Generate a slug from the title
 2. Create a file with the pattern `YYYY-MM-DD-slug.mdx`
 3. Write properly formatted frontmatter
@@ -123,20 +124,20 @@ bun run create --non-interactive --type muses --title "Test" --description "Test
 
 ### Option Reference
 
-| Option | Shorthand | Description | Required for Non-Interactive |
-|--------|-----------|-------------|------------------------------|
-| `--type <type>` | `-t` | Content type (muses, short_form, etc.) | Yes |
-| `--dry-run` | `-d` | Preview without creating file | No |
-| `--debug` | | Show debug information | No |
-| `--non-interactive` | | Run without prompts | N/A |
-| `--title <title>` | | Content title | Yes |
-| `--tags <tags>` | | Comma-separated tags | No |
-| `--author <author>` | | Author name | No |
-| `--description <description>` | | Content description | Yes |
-| `--image-src <src>` | | Image source URL | No |
-| `--image-alt <alt>` | | Image alt text | No |
-| `--pub-date <date>` | | Publication date (ISO format) | No |
-| `--updated-date <date>` | | Last updated date (ISO format) | No |
+| Option                        | Shorthand | Description                            | Required for Non-Interactive |
+| ----------------------------- | --------- | -------------------------------------- | ---------------------------- |
+| `--type <type>`               | `-t`      | Content type (muses, short_form, etc.) | Yes                          |
+| `--dry-run`                   | `-d`      | Preview without creating file          | No                           |
+| `--debug`                     |           | Show debug information                 | No                           |
+| `--non-interactive`           |           | Run without prompts                    | N/A                          |
+| `--title <title>`             |           | Content title                          | Yes                          |
+| `--tags <tags>`               |           | Comma-separated tags                   | No                           |
+| `--author <author>`           |           | Author name                            | No                           |
+| `--description <description>` |           | Content description                    | Yes                          |
+| `--image-src <src>`           |           | Image source URL                       | No                           |
+| `--image-alt <alt>`           |           | Image alt text                         | No                           |
+| `--pub-date <date>`           |           | Publication date (ISO format)          | No                           |
+| `--updated-date <date>`       |           | Last updated date (ISO format)         | No                           |
 
 ## Supported Content Types
 
@@ -152,6 +153,7 @@ The tool automatically detects all content collections defined in `content.confi
 ## Interactive Workflow
 
 1. Select content type:
+
    ```
    ? Select content type: (Use arrow keys)
    > muses
@@ -163,14 +165,16 @@ The tool automatically detects all content collections defined in `content.confi
    ```
 
 2. Fill in required fields (validation included):
+
    ```
    Title: Stockholm: Urban Reflections
    Tags (comma-separated): sweden, architecture, street, reflection
-   Author (default: Erfi Anugrah): 
+   Author (default: Erfi Anugrah):
    Description: A winter wander through Stockholm's glass-filled business district
    ```
 
 3. Add optional image information:
+
    ```
    ? Include image? Yes
    Image src: https://cdn.erfianugrah.com/stockholm-reflections-01.jpg
@@ -180,6 +184,7 @@ The tool automatically detects all content collections defined in `content.confi
    ```
 
 4. Preview and confirm:
+
    ```
    Content Preview:
    ---
@@ -216,6 +221,7 @@ The tool consists of two main components:
 ## Schema Validation
 
 The tool validates user input according to the schema requirements:
+
 - Required fields must be provided
 - Complex fields like `image` are properly structured
 - Date fields are automatically generated in ISO format
@@ -289,25 +295,26 @@ bun run update-post --file short_form/2021-03-08-hypnagogia.mdx \
 
 ### Options Reference
 
-| Option | Description | Required |
-|--------|-------------|----------|
-| `--file <path>` | Path to the file (relative to src/content) | Yes |
-| `--title <title>` | Update the content title | No |
-| `--description <desc>` | Update the description | No |
-| `--tags <tags>` | Update tags (comma-separated) | No |
-| `--author <name>` | Update the author name | No |
-| `--pub-date <date>` | Update publication date (ISO format) | No |
-| `--updated-date <date>` | Update or add updated date (ISO format) | No |
-| `--remove-updated-date` | Remove the updated date field | No |
-| `--image-src <url>` | Update image source URL | No |
-| `--image-alt <text>` | Update image alt text | No |
-| `--image-positionx <pos>` | Update image X position | No |
-| `--image-positiony <pos>` | Update image Y position | No |
-| `--dry-run` | Preview changes without writing to file | No |
+| Option                    | Description                                | Required |
+| ------------------------- | ------------------------------------------ | -------- |
+| `--file <path>`           | Path to the file (relative to src/content) | Yes      |
+| `--title <title>`         | Update the content title                   | No       |
+| `--description <desc>`    | Update the description                     | No       |
+| `--tags <tags>`           | Update tags (comma-separated)              | No       |
+| `--author <name>`         | Update the author name                     | No       |
+| `--pub-date <date>`       | Update publication date (ISO format)       | No       |
+| `--updated-date <date>`   | Update or add updated date (ISO format)    | No       |
+| `--remove-updated-date`   | Remove the updated date field              | No       |
+| `--image-src <url>`       | Update image source URL                    | No       |
+| `--image-alt <text>`      | Update image alt text                      | No       |
+| `--image-positionx <pos>` | Update image X position                    | No       |
+| `--image-positiony <pos>` | Update image Y position                    | No       |
+| `--dry-run`               | Preview changes without writing to file    | No       |
 
 ### Example Workflow
 
 1. Create a new post with the creation tool
+
    ```bash
    bun run create -t muses
    ```

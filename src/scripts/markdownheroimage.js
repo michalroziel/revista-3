@@ -6,7 +6,7 @@ function handlePageLoad() {
     const setBgImage = () => {
       const optimizedImageUrl = imageElement.currentSrc;
       backgroundImageElement.style.backgroundImage = `url(${optimizedImageUrl})`;
-    }
+    };
     if (imageElement.complete) {
       setBgImage();
     } else {

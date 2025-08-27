@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <input
@@ -10,9 +11,10 @@
 
 <div
   id="modal"
-  class="modal bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]" >
+  class="modal bg-[rgb(245,245,245)] dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
+>
   <div
-    class="modal-content bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
+    class="modal-content bg-[rgb(245,245,245)] dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
   >
     <input
       id="search"
@@ -22,43 +24,47 @@
     />
     <div
       id="results"
-      class="search-results bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
+      class="search-results bg-[rgb(245,245,245)] dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
     >
     </div>
   </div>
 </div>
 
 <script is:inline>
-  document.addEventListener("astro:page-load", () => {
-    const modal = document.querySelector("#modal");
-    const navSearchInput = document.querySelector("#nav-search");
-    const modalSearchInput = document.querySelector("#search");
+  document.addEventListener('astro:page-load', () => {
+    const modal = document.querySelector('#modal');
+    const navSearchInput = document.querySelector('#nav-search');
+    const modalSearchInput = document.querySelector('#search');
 
-    navSearchInput?.addEventListener("click", (e) => {
+    navSearchInput?.addEventListener('click', e => {
       // Show the modal when the search field is clicked
-      modal.style.display = "block";
+      modal.style.display = 'block';
       // Focus on the search field inside the modal
       modalSearchInput.focus();
     });
 
-    modalSearchInput?.addEventListener("input", async (e) => {
+    modalSearchInput?.addEventListener('input', async e => {
       // only load the pagefind script once
-      if (e.target.dataset.loaded !== "true") {
-        e.target.dataset.loaded = "true";
+      if (e.target.dataset.loaded !== 'true') {
+        e.target.dataset.loaded = 'true';
         // load the pagefind script
-        window.pagefind = await import("/pagefind/pagefind.js");
+        const baseUrl = document.querySelector('base')?.getAttribute('href') || '/';
+        const pagefindPath = baseUrl.endsWith('/')
+          ? `${baseUrl}pagefind/pagefind.js`
+          : `${baseUrl}/pagefind/pagefind.js`;
+        window.pagefind = await import(pagefindPath);
       }
 
       // search the index using the input value
       const search = await window.pagefind.search(e.target.value);
 
       // clear the old results
-      document.querySelector("#results").innerHTML = "";
+      document.querySelector('#results').innerHTML = '';
 
       // add the new results
       for (const result of search.results) {
         const data = await result.data();
-        document.querySelector("#results").innerHTML += `
+        document.querySelector('#results').innerHTML += `
         <a href="${data.url}" class="result-link dark:text-white m-4">
           <h3 class="result-title text-2xl font-bold underline">${data.meta.title}</h3>
           <p class="result-excerpt text-base">${data.excerpt}</p>
@@ -67,16 +73,16 @@
 
       // Show the modal after the query is made
       if (search.results.length > 0) {
-        modal.style.display = "block";
+        modal.style.display = 'block';
       } else {
-        modal.style.display = "none";
+        modal.style.display = 'none';
       }
     });
 
     // Hide the modal when user clicks outside of it
     window.onclick = function (event) {
       if (event.target == modal) {
-        modal.style.display = "none";
+        modal.style.display = 'none';
       }
     };
   });
@@ -165,7 +171,7 @@
     position: absolute; /* Position the modal */
     top: 50%; /* Position the modal vertically at the center */
     left: 50%; /* Position the modal horizontally at the center */
-    transform: translate(-50%,-50%); /* Use translate to adjust the position of the modal */
+    transform: translate(-50%, -50%); /* Use translate to adjust the position of the modal */
   }
 
   @media (max-width: 600px) {

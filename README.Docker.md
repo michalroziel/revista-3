@@ -42,7 +42,7 @@ services:
   revista:
     build: .
     ports:
-      - "8080:80"
+      - '8080:80'
     restart: unless-stopped
     volumes:
       - caddy_data:/data

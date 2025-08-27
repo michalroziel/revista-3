@@ -1,22 +1,22 @@
 ---
-import "../styles/MasonryLayout.css";
-import { getImage } from "astro:assets";
+import '../styles/MasonryLayout.css';
+import { getImage } from 'astro:assets';
 const { images } = Astro.props;
 const imageAssets = await Promise.all(
-  images.map(async (image) => {
+  images.map(async image => {
     if (image) {
       return await getImage({
         src: image.src,
         alt: image.alt,
         width: 3840,
         height: 2160,
-        decoding: "async",
-        format: "avif",
-        loading: "lazy",
+        decoding: 'async',
+        format: 'avif',
+        loading: 'lazy',
       });
     }
     return null;
-  }),
+  })
 );
 ---
 
@@ -37,7 +37,7 @@ const imageAssets = await Promise.all(
             />
           </a>
         </div>
-      ) : null,
+      ) : null
     )
   }
 </div>

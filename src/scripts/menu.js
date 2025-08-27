@@ -12,7 +12,7 @@ function handlePageLoad() {
     }
 
     hamburger.classList.toggle('open');
-  }
+  };
 }
 
 document.addEventListener('astro:page-load', handlePageLoad);

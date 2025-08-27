@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Check initial theme state from DOM
     const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains('dark'))
-    }
-    
-    checkTheme()
-    
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+
+    checkTheme();
+
     // Listen for theme changes
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(document.documentElement, { 
-      attributes: true, 
-      attributeFilter: ['class'] 
-    })
-    
-    return () => observer.disconnect()
-  }, [])
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleTheme = () => {
     // Dispatch custom event for Astro script to handle
-    window.dispatchEvent(new Event('theme-toggle'))
-  }
+    window.dispatchEvent(new Event('theme-toggle'));
+  };
 
   return (
     <button
@@ -42,13 +42,7 @@ export default function ThemeToggle() {
         strokeLinejoin="round"
         className="w-[24px] h-[24px]"
       >
-        <motion.circle
-          cx="12"
-          cy="12"
-          r="5"
-          fill="currentColor"
-          animate={{ r: isDark ? 5 : 9 }}
-        />
+        <motion.circle cx="12" cy="12" r="5" fill="currentColor" animate={{ r: isDark ? 5 : 9 }} />
         <motion.g
           stroke="currentColor"
           animate={{ opacity: isDark ? 1 : 0, scale: isDark ? 1 : 0.3 }}
@@ -64,5 +58,5 @@ export default function ThemeToggle() {
         </motion.g>
       </motion.svg>
     </button>
-  )
+  );
 }

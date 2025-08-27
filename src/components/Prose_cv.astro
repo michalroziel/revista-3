@@ -27,21 +27,21 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener('DOMContentLoaded', () => {
     // Only add basic styling classes
-    document.querySelectorAll("h2 .company-name").forEach(element => {
+    document.querySelectorAll('h2 .company-name').forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('company-section');
       }
     });
-    
-    document.querySelectorAll("h3 .job-title").forEach(element => {
+
+    document.querySelectorAll('h3 .job-title').forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('job-section');
       }
     });
-    
-    document.querySelectorAll(".school-name").forEach(element => {
+
+    document.querySelectorAll('.school-name').forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('education-section');
       }
@@ -123,9 +123,9 @@
     padding-left: 30px;
     margin-bottom: 2.5rem;
   }
-  
+
   :global(.company-section::before) {
-    content: "";
+    content: '';
     position: absolute;
     left: 6px;
     top: 8px;
@@ -134,11 +134,11 @@
     background-color: var(--color-slate-200);
     z-index: 1;
   }
-  
+
   :global(.dark .company-section::before) {
     background-color: var(--color-slate-700);
   }
-  
+
   :global(.job-section) {
     position: relative;
     padding-left: 20px;
@@ -146,9 +146,9 @@
     /* Add min-height for better spacing */
     min-height: 4rem;
   }
-  
+
   :global(.job-section::before) {
-    content: "";
+    content: '';
     position: absolute;
     left: -24px;
     top: 6px;
@@ -160,16 +160,16 @@
     border: 3px solid var(--color-white);
     box-shadow: 0 0 0 2px var(--color-blue-200);
   }
-  
+
   :global(.dark .job-section::before) {
     background-color: var(--color-blue-400);
     border-color: var(--color-slate-800);
     box-shadow: 0 0 0 2px var(--color-blue-800);
   }
-  
+
   /* Add timeline connectors between job positions */
   :global(.job-section::after) {
-    content: "";
+    content: '';
     position: absolute;
     left: -18px;
     top: 20px;
@@ -178,23 +178,23 @@
     background-color: var(--color-blue-200);
     z-index: 1;
   }
-  
+
   :global(.dark .job-section::after) {
     background-color: var(--color-blue-700);
   }
-  
+
   /* Remove connector from last job in company */
   :global(.job-section:last-child::after) {
     display: none;
   }
-  
+
   /* Add date indicator on timeline */
   :global(.job-section .date-range) {
     position: relative;
   }
-  
+
   :global(.job-section .date-range::before) {
-    content: "";
+    content: '';
     position: absolute;
     left: -40px;
     top: 50%;
@@ -202,16 +202,16 @@
     height: 2px;
     background-color: var(--color-blue-300);
   }
-  
+
   :global(.dark .job-section .date-range::before) {
     background-color: var(--color-blue-600);
   }
-  
+
   :global(.education-section) {
     position: relative;
     margin-bottom: 1.5rem;
   }
-  
+
   /* Print adjustments */
   @media print {
     :global(.job-section),
@@ -229,7 +229,7 @@
       max-width: 100%;
       font-size: 11pt;
     }
-    
+
     /* Major section headings */
     :global(.prose h2) {
       margin-top: 1.5rem;
@@ -238,7 +238,7 @@
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     /* Only use page breaks for major sections like Skills and Education */
     :global(.prose h2#skills),
     :global(.prose h2#languages),
@@ -246,7 +246,7 @@
       page-break-before: always;
       break-before: page;
     }
-    
+
     /* Company sections */
     :global(.prose .company-name) {
       margin-top: 1.5rem;
@@ -255,19 +255,19 @@
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     /* Job titles */
     :global(.prose .job-title) {
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     /* Date ranges */
     :global(.prose .date-range) {
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     /* Job descriptions */
     :global(.prose .job-title + * + ul) {
       page-break-before: avoid;
@@ -275,7 +275,7 @@
       page-break-inside: auto;
       break-inside: auto;
     }
-    
+
     /* Keep at least 2 lines together when breaking */
     :global(.prose li) {
       page-break-inside: auto;
@@ -283,24 +283,24 @@
       orphans: 3;
       widows: 3;
     }
-    
+
     /* Allow breaks inside longer lists */
     :global(.prose ul) {
       page-break-inside: auto;
       break-inside: auto;
     }
-    
+
     /* School section */
     :global(.prose .school-name) {
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     :global(.prose .degree) {
       page-break-after: avoid;
       break-after: avoid;
     }
-    
+
     /* Text colors */
     :global(.prose .company-name),
     :global(.prose .school-name),
@@ -309,19 +309,19 @@
     :global(.prose .date-range) {
       color: #000 !important;
     }
-    
+
     /* Tables */
     :global(.prose table) {
       page-break-inside: avoid;
       break-inside: avoid;
     }
-    
+
     /* Improve orphans and widows for all text */
     :global(.prose p) {
       orphans: 3;
       widows: 3;
     }
-    
+
     /* Hide timeline elements when printing */
     :global(.job-section),
     :global(.job-content),
@@ -329,7 +329,7 @@
       padding-left: 0 !important;
       margin-left: 0 !important;
     }
-    
+
     :global(.company-section::before),
     :global(.job-section::before),
     :global(.job-section::after),
@@ -341,8 +341,10 @@
   }
 
   /* Skills section enhancements */
-  :global(.prose ul:has(li:first-child:contains("HTML")), 
-          .prose ul:has(li:first-child:contains("English"))) {
+  :global(
+    .prose ul:has(li:first-child:contains('HTML')),
+    .prose ul:has(li:first-child:contains('English'))
+  ) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem 1.5rem;
@@ -350,15 +352,19 @@
     padding-left: 0;
   }
 
-  :global(.prose ul:has(li:first-child:contains("HTML")) li, 
-          .prose ul:has(li:first-child:contains("English")) li) {
+  :global(
+    .prose ul:has(li:first-child:contains('HTML')) li,
+    .prose ul:has(li:first-child:contains('English')) li
+  ) {
     position: relative;
     padding-left: 1.5rem;
   }
 
-  :global(.prose ul:has(li:first-child:contains("HTML")) li::before, 
-          .prose ul:has(li:first-child:contains("English")) li::before) {
-    content: "•";
+  :global(
+    .prose ul:has(li:first-child:contains('HTML')) li::before,
+    .prose ul:has(li:first-child:contains('English')) li::before
+  ) {
+    content: '•';
     position: absolute;
     left: 0;
     color: var(--color-blue-500);
@@ -366,8 +372,10 @@
   }
 
   @media (max-width: 640px) {
-    :global(.prose ul:has(li:first-child:contains("HTML")), 
-            .prose ul:has(li:first-child:contains("English"))) {
+    :global(
+      .prose ul:has(li:first-child:contains('HTML')),
+      .prose ul:has(li:first-child:contains('English'))
+    ) {
       grid-template-columns: 1fr;
     }
   }

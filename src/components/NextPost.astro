@@ -1,7 +1,7 @@
 ---
-import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
-import Prose from "./Prose.astro";
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Prose from './Prose.astro';
 
 export interface Props {
   currentId: string;
@@ -11,7 +11,7 @@ export interface Props {
 const { currentId, collection } = Astro.props;
 const allPosts = await getCollection(collection);
 
-const otherPosts = allPosts.filter((post) => post.id !== currentId);
+const otherPosts = allPosts.filter(post => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
 async function optimizeImage(src, alt) {
@@ -21,19 +21,16 @@ async function optimizeImage(src, alt) {
     // layout: "responsive",
     width: 640,
     height: 360,
-    format: "avif",
+    format: 'avif',
     quality: 65,
-    decoding: "async",
+    decoding: 'async',
   });
 }
 
 const postsData = await Promise.all(
-  otherPosts.map(async (post) => {
+  otherPosts.map(async post => {
     const imageData = post.data.image
-      ? await optimizeImage(
-          post.data.image.src,
-          post.data.image.alt || post.data.title,
-        )
+      ? await optimizeImage(post.data.image.src, post.data.image.alt || post.data.title)
       : null;
     return {
       id: post.id,
@@ -42,13 +39,10 @@ const postsData = await Promise.all(
       image: imageData ? imageData.src : null,
       alt: post.data.image?.alt || post.data.title,
     };
-  }),
+  })
 );
 
-const favicon = await optimizeImage(
-  "https://cdn.erfianugrah.com/ea_favicon.png",
-  "favicon",
-);
+const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png', 'favicon');
 ---
 
 {
@@ -118,38 +112,38 @@ const favicon = await optimizeImage(
   }
 
   function updatePosts() {
-    const container = document.getElementById("randomPosts");
+    const container = document.getElementById('randomPosts');
     if (!container) return;
 
-    const posts = JSON.parse(container.dataset.posts || "[]");
+    const posts = JSON.parse(container.dataset.posts || '[]');
     const collection = container.dataset.collection;
-    const favicon = JSON.parse(container.dataset.favicon || "{}");
+    const favicon = JSON.parse(container.dataset.favicon || '{}');
 
     const shuffledPosts = shuffleArray([...posts]);
     const selectedPosts = shuffledPosts.slice(0, 3);
 
-    const postElements = container.querySelectorAll(".post-item");
+    const postElements = container.querySelectorAll('.post-item');
     selectedPosts.forEach((post, index) => {
       const element = postElements[index];
       if (element) {
         element.href = `/${collection}/${post.id}/`;
-        element.style.display = "block";
+        element.style.display = 'block';
 
-        const img = element.querySelector("img");
+        const img = element.querySelector('img');
         if (img) {
           img.src = post.image || favicon.src;
           img.alt = post.alt;
           img.className = post.image
-            ? "w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
-            : "w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90";
+            ? 'w-full h-full object-cover transition-all duration-300 group-hover:opacity-90'
+            : 'w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90';
         }
 
-        const title = element.querySelector("h3");
+        const title = element.querySelector('h3');
         if (title) {
           title.textContent = post.title;
         }
 
-        const description = element.querySelector("p");
+        const description = element.querySelector('p');
         if (description) {
           description.textContent = post.description;
         }
@@ -157,5 +151,5 @@ const favicon = await optimizeImage(
     });
   }
 
-  document.addEventListener("astro:page-load", updatePosts);
+  document.addEventListener('astro:page-load', updatePosts);
 </script>

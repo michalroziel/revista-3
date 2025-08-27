@@ -14,7 +14,8 @@
     "update-post": "node scripts/update-post.js",
     "update": "node scripts/update-post.js",
     "update-interactive": "node scripts/update-post-interactive.js",
-    "ui": "node scripts/update-post-interactive.js"
+    "ui": "node scripts/update-post-interactive.js",
+    "format": "prettier --write \"**/*.{astro,js,mjs,ts,tsx,jsx}\" --ignore-path .gitignore"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

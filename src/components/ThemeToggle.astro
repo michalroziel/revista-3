@@ -1,5 +1,5 @@
 ---
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from './ThemeToggle';
 ---
 
 <ThemeToggle client:load />
@@ -37,23 +37,21 @@ import ThemeToggle from "./ThemeToggle";
 </style>
 
 <script>
-  function getThemePreference(): "light" | "dark" {
+  function getThemePreference(): 'light' | 'dark' {
     return (
-      (localStorage.getItem("theme") as "light" | "dark") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light")
+      (localStorage.getItem('theme') as 'light' | 'dark') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     );
   }
 
-  function applyTheme(theme: "light" | "dark") {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
+  function applyTheme(theme: 'light' | 'dark') {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
   }
 
   function toggleTheme() {
-    const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     applyTheme(newTheme);
   }
 
@@ -61,10 +59,10 @@ import ThemeToggle from "./ThemeToggle";
   applyTheme(getThemePreference());
 
   // Listen for theme toggle events from React component
-  window.addEventListener("theme-toggle", toggleTheme);
+  window.addEventListener('theme-toggle', toggleTheme);
 
   // Apply theme on Astro navigation events
-  document.addEventListener("astro:after-swap", () => {
+  document.addEventListener('astro:after-swap', () => {
     applyTheme(getThemePreference());
   });
 </script>

@@ -1,34 +1,34 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import ScrollToTop from "../components/scroll-to-top";
-import { getImage } from "astro:assets";
-import { Font } from "astro:assets";
-import "../styles/global.css";
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ScrollToTop from '../components/scroll-to-top';
+import { getImage } from 'astro:assets';
+import { Font } from 'astro:assets';
+import '../styles/global.css';
 let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
-  src: "https://cdn.erfianugrah.com/Tenhult_3.JPG",
-  alt: "Cover image for stoicopa website",
+  src: 'https://cdn.erfianugrah.com/Tenhult_3.JPG',
+  alt: 'Cover image for stoicopa website',
   height: 720,
   width: 1280,
-  decoding: "async",
-  format: "webp",
-  loading: "lazy",
+  decoding: 'async',
+  format: 'webp',
+  loading: 'lazy',
 });
 
 const favicon_webp = await getImage({
-  src: "https://cdn.erfianugrah.com/ea_favicon.png",
-  alt: "stoicopa favicon",
+  src: 'https://cdn.erfianugrah.com/ea_favicon.png',
+  alt: 'stoicopa favicon',
   height: 400,
   width: 400,
-  decoding: "async",
-  loading: "lazy",
-  format: "png",
+  decoding: 'async',
+  loading: 'lazy',
+  format: 'png',
 });
 
-const pageTitle = "stoicopa";
-const metaDescription = "My personal hamster wheel.";
+const pageTitle = 'stoicopa';
+const metaDescription = 'My personal hamster wheel.';
 const {
   image,
   description,
@@ -44,40 +44,40 @@ const {
 
 // Schema.org structured data
 const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Erfi Anugrah",
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Erfi Anugrah',
   url: baseUrl,
   image: `${baseUrl}${favicon_webp.src}`,
   sameAs: [
-    "https://mastodon.social/@stoicopa",
-    "https://github.com/erfianugrah",
-    "https://linkedin.com/in/erfianugrah",
-    "https://instagram.com/stoicopa",
+    'https://mastodon.social/@stoicopa',
+    'https://github.com/erfianugrah',
+    'https://linkedin.com/in/erfianugrah',
+    'https://instagram.com/stoicopa',
   ],
 };
 
 const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: site_name || "stoicopa",
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site_name || 'stoicopa',
   url: baseUrl,
   description: description || metaDescription,
   potentialAction: {
-    "@type": "SearchAction",
+    '@type': 'SearchAction',
     target: `${baseUrl}/search?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
+    'query-input': 'required name=search_term_string',
   },
 };
 
 const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
   itemListElement: [
     {
-      "@type": "ListItem",
+      '@type': 'ListItem',
       position: 1,
-      name: "Home",
+      name: 'Home',
       item: baseUrl,
     },
   ],
@@ -85,16 +85,15 @@ const breadcrumbSchema = {
 
 // Format dates for structured data
 const formattedPubDate = pubDate ? new Date(pubDate).toISOString() : null;
-const formattedUpdatedDate = updatedDate
-  ? new Date(updatedDate).toISOString()
-  : null;
+const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toISOString() : null;
 ---
 
 <html class="bg-[rgb(244,242,238)] dark:bg-[rgb(34,33,37)]" lang="en">
   <head>
     <meta charset="utf-8" />
+    <base href={import.meta.env.BASE_URL} />
     <link rel="icon" type="image/webp" href={favicon_webp.src} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="./sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, baseUrl).href} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
@@ -106,22 +105,16 @@ const formattedUpdatedDate = updatedDate
     <!-- Basic SEO -->
     <title>{title || pageTitle}</title>
     <meta name="description" content={description || metaDescription} />
-    <meta name="author" content={author || "Erfi Anugrah"} />
+    <meta name="author" content={author || 'Erfi Anugrah'} />
 
     <!-- OpenGraph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title || pageTitle} />
     <meta property="og:description" content={description || metaDescription} />
-    <meta property="og:site_name" content={site_name || "stoicopa"} />
-    <meta
-      property="og:image"
-      content={image || `${baseUrl}${metaImage?.src}`}
-    />
-    <meta
-      property="og:image:alt"
-      content={alt || "Cover image for stoicopa website"}
-    />
+    <meta property="og:site_name" content={site_name || 'stoicopa'} />
+    <meta property="og:image" content={image || `${baseUrl}${metaImage?.src}`} />
+    <meta property="og:image:alt" content={alt || 'Cover image for stoicopa website'} />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="720" />
     <meta property="og:locale" content="en_US" />
@@ -130,41 +123,18 @@ const formattedUpdatedDate = updatedDate
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title || pageTitle} />
     <meta name="twitter:description" content={description || metaDescription} />
-    <meta
-      name="twitter:image"
-      content={image || `${baseUrl}${metaImage?.src}`}
-    />
-    <meta
-      name="twitter:image:alt"
-      content={alt || "Cover image for stoicopa website"}
-    />
+    <meta name="twitter:image" content={image || `${baseUrl}${metaImage?.src}`} />
+    <meta name="twitter:image:alt" content={alt || 'Cover image for stoicopa website'} />
 
     <!-- Article-specific metadata -->
-    {
-      pubDate && (
-        <meta property="article:published_time" content={formattedPubDate} />
-      )
-    }
-    {
-      updatedDate && (
-        <meta property="article:modified_time" content={formattedUpdatedDate} />
-      )
-    }
-    <meta property="article:author" content={author || "Erfi Anugrah"} />
+    {pubDate && <meta property="article:published_time" content={formattedPubDate} />}
+    {updatedDate && <meta property="article:modified_time" content={formattedUpdatedDate} />}
+    <meta property="article:author" content={author || 'Erfi Anugrah'} />
 
     <!-- Structured Data -->
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(personSchema)}
-    />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(websiteSchema)}
-    />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(breadcrumbSchema)}
-    />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
     <ClientRouter />
   </head>
