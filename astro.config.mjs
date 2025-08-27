@@ -15,6 +15,7 @@ export default defineConfig({
   site: process.env.GITHUB_PAGES === "true"
     ? "https://erfianugrah.github.io/revista-3"
     : "https://www.erfianugrah.com",
+  base: process.env.GITHUB_PAGES === "true" ? "/revista-3" : undefined,
 
   image: {
     // responsiveStyles: true,
