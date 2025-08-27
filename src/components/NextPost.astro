@@ -129,7 +129,7 @@
 
                     const postElements = container.querySelectorAll('.post-item');
                     selectedPosts.forEach((post, index) => {
-                      const element = postElements[index];
+                      const element = postElements[index] as HTMLElement;
                       if (element) {
                         element.href = `${base}${collection}/${post.id}/`;
                         element.style.display = 'block';
