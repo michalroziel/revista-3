@@ -1,7 +1,38 @@
 ---
-import TagLayout from '../../../layouts/TagLayout.astro';
-const pageTitle = 'Long Form Projects';
+import { getCollection } from 'astro:content';
+import { withBasePath } from '../../../utils/withBasePath'; // adjust if your util lives elsewhere
+
 const directory = 'long_form';
+
+// collect all tags from long_form posts
+const posts = await getCollection(directory);
+const tags = Array.from(
+  new Set(
+    posts.flatMap((p) => Array.isArray(p.data?.tags) ? p.data.tags : []).filter(Boolean)
+  )
+);
+
+// choose the first tag (or fallback if none)
+const first = tags[0] || null;
+
+// build the FULL target URL with base (bullet-proof on GitHub Pages)
+const target = first
+  ? withBasePath(`/${directory}/tags/${encodeURIComponent(first)}/`)
+  : withBasePath(`/${directory}/`);
 ---
 
-<TagLayout directory={directory} title={pageTitle} />
+<!-- redirect quickly on the client -->
+<div id="tag-redirect" data-url={target}></div>
+<script>
+  (function () {
+    var el = document.getElementById('tag-redirect');
+    if (!el) return;
+    var url = el.dataset.url;
+    if (url) window.location.replace(url);
+  })();
+</script>
+
+<!-- noscript fallback -->
+<noscript>
+<p>Redirecting to <a href={target}>{target}</a>…</p>
+</noscript>
