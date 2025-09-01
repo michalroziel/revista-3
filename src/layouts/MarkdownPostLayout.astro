@@ -69,9 +69,12 @@ const metaImage = image
 
 
 
-const filteredTags = frontmatter.tags.filter(
-  (t) => t.toLowerCase() !== collection.replace('_', ' ')
-);
+const filteredTags = frontmatter.tags.filter( (t) => t.toLowerCase() !== collection.replace('_', ' '));
+
+const collDisplay = collection.replace('_', ' ').toLowerCase();
+const tagsWithoutCollection = Array.isArray(frontmatter.tags)
+  ? frontmatter.tags.filter((t) => t.toLowerCase() !== collDisplay) : [];
+
 ---
 
 
@@ -92,7 +95,8 @@ const filteredTags = frontmatter.tags.filter(
       <HeroImage
         client:load
         title={title}
-        tags={filteredTags}
+        tags={tagsWithoutCollection}
+        collection={collection}
         backgroundImage={backgroundImage.src}
         mobileBackgroundImage={mobileBackgroundImage.src}
         positionX={positionx}
