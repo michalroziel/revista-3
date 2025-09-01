@@ -1,13 +1,14 @@
 ---
 import Pagefind from './Pagefind.astro';
+import { withBasePath } from '../utils/withBasePath';
 ---
 
 <div id="nav-links" class="nav-links collapsed font-overpass-mono capitalize">
-  <a class="fade-effect" href={import.meta.env.BASE_URL || ''}>Home</a>
-  <a class="fade-effect" href={`${import.meta.env.BASE_URL || ''}/muses`}> Muses </a>
-  <a class="fade-effect" href={`${import.meta.env.BASE_URL || ''}/short_form`}> Short Form </a>
-  <a class="fade-effect" href={`${import.meta.env.BASE_URL || ''}/long_form/tags`}> Long Form </a>
-  <a class="fade-effect" href={`${import.meta.env.BASE_URL || ''}/zeitweilig`}> Zeitweilig </a>
+  <a class="fade-effect" href={withBasePath('/')}>Home</a>
+  <a class="fade-effect" href={withBasePath('/muses/')}> Muses </a>
+  <a class="fade-effect" href={withBasePath('/short_form/')}> Short Form </a>
+  <a class="fade-effect" href={withBasePath('/long_form/')}> Long Form </a>  <!-- changed -->
+  <a class="fade-effect" href={withBasePath('/zeitweilig/')}> Zeitweilig </a>
   <!-- <a href="/tags/">Tags</a> -->
   <Pagefind class="fade-effect" />
   <slot />
