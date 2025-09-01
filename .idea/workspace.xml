@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26b32d43-ac0d-4330-8568-d892312dabfb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/utils/favicon-mroziel-512x512.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Footer.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.astro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/BaseLayout.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BaseLayout.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/favicon-mroziel-512x512.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/favicon-mroziel-512x512.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +62,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/src/utils" />
     </key>
   </component>
@@ -82,7 +82,7 @@
       <updated>1756288718229</updated>
       <workItem from="1756288726737" duration="6412000" />
       <workItem from="1756299993371" duration="1357000" />
-      <workItem from="1756301378367" duration="14536000" />
+      <workItem from="1756301378367" duration="14972000" />
     </task>
     <servers />
   </component>
