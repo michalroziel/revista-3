@@ -6,6 +6,8 @@ import Prose from '../components/Prose.astro';
 import { getImage } from 'astro:assets';
 import HeroImage from '../components/HeroImage.tsx';
 import NextPost from '../components/NextPost.astro';
+import { withBasePath } from '../utils/withBasePath';  // ← add this
+
 
 const { frontmatter, currentId, collection } = Astro.props;
 const updatedDate = frontmatter?.updatedDate.toDateString().split(' ').slice(1).join(' ');
@@ -19,6 +21,12 @@ const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;
 const positiony = frontmatter?.image?.positiony;
 let baseUrl = new URL(Astro.request.url).origin;
+
+// build helpers once
+const coll = (collection || '').replace(/^\/+|\/+$/g, '');
+const authorHref = withBasePath(`/authors/${author}`)
+const tagHref = (t: string) => withBasePath(`/${coll}/tags/${encodeURIComponent(t)}/`);
+
 
 const backgroundImage = image
   ? await getImage({
@@ -91,7 +99,7 @@ const metaImage = image
               <p class="font-overpass-mono text-xl">
                 <a
                   class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline"
-                  href={`../tags/${tag}`}
+                  href={tagHref(tag)}
                 >
                   {tag}
                 </a>
@@ -109,7 +117,7 @@ const metaImage = image
         <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
           <p>
             -- <a
-              href={`${import.meta.env.BASE_URL || ''}/authors/${author}`}
+              href={authorHref}
               class="no-underline font-inconsolata"
             >
               {authorFullName}
