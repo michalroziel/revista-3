@@ -156,10 +156,11 @@ function updatePosts() {
     const img = el.querySelector('img');
     if (img) {
       img.src = post.image || favicon.src;
-      img.alt = post.alt;
-      img.className = post.image
-        ? 'w-full h-full object-cover transition-all duration-300 group-hover:opacity-90'
-        : 'w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90';
+      img.alt = post.alt || post.title;
+      // Always fill the card (even for the fallback)
+      img.className = 'w-full h-full object-cover transition-all duration-300 group-hover:opacity-90';
+      img.loading = 'lazy';
+      img.decoding = 'async';
     }
 
     const title = el.querySelector('h3'); if (title) title.textContent = post.title;
