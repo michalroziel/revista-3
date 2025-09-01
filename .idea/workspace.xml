@@ -6,24 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="26b32d43-ac0d-4330-8568-d892312dabfb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-adam.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-adam.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-anam.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-anam.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-angelo.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-angelo.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-ej.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-ej.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-hakim.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-hakim.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-odelia.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-odelia.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-oliwka.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-oliwka.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-pei-si.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-pei-si.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-peter.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-peter.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-phoebe.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-phoebe.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-salma.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-salma.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-theo.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/gleichgesinnte/2018-12-25-theo.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/short_form/2021-03-08-hypnagogia.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2021-03-08-hypnagogia.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/short_form/2021-10-17-mundane.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2021-10-17-mundane.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/short_form/2021-11-02-obsolescence.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2021-11-02-obsolescence.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/short_form/2022-06-13-faroe.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2022-06-13-faroe.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HeroImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeroImage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/MarkdownPostLayout.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/MarkdownPostLayout.astro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/TagLayout.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/TagLayout.astro" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +82,7 @@
       <updated>1756288718229</updated>
       <workItem from="1756288726737" duration="6412000" />
       <workItem from="1756299993371" duration="1357000" />
-      <workItem from="1756301378367" duration="20578000" />
+      <workItem from="1756301378367" duration="24710000" />
     </task>
     <servers />
   </component>

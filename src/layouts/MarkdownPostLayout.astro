@@ -66,7 +66,14 @@ const metaImage = image
       loading: 'lazy',
     })
   : null;
+
+
+
+const filteredTags = frontmatter.tags.filter(
+  (t) => t.toLowerCase() !== collection.replace('_', ' ')
+);
 ---
+
 
 <BaseLayout
   title={title}
@@ -78,12 +85,14 @@ const metaImage = image
   updatedDate={publishedDate}
   is404Page={false}
 >
+
+
   {
     image ? (
       <HeroImage
         client:load
         title={title}
-        tags={frontmatter.tags}
+        tags={filteredTags}
         backgroundImage={backgroundImage.src}
         mobileBackgroundImage={mobileBackgroundImage.src}
         positionX={positionx}
