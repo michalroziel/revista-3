@@ -5,8 +5,10 @@ import ThemeToggle from './ThemeToggle.astro';
 import { getImage } from 'astro:assets';
 const { is404Page = false } = Astro.props;
 
+import mrFaviconPng from '../assets/favicon-mroziel-512x512.png';
+
 const favicon_avif = await getImage({
-  src: 'https://cdn.erfianugrah.com/ea_favicon.png',
+  src: mrFaviconPng,
   alt: 'favicon',
   width: '640',
   height: '480',
