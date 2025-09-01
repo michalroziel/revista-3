@@ -2,7 +2,10 @@
 // NextPost.astro
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Prose from './Prose.astro';
+
+import mrPlaceholder from '../assets/mroziel_placeholder.png';
 
 export interface Props {
   currentId: string;
@@ -19,7 +22,7 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
-async function optimizeImage(src: string, alt: string) {
+async function optimizeImage(src: string | ImageMetadata, alt: string) {
   return await getImage({
     src,
     alt,
@@ -48,7 +51,7 @@ const postsData = await Promise.all(
   })
 );
 
-const favicon = await optimizeImage('https://cdn.erfianugrah.com/ea_favicon.png', 'favicon');
+const favicon = await optimizeImage(mrPlaceholder, 'MR Placeholder');
 ---
 
   {shouldRender && (
