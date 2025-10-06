@@ -7,6 +7,7 @@
     <list default="true" id="26b32d43-ac0d-4330-8568-d892312dabfb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/content/short_form/2022-06-13-faroe.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2022-06-13-faroe.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/muses.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/muses.astro" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +84,7 @@
       <workItem from="1756288726737" duration="6412000" />
       <workItem from="1756299993371" duration="1357000" />
       <workItem from="1756301378367" duration="30408000" />
-      <workItem from="1759703363159" duration="466000" />
+      <workItem from="1759703363159" duration="2725000" />
     </task>
     <servers />
   </component>
