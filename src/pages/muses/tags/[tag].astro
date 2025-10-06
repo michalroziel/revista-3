@@ -4,7 +4,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogPost from '../../../components/BlogPost.astro';
 import { sortByDate } from '../../../components/sortbydate';
 export async function getStaticPaths() {
-  const allMuses = await getCollection('muses');
+  const allMuses = await getCollection('moments');
   const uniqueTags = [...new Set(allMuses.map(post => post.data.tags).flat())];
 
   return uniqueTags.map(tag => {
@@ -26,7 +26,7 @@ const { posts } = Astro.props;
       .sort(sortByDate)
       .map(post => (
         <BlogPost
-          url={`${import.meta.env.BASE_URL || ''}/muses/${post.id}`}
+          url={`${import.meta.env.BASE_URL || ''}/moments/${post.id}`}
           image={post.data?.image?.src || ''}
           alt={post.data?.image?.alt || ''}
           title={post.data?.title || ''}

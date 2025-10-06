@@ -191,8 +191,8 @@ These custom utilities provide precise control over image positioning and croppi
 All content is validated using Zod schemas with the following pattern:
 
 ```typescript
-const muses = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
+const moments = defineCollection({
+  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/moments" }),
   schema: z.object({
     // Required fields
     title: z.string(),
@@ -215,12 +215,12 @@ const muses = defineCollection({
 
 ### Glob Pattern Selection
 
-The `loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" })` configuration:
+The `loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/moments" })` configuration:
 
 1. `**\/` - Recursively searches all subdirectories
 2. `[^_]*` - Ignores files that start with underscore (draft content)
 3. `.mdx` - Only selects MDX files
-4. `base: "./src/content/muses"` - Sets the root directory for the collection
+4. `base: "./src/content/moments"` - Sets the root directory for the collection
 
 This provides a way to:
 - Organize content in subdirectories (e.g., by year, category)
@@ -300,7 +300,7 @@ The tag system works as follows:
 2. **Tag Extraction**: During build, Astro extracts all unique tags
    ```javascript
    export async function getStaticPaths() {
-     const posts = await getCollection('muses');
+     const posts = await getCollection('moments');
      const tags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
      
      return tags.map(tag => ({
@@ -314,7 +314,7 @@ The tag system works as follows:
    ```
 
 3. **Route Generation**: Creates dynamic routes for each tag
-   - `/muses/tags/[tag].astro` → `/muses/tags/monochrome`
+   - `/moments/tags/[tag].astro` → `/moments/tags/monochrome`
    - `/long_form/tags/[tag].astro` → `/long_form/tags/travel`
 
 4. **Content Association**: Each tag page displays all content with that tag

@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
 export async function getStaticPaths() {
-  const blogEntries = await getCollection('muses');
+  const blogEntries = await getCollection('moments');
   return blogEntries.map(entry => ({
     params: { id: entry.id },
     props: { entry },
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, remarkPluginFrontmatter } = await render(entry);
-const collection = 'muses';
+const collection = 'moments';
 ---
 
 <MarkdownPostLayout frontmatter={entry.data} currentId={entry.id} collection={collection}>

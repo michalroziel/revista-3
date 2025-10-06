@@ -25,7 +25,7 @@ export async function parseTS(filePath) {
     // Instead of regular expressions, let's use a simpler approach
     // to identify collections by looking for known patterns
     const collections = {};
-    const collectionNames = ['muses', 'short_form', 'long_form', 'zeitweilig', 'authors', 'cv'];
+    const collectionNames = ['moments', 'short_form', 'long_form', 'zeitweilig', 'authors', 'cv'];
 
     // Check for each known collection name in the content
     for (const name of collectionNames) {
@@ -83,7 +83,7 @@ export async function parseTS(filePath) {
 
     // Return basic collection structure as fallback
     return {
-      muses: {
+      moments: {
         required: ['title', 'tags', 'author', 'description', 'pubDate'],
         optional: ['updatedDate', 'image', 'slug'],
         imageProps: [

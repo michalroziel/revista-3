@@ -13,7 +13,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.13.3. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.13.3. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, moments, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
@@ -53,7 +53,7 @@ graph TD
     
     H --> K["📝 long_form<br>(articles)"]
     H --> L["📝 short_form<br>(quick posts)"]
-    H --> M["📝 muses<br>(photography)"]
+    H --> M["📝 moments<br>(photography)"]
     H --> N["📝 zeitweilig<br>(temporary thoughts)"]
     H --> O["📝 authors<br>(contributor info)"]
     H --> P["📝 cv<br>(resume data)"]
@@ -134,7 +134,7 @@ graph TD
 
 ## Key Features
 
-1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern. This gives me type-safe content management, explicit file selection, and simplified querying.
+1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, moments, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern. This gives me type-safe content management, explicit file selection, and simplified querying.
 
 2. **Responsive Design**: The site uses Tailwind CSS for a mobile-first approach. I've customized the breakpoints to match my specific needs at 800px, 1200px, 1900px, 2500px, and 3800px, which ensures the site looks good on everything from phones to ultra-wide monitors.
 
@@ -185,7 +185,7 @@ bun run preview
 bun run create
 
 # Specify content type directly
-bun run create -t muses
+bun run create -t moments
 
 # Preview frontmatter without creating a file (dry run)
 bun run create --dry-run
@@ -196,7 +196,7 @@ bun run create -d
 bun run create --help
 
 # Non-interactive mode (for scripts or automated workflows)
-bun run create --non-interactive --type muses --title "Post Title" --description "Post description" --tags "tag1,tag2" --pub-date "2024-05-19T12:00:00Z" --updated-date "2024-05-20T10:00:00Z"
+bun run create --non-interactive --type moments --title "Post Title" --description "Post description" --tags "tag1,tag2" --pub-date "2024-05-19T12:00:00Z" --updated-date "2024-05-20T10:00:00Z"
 ```
 
 This interactive tool:
@@ -204,19 +204,19 @@ This interactive tool:
 - Provides a user-friendly interface with colored prompts
 - Validates input according to schema requirements
 - Generates proper filenames using date-slug.mdx pattern (uses pubDate for the filename when provided)
-- Supports all content types: muses, short_form, long_form, zeitweilig, authors, cv
+- Supports all content types: moments, short_form, long_form, zeitweilig, authors, cv
 
 #### Post Update Tool
 
 ```bash
 # Update an existing post's frontmatter (e.g., add/modify updated date)
-bun run update-post --file muses/2025-05-19-commodification.mdx --updated-date "2025-05-20T12:00:00Z"
+bun run update-post --file moments/2025-05-19-commodification.mdx --updated-date "2025-05-20T12:00:00Z"
 
 # Preview changes without writing to file
 bun run update-post --file short_form/2025-05-19-the-essence-of-light.mdx --tags "photography,light,art,philosophy" --dry-run
 
 # Update multiple fields at once
-bun run update-post --file muses/2025-05-19-commodification.mdx \
+bun run update-post --file moments/2025-05-19-commodification.mdx \
   --title "New Title" \
   --tags "photography,art,economics,critique" \
   --updated-date "2025-05-20T08:15:00Z"
@@ -243,7 +243,7 @@ graph TD
     
     A["📁 content/"] --> B["📁 long_form/<br><i>in-depth articles</i>"]
     A --> C["📁 short_form/<br><i>brief posts</i>"]
-    A --> D["📁 muses/<br><i>photo collections</i>"]
+    A --> D["📁 moments/<br><i>photo collections</i>"]
     A --> E["📁 zeitweilig/<br><i>ephemeral content</i>"]
     A --> F["📁 authors/<br><i>contributor profiles</i>"]
     A --> G["📁 cv/<br><i>professional info</i>"]
@@ -276,7 +276,7 @@ graph TD
     classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
     classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
     
-    D["📁 muses/"] --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
+    D["📁 moments/"] --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
     
     E["📁 zeitweilig/"] --> M["📄 thoughts-on-bw.mdx<br><i>creative exploration</i>"]
     
@@ -293,8 +293,8 @@ Each content collection is defined with a specific schema in `content.config.ts`
 
 ```typescript
 // Example collection schema in content.config.ts
-const muses = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
+const moments = defineCollection({
+  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/moments" }),
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
@@ -311,7 +311,7 @@ const muses = defineCollection({
   }),
 });
 
-// Example frontmatter from an actual muses post:
+// Example frontmatter from an actual moments post:
 ---
 title: "Stockholm: Urban Reflections"
 tags: ["sweden", "architecture", "street", "reflection"]
@@ -351,13 +351,13 @@ graph TD
     A --> D["📋 /cv<br>(Resume page)"]
     A --> E["📚 /long_form<br>(Article index)"]
     A --> F["📝 /short_form<br>(Brief posts index)"]
-    A --> G["🖼️ /muses<br>(Photography index)"]
+    A --> G["🖼️ /moments<br>(Photography index)"]
     A --> H["⏳ /zeitweilig<br>(Ephemeral content)"]
 
     %% RSS feeds
     E -.-> E0["📡 /long_form/rss.xml"]
     F -.-> F0["📡 /short_form/rss.xml"]
-    G -.-> G0["📡 /muses/rss.xml"]
+    G -.-> G0["📡 /moments/rss.xml"]
     H -.-> H0["📡 /zeitweilig/rss.xml"]
     
     class A rootRoute
@@ -388,7 +388,7 @@ graph TD
     class J,K,M,N tagRoute
 ```
 
-### Muses and Zeitweilig Routes
+### moments and Zeitweilig Routes
 
 ```mermaid
 graph TD
@@ -396,10 +396,10 @@ graph TD
     classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
     classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
     
-    %% Muses routes
-    G["🖼️ /muses"] --> O["🖼️ /muses/[post-slug]<br>(Individual gallery pages)"]
-    G --> P["🏷️ /muses/tags<br>(Tags index)"]
-    P --> Q["🔖 /muses/tags/[tag]<br>(Galleries with specific tag)"]
+    %% moments routes
+    G["🖼️ /moments"] --> O["🖼️ /moments/[post-slug]<br>(Individual gallery pages)"]
+    G --> P["🏷️ /moments/tags<br>(Tags index)"]
+    P --> Q["🔖 /moments/tags/[tag]<br>(Galleries with specific tag)"]
     
     %% Zeitweilig routes
     H["⏳ /zeitweilig"] --> R["📄 /zeitweilig/[post-slug]<br>(Individual content pages)"]
@@ -414,7 +414,7 @@ graph TD
 
 The routing system combines static and dynamic routes:
 
-- **Static routes** like `/muses` are defined by files at `src/pages/muses.astro`
+- **Static routes** like `/moments` are defined by files at `src/pages/moments.astro`
 - **Dynamic routes** like `/long_form/camera-review` are handled by `src/pages/long_form/[...id].astro`
 - **Collection pages** use `getStaticPaths()` to generate routes from content collections
 - **Tag pages** are automatically generated for each tag used in the content
@@ -430,7 +430,7 @@ Each collection follows the same pattern of routes: index, individual posts, tag
    - `/cv`: CV page (`src/pages/cv.astro`)
 
 2. **Collection Routes**:
-   For each collection (long_form, short_form, muses, zeitweilig):
+   For each collection (long_form, short_form, moments, zeitweilig):
    - `/{collection}`: Index page for the collection (`src/pages/{collection}/index.astro`)
    - `/{collection}/post-id`: Individual post pages (`src/pages/{collection}/[...id].astro`)
    - `/{collection}/tags`: Tag index for the collection (`src/pages/{collection}/tags/index.astro`)

@@ -2,9 +2,9 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 // 2. Define a `type` and `schema` for each collection
-const muses = defineCollection({
+const moments = defineCollection({
   // type: "content", // v2.5.0 and later
-  loader: glob({ pattern: '**\/[^_]*.mdx', base: './src/content/muses' }),
+  loader: glob({ pattern: '**\/[^_]*.mdx', base: './src/content/moments' }),
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
@@ -202,7 +202,7 @@ const cv = defineCollection({
 });
 // 3. Export a single `collections` object to register your collection(s)
 export const collections = {
-  muses,
+  moments,
   short_form,
   long_form,
   zeitweilig,

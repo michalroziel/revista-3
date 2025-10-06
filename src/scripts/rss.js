@@ -1,5 +1,5 @@
 function handlePageLoad() {
-  const collections = ['/short_form/', '/long_form/', '/muses/', '/zeitweilig/'];
+  const collections = ['/short_form/', '/long_form/', '/moments/', '/zeitweilig/'];
   const currentPath = window.location.pathname;
 
   // Remove base path from current path for comparison
