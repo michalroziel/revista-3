@@ -1,11 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/rss/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>stoicopa</title><description>My personal hamster wheel.</description><link>https://michalroziel.github.io/$%7Brepo%7D/</link><language>en-us</language><item><title>Antarctica</title><link>https://michalroziel.github.io/zeitweilig/what-is-erfi/</link><guid isPermaLink="true">https://michalroziel.github.io/zeitweilig/what-is-erfi/</guid><description>The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore.</description><pubDate>Fri, 03 Jun 2022 06:06:06 GMT</pubDate><content:encoded>&lt;p&gt;import { Code } from &apos;astro:components&apos;;
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/revista-3/rss/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>stoicopa</title><description>My personal hamster wheel.</description><link>https://michalroziel.github.io/revista-3/</link><language>en-us</language><item><title>The Study of Erfinism</title><link>https://michalroziel.github.io/revista-3/zeitweilig/what-is-erfi/</link><guid isPermaLink="true">https://michalroziel.github.io/revista-3/zeitweilig/what-is-erfi/</guid><description>The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore.</description><pubDate>Fri, 03 Jun 2022 06:06:06 GMT</pubDate><content:encoded>&lt;p&gt;import { Code } from &apos;astro:components&apos;;
 import since94 from &apos;../../scripts/since94.js&apos;;&lt;/p&gt;
-&lt;h1&gt;The frozen continent&lt;/h1&gt;
-&lt;p&gt;import MasonryLayout from &apos;../../components/Masonry.astro&apos;;&lt;/p&gt;
-&lt;p&gt;&amp;lt;MasonryLayout images={[
-{src : &quot;https://res.cloudinary.com/dzihjnilq/image/upload/IMG_1278_dlcalo.jpg&quot;, alt: &quot;zeitweilig_1&quot; },
-{src : &quot;https://res.cloudinary.com/dzihjnilq/image/upload/IMG_1546_j6gfet.jpg&quot;, alt: &quot;zeitweilig_2&quot; },
-]} /&amp;gt;&lt;/p&gt;
+&lt;h1&gt;Exposé for a PhD thesis&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;Working title: What is Erfi?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Field research conducted by Lena&lt;/p&gt;
 &lt;h2&gt;&lt;strong&gt;Preface&lt;/strong&gt;&lt;/h2&gt;
