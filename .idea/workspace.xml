@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="26b32d43-ac0d-4330-8568-d892312dabfb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/short_form/2021-11-02-obsolescence.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2021-11-02-sailing.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-what-is-erfi.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-who-is-michal.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/short_form/2021-11-02-sailing.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/short_form/2021-11-02-sailing.mdx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +94,7 @@
       <workItem from="1759949371603" duration="416000" />
       <workItem from="1765215351008" duration="2711000" />
       <workItem from="1765305553849" duration="1910000" />
-      <workItem from="1765411149374" duration="293000" />
+      <workItem from="1765411149374" duration="1616000" />
     </task>
     <servers />
   </component>
