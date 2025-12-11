@@ -276,7 +276,7 @@ bun run update-post --file muses/2025-05-19-commodification.mdx --updated-date "
 bun run update-post --file short_form/2025-05-19-the-essence-of-light.mdx --tags "photography,light,art,philosophy" --dry-run
 
 # Update multiple fields at once
-bun run update-post --file zeitweilig/2022-06-03-what-is-erfi.mdx \
+bun run update-post --file zeitweilig/2022-06-03-who-is-michal.mdx \
   --title "Updated Title" \
   --description "New description text" \
   --tags "new,tags,here" \
