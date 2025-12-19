@@ -5,20 +5,42 @@ pubDate: 2021-11-02T11:15:00.000Z
 updatedDate: 2022-06-13T06:35:07.000Z
 tags: [ 'short form']
 author: "Michal Roziel"
-image: { src: https://res.cloudinary.com/dzihjnilq/image/upload/v1759703218/cherbourg-sunset_wkshh7.jpg, alt: sailing 1, positionx: 65%, positiony: 40% }
-description: The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
+image: { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1759703218/cherbourg-sunset_wkshh7.jpg", alt: "sailing 1", positionx: "65%", positiony: "40%" }
+description: The impermanence of things; a matter of eventuality, presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
 ---
 
 import MasonryLayout from '../../components/Masonry.astro';
 import AnimeTitle from '../../components/AnimeTitle.astro';
+import LanguageSelector from '../../components/LanguageSelector.astro';
 
-<AnimeTitle text="noun | /ˈseɪ.lɪŋ/" />
+<LanguageSelector languages={["english", "german", "polish"]} />
 
-The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
+<AnimeTitle text="noun | /ˌɑːbsəˈlesns/" />
 
----
+<div id="lang-content" data-language="english" class="content-text">
+  <p class="lang-item english">The impermanence of things; a matter of eventuality, presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.</p>
+  <p class="lang-item german">Die Vergänglichkeit der Dinge; eine Angelegenheit der Zwangsläufigkeit, stellt sich mir auf eine Weise dar, die fremd ist für meine Gewohnheit. In gewisser Weise erzeugt sie ein Gefühl der Sehnsucht.</p>
+  <p class="lang-item polish">Nietrwałość rzeczy; kwestia nieuchronności, manifestuje się w sposób obcy temu, do czego jestem przyzwyczajony. W pewnym sensie budzi uczucie tęsknoty.</p>
+</div>
 
-<MasonryLayout images={[
-  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/cherbourg-dawn_oleuhy.jpg", alt: "sailing 1" },
-  {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412741/sailing-east-goodwin_se0gqk.jpg", alt: "sailing 2"},
-  {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412736/sailing-selfie_eylmty.jpg", alt: "sailing 3"}]}/>
+<script is:inline>{`
+  document.addEventListener("language-changed", (e) => {
+    const container = document.getElementById("lang-content");
+    if (container) {
+      container.setAttribute("data-language", e.detail.language.toLowerCase());
+    }
+  });
+`}</script>
+
+<style>{`
+  .lang-item {
+    display: none;
+    font-style: italic;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+
+  #lang-content[data-language="english"] .english { display: block; }
+  #lang-content[data-language="german"] .german { display: block; }
+  #lang-content[data-language="polish"] .polish { display: block; }
+`}</style>
