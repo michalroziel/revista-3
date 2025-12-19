@@ -9,14 +9,16 @@ image: { src: https://res.cloudinary.com/dzihjnilq/image/upload/v1759703218/cher
 description: The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
 ---
 
-noun | /ˌɑːbsəˈlesns/
+import MasonryLayout from '../../components/Masonry.astro';
+import AnimeTitle from '../../components/AnimeTitle.astro';
 
-The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
+<AnimeTitle text="noun | /ˈseɪ.lɪŋ/" />
+
+The impermanence of things; a matter of eventuality,  presents themselves in a rather alien way than what I am used to. In a sense, makes for a feeling of saudade.
 
 ---
-import MasonryLayout from '../../components/Masonry.astro';
 
 <MasonryLayout images={[
-    { src: "https://res.cloudinary.com/dzihjnilq/image/upload/cherbourg-dawn_oleuhy.jpg", alt: "sailing 1" },
-    {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412741/sailing-east-goodwin_se0gqk.jpg", alt: "sailing 2"},
-    {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412736/sailing-selfie_eylmty.jpg", alt: "sailing 3"}]}/>
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/cherbourg-dawn_oleuhy.jpg", alt: "sailing 1" },
+  {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412741/sailing-east-goodwin_se0gqk.jpg", alt: "sailing 2"},
+  {src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1765412736/sailing-selfie_eylmty.jpg", alt: "sailing 3"}]}/>
