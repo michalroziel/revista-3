@@ -1,57 +1,77 @@
 ---
-const { text = "Animated title" } = Astro.props;
+interface Props {
+  text?: string;
+  scrambleType?: "default" | "cats";
+  size?: string; // New prop for font size
+}
+
+const {
+  text = "Animated title",
+  scrambleType = "default",
+  size = "2.5rem" // Default size
+} = Astro.props;
 ---
 
-<h1 class="anime-title">{text}</h1>
+<h1
+  class="anime-title"
+  data-scramble-type={scrambleType}
+  style={`font-size: ${size};`}
+>
+  {text}
+</h1>
 
 <script is:inline>
-  function randomChar() {
-    const possible =
-      "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~" +
-        "0123456789" +
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-        "abcdefghijklmnopqrstuvwxyz";
-    return possible.charAt(Math.floor(Math.random() * possible.length));
+  function getRandomChar(type) {
+    if (type === "cats") {
+      const chars = "pspspsPSPSPS.......";
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    } else {
+      const chars = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+  }
+
+  function mask(chars, progress, type) {
+    const masked = [];
+    for (let i = 0; i < chars.length; i++) {
+      const position = (i + 1) / chars.length;
+      masked.push(position > progress ? getRandomChar(type) : chars[i]);
+    }
+    return masked.join("");
+  }
+
+  function playShuffle() {
+    const el = document.querySelector(".anime-title");
+    if (!el) return;
+
+    const type = el.getAttribute("data-scramble-type") || "default";
+    const chars = (el.dataset.original ?? el.textContent).split("");
+    el.dataset.original = chars.join("");
+
+    const start = performance.now();
+    const duration = 2500;
+
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = mask(chars, progress, type);
+
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = chars.join("");
     }
 
-    function mask(chars, progress) {
-      const masked = [];
-      for (let i = 0; i < chars.length; i++) {
-        const position = (i + 1) / chars.length;
-        masked.push(position > progress ? randomChar() : chars[i]);
-        }
-      return masked.join("");
-      }
+    requestAnimationFrame(tick);
+  }
 
-    function playShuffle() {
-      const el = document.querySelector(".anime-title");
-      if (!el) return;
-
-      const chars = (el.dataset.original ?? el.textContent).split("");
-      el.dataset.original = chars.join("");
-
-      const start = performance.now();
-      const duration = 3600;
-
-      function tick(now) {
-        const progress = Math.min((now - start) / duration, 1);
-        el.textContent = mask(chars, progress);
-
-        if (progress < 1) requestAnimationFrame(tick);
-          else el.textContent = chars.join("");
-        }
-
-      requestAnimationFrame(tick);
-      }
-
-    playShuffle();
-    document.addEventListener("astro:page-load", playShuffle);
+  playShuffle();
+  document.addEventListener("astro:page-load", playShuffle);
 </script>
 
 <style>
   .anime-title {
-    font-size: 2.0rem;  /* Change this value */
+    /* font-size removed here, handled by inline style */
     font-weight: bold;
     margin: 0;
+    font-family: monospace;
+    line-height: 1.2;
   }
 </style>

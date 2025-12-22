@@ -1,0 +1,67 @@
+---
+title: Los Gatos
+slug: cats
+pubDate: 2025-12-22T00:00:00.000Z
+updatedDate: 2025-12-22T00:00:00.000Z
+tags: [ 'short form']
+author: "Michal Roziel"
+image: { src: https://res.cloudinary.com/dzihjnilq/image/upload/v1766440571/cats-10_uowtne.jpg, alt: cats 10, positionx: 50%, positiony: 40% }
+description: pspspsp
+
+
+
+---
+import MasonryLayout from '../../components/Masonry.astro';
+import AnimeTitle from '../../components/AnimeTitle.astro';
+
+import LanguageSelector from '../../components/LanguageSelector.astro';
+
+
+
+<AnimeTitle text="Our neighbourhood tigers" scrambleType="cats" size="1.5rem" />
+
+
+---
+
+<LanguageSelector languages={["english", "deutsch", "polski"]} />
+
+<div id="lang-content" data-language="english" class="content-text">
+  <p class="lang-item english">They are the quiet observers of our cities, whether in narrow alleyways, or busy markets,
+    I find myself pausing to capture the cats I encounter in my daily life.</p>
+  <p class="lang-item deutsch">Sie sind die stillen Beobachter unserer Städte – ob in engen Gassen oder auf belebten Märkten.
+    Ich halte oft an, um die Katzen festzuhalten, denen ich im Alltag begegne.</p>
+  <p class="lang-item polski">Są cichymi obserwatorami naszych miast. Można je spotkać w wąskich alejkach i na gwarnych bazarach.
+    często zatrzymuję się, żeby zrobić zdjęcie kotom, które stają na mojej drodze</p>
+</div>
+
+<script is:inline>{`
+  document.addEventListener("language-changed", (e) => {
+    const container = document.getElementById("lang-content");
+    if (container) {
+      container.setAttribute("data-language", e.detail.language.toLowerCase());
+    }
+  });
+`}</script>
+
+<style>{`
+  .lang-item {
+    display: none;
+    font-style: italic;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+
+  #lang-content[data-language="english"] .english { display: block; }
+  #lang-content[data-language="deutsch"] .deutsch { display: block; }
+  #lang-content[data-language="polski"] .polski { display: block; }
+`}</style>
+
+<MasonryLayout images={[
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/cats-1_ibrtea.jpg", alt: "cats 1" },
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435416/cats-2_onynmw.jpg", alt : "cats 2"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435416/cats-3_wednow.jpg", alt : "cats 3"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435417/cats-4_tgldts.jpg", alt : "cats 4"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435418/cats-5_sjhydb.jpg", alt : "cats 5"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435420/cats-6_zbpqn0.jpg", alt : "cats 6"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435420/cats-7_gcwczb.jpg", alt : "cats 7"},
+  { src: "https://res.cloudinary.com/dzihjnilq/image/upload/v1766435421/cats-8_reelyb.jpg", alt : "cats 8"}]} />
