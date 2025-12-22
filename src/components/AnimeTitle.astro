@@ -8,45 +8,50 @@ const { text = "Animated title" } = Astro.props;
   function randomChar() {
     const possible =
       "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~" +
-      "0123456789" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-      "abcdefghijklmnopqrstuvwxyz";
+        "0123456789" +
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "abcdefghijklmnopqrstuvwxyz";
     return possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-
-  function mask(chars, progress) {
-    const masked = [];
-    for (let i = 0; i < chars.length; i++) {
-      const position = (i + 1) / chars.length;
-      masked.push(position > progress ? randomChar() : chars[i]);
-    }
-    return masked.join("");
-  }
-
-  function playShuffle() {
-    const el = document.querySelector(".anime-title");
-    if (!el) return;
-
-    const chars = (el.dataset.original ?? el.textContent).split("");
-    el.dataset.original = chars.join("");
-
-    const start = performance.now();
-    const duration = 3600;
-
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      el.textContent = mask(chars, progress);
-
-      if (progress < 1) requestAnimationFrame(tick);
-      else el.textContent = chars.join(""); // final = original
     }
 
-    requestAnimationFrame(tick);
-  }
+    function mask(chars, progress) {
+      const masked = [];
+      for (let i = 0; i < chars.length; i++) {
+        const position = (i + 1) / chars.length;
+        masked.push(position > progress ? randomChar() : chars[i]);
+        }
+      return masked.join("");
+      }
 
-  // Initial load
-  playShuffle();
+    function playShuffle() {
+      const el = document.querySelector(".anime-title");
+      if (!el) return;
 
-  // Re-run on Astro client-side navigations (view transitions)
-  document.addEventListener("astro:page-load", playShuffle);
+      const chars = (el.dataset.original ?? el.textContent).split("");
+      el.dataset.original = chars.join("");
+
+      const start = performance.now();
+      const duration = 3600;
+
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        el.textContent = mask(chars, progress);
+
+        if (progress < 1) requestAnimationFrame(tick);
+          else el.textContent = chars.join("");
+        }
+
+      requestAnimationFrame(tick);
+      }
+
+    playShuffle();
+    document.addEventListener("astro:page-load", playShuffle);
 </script>
+
+<style>
+  .anime-title {
+    font-size: 2.0rem;  /* Change this value */
+    font-weight: bold;
+    margin: 0;
+  }
+</style>

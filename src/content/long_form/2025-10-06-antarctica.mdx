@@ -9,11 +9,19 @@ image: { src: https://res.cloudinary.com/dzihjnilq/image/upload/vernadsky-selma_
 description: Sailing the Storm-bound Gateway to Antarctica.
 ---
 
-Starting out from Ushaïa, Argentina I embarked on a Journey like never before.
+
 
 ---
-import MasonryLayout from '../../components/Masonry.astro';
 
+import MasonryLayout from '../../components/Masonry.astro';
+import AnimeTitle from '../../components/AnimeTitle.astro';
+
+<AnimeTitle text="Starting out from Ushaïa, Argentina I embarked on a Journey like never before." />´
+
+
+
+
+---
 <MasonryLayout images={[
     { src: "https://res.cloudinary.com/dzihjnilq/image/upload/start-journey.jpg", alt: "antarctica 2" },
     { src: "https://res.cloudinary.com/dzihjnilq/image/upload/antarctica-zodiac.jpg", alt: "antarctica 3"},
