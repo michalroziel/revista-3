@@ -8,4 +8,39 @@ author: "Michał Roziel"
 image: { src: https://res.cloudinary.com/dzihjnilq/image/upload/saarbruecken-stars_stk2we.jpg, alt: above 1, positionx: 75%, positiony: 0% }
 tags: [ 'moments' ]
 ---
-A moment of quiet reflection atop man-made infrastructure.
+
+import MasonryLayout from '../../components/Masonry.astro';
+import AnimeTitle from '../../components/AnimeTitle.astro';
+import LanguageSelector from '../../components/LanguageSelector.astro';
+
+<LanguageSelector languages={["english", "deutsch", "polski"]} />
+
+<AnimeTitle text="Above the Network" />
+
+<div id="lang-content" data-language="english" class="content-text">
+  <p class="lang-item english">A moment of quiet reflection atop man-made infrastructure.</p>
+  <p class="lang-item deutsch">Ein Moment der stillen Besinnung auf einer von Menschenhand geschaffenen Infrastruktur.</p>
+  <p class="lang-item polski">Chwila spokojnej refleksji na szczycie infrastruktury stworzonej przez człowieka.</p>
+</div>
+
+<script is:inline>{`
+  document.addEventListener("language-changed", (e) => {
+    const container = document.getElementById("lang-content");
+    if (container) {
+      container.setAttribute("data-language", e.detail.language.toLowerCase());
+    }
+  });
+`}</script>
+
+<style>{`
+  .lang-item {
+    display: none;
+    font-style: italic;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+
+  #lang-content[data-language="english"] .english { display: block; }
+  #lang-content[data-language="deutsch"] .deutsch { display: block; }
+  #lang-content[data-language="polski"] .polski { display: block; }
+`}</style>
