@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="title desc">
+  <title id="title">Michal Roziel portrait placeholder</title>
+  <desc id="desc">Minimal placeholder portrait with a circular outline and initials MR.</desc>
+  <rect width="640" height="480" fill="#d9d6cf" />
+  <circle cx="320" cy="190" r="92" fill="#f3f1eb" stroke="#6b6a66" stroke-width="8" />
+  <path
+    d="M206 380c20-64 73-102 114-102s94 38 114 102"
+    fill="none"
+    stroke="#6b6a66"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="10"
+  />
+  <text
+    x="320"
+    y="214"
+    fill="#4c4b47"
+    font-family="monospace"
+    font-size="68"
+    font-weight="700"
+    letter-spacing="8"
+    text-anchor="middle"
+  >
+    MR
+  </text>
+</svg>
