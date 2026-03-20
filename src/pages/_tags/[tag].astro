@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogPost from '../../components/BlogPost.astro';
+import { withBasePath } from '../../utils/withBasePath';
 
 export async function getStaticPaths() {
   const allMuses = await getCollection('moments');
@@ -24,6 +25,6 @@ const { posts } = Astro.props;
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul>
-    {posts.map(post => <BlogPost url={`/moments/${post.id}/`} title={post.data.title} />)}
+    {posts.map(post => <BlogPost url={withBasePath(`/moments/${post.id}`)} title={post.data.title} />)}
   </ul>
 </BaseLayout>

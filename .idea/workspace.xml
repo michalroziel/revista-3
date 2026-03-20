@@ -6,17 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="26b32d43-ac0d-4330-8568-d892312dabfb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/authors/erfianugrah.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/authors/erfianugrah.mdx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/content/long_form/2025-10-06-antarctica.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/long_form/2025-10-06-antarctica.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/moments/2017-09-02-the-beginning.mdx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/moments/2017-09-07-quality.mdx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/moments/2017-09-09-darkroom.mdx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/moments/2025-10-06-abovethenetwork.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/moments/2025-10-06-abovethenetwork.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-who-is-michal.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/zeitweilig/2022-06-03-who-is-michal.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/AuthorLayout.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/AuthorLayout.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/BaseLayout.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BaseLayout.astro" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/michalroziel/Documents/code/michals-personal/revista-3" value="31riiHsbriCHlQhhA7AsOWh9HQu" />
+    </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -76,7 +79,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
       </set>
     </attachedChunks>
   </component>
@@ -103,7 +106,9 @@
       <workItem from="1765998225877" duration="624000" />
       <workItem from="1766137502689" duration="6299000" />
       <workItem from="1766150825458" duration="24670000" />
-      <workItem from="1770643828156" duration="984000" />
+      <workItem from="1770643828156" duration="1832000" />
+      <workItem from="1774047438992" duration="304000" />
+      <workItem from="1774047806079" duration="1086000" />
     </task>
     <servers />
   </component>

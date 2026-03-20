@@ -2,7 +2,6 @@
 import BaseLayout from './BaseLayout.astro';
 import '../styles/glightbox.css';
 import Prose from '../components/Prose.astro';
-import { getImage, Image } from 'astro:assets';
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate.toDateString().split(' ').slice(1).join(' ');
 const publishedDate = frontmatter?.pubDate.toDateString().split(' ').slice(1).join(' ');
@@ -13,25 +12,12 @@ const authorFullName = frontmatter?.author;
 const author = authorFullName.split(' ')[0].toLowerCase();
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
-
-let baseUrl = new URL(Astro.request.url).origin;
-
-const metaImage = image
-  ? await getImage({
-      src: image,
-      alt: alt,
-      width: 1280,
-      height: 720,
-      decoding: 'async',
-      format: 'webp',
-    })
-  : null;
 ---
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${metaImage?.src}` : ''}
-  alt={alt ? metaImage?.attributes.alt : ''}
+  image={image || ''}
+  alt={alt || ''}
   description={description}
   author={author}
   pubDate={updatedDate}
@@ -43,14 +29,14 @@ const metaImage = image
       image ? (
         <div>
           <div class="md:h-[480px] h-[360px]">
-            <Image
+            <img
               src={image}
               alt={alt}
-              inferSize={true}
               decoding="async"
-              format="avif"
               loading="lazy"
-              style={`height: 100%`}
+              width="640"
+              height="480"
+              style={`height: 100%; width: 100%; object-fit: cover;`}
               data-pagefind-meta="image[src]"
             />
           </div>

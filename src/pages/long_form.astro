@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogPost from '../components/BlogPost.astro';
 import { sortByDate } from '../components/sortbydate';
+import { withBasePath } from '../utils/withBasePath';
 const pageTitle = 'Long Form';
 const allLong_form = await getCollection('long_form');
 ---
@@ -13,7 +14,7 @@ const allLong_form = await getCollection('long_form');
       .sort(sortByDate)
       .map(post => (
         <BlogPost
-          url={`${import.meta.env.BASE_URL || ''}/long_form/${post.id}`}
+          url={withBasePath(`/long_form/${post.id}/`)}
           image={post.data?.image?.src || ''}
           alt={post.data?.image?.alt || ''}
           title={post.data?.title || ''}

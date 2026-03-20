@@ -6,9 +6,12 @@ import ScrollToTop from '../components/scroll-to-top';
 import { getImage } from 'astro:assets';
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import mrPlaceholderPng from '../assets/mroziel_placeholder.png';
+import mrFaviconPng from '../assets/favicon-mroziel-512x512.png' ;
+
 let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
-  src: 'https://cdn.erfianugrah.com/Tenhult_3.JPG',
+  src: mrPlaceholderPng,
   alt: 'Cover image for stoicopa website',
   height: 720,
   width: 1280,
@@ -16,8 +19,6 @@ const metaImage = await getImage({
   format: 'webp',
   loading: 'lazy',
 });
-
-import mrFaviconPng from '../assets/favicon-mroziel-512x512.png' ;
 
 const favicon_webp = await getImage({
   src: mrFaviconPng,

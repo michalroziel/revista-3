@@ -124,9 +124,14 @@ decoding="async"
 
 // Join helper using base from data-attr
 function withBasePath(base, path) {
-  const b = base.endsWith('/') ? base : base + '/';
-  const p = String(path || '').replace(/^\/+/, '');
-  return b + p;
+  const baseClean = String(base || '').replace(/^\/+|\/+$/g, '');
+  const pathClean = String(path || '').replace(/^\/+|\/+$/g, '');
+
+  if (!pathClean) {
+    return baseClean ? `/${baseClean}` : '/';
+  }
+
+  return baseClean ? `/${baseClean}/${pathClean}` : `/${pathClean}`;
 }
 
 function updatePosts() {
