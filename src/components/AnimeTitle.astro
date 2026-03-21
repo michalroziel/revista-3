@@ -14,6 +14,7 @@ const {
 
 <h1
   class="anime-title"
+  data-anime-title
   data-scramble-type={scrambleType}
   style={`font-size: ${size};`}
 >
@@ -21,49 +22,78 @@ const {
 </h1>
 
 <script is:inline>
-  function getRandomChar(type) {
-    if (type === "cats") {
-      const chars = "pspspsPSPSPS.......";
-      return chars.charAt(Math.floor(Math.random() * chars.length));
-    } else {
+  (() => {
+    if (window.__animeTitleSetupBound) {
+      return;
+    }
+
+    function getRandomChar(type) {
+      if (type === "cats") {
+        const chars = "pspspsPSPSPS.......";
+        return chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
       const chars = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
       return chars.charAt(Math.floor(Math.random() * chars.length));
     }
-  }
 
-  function mask(chars, progress, type) {
-    const masked = [];
-    for (let i = 0; i < chars.length; i++) {
-      const position = (i + 1) / chars.length;
-      masked.push(position > progress ? getRandomChar(type) : chars[i]);
-    }
-    return masked.join("");
-  }
+    function mask(chars, progress, type) {
+      const masked = [];
 
-  function playShuffle() {
-    const el = document.querySelector(".anime-title");
-    if (!el) return;
+      for (let i = 0; i < chars.length; i++) {
+        const position = (i + 1) / chars.length;
+        masked.push(position > progress ? getRandomChar(type) : chars[i]);
+      }
 
-    const type = el.getAttribute("data-scramble-type") || "default";
-    const chars = (el.dataset.original ?? el.textContent).split("");
-    el.dataset.original = chars.join("");
-
-    const start = performance.now();
-    const duration = 2500;
-
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      el.textContent = mask(chars, progress, type);
-
-      if (progress < 1) requestAnimationFrame(tick);
-      else el.textContent = chars.join("");
+      return masked.join("");
     }
 
-    requestAnimationFrame(tick);
-  }
+    function playShuffle(el) {
+      if (!el) {
+        return;
+      }
 
-  playShuffle();
-  document.addEventListener("astro:page-load", playShuffle);
+      const type = el.getAttribute("data-scramble-type") || "default";
+      const original = el.dataset.original ?? el.textContent ?? "";
+      const chars = original.split("");
+      const duration = 2500;
+      const runId = String((Number(el.dataset.runId ?? "0") + 1));
+
+      el.dataset.original = original;
+      el.dataset.runId = runId;
+
+      const start = performance.now();
+
+      function tick(now) {
+        if (el.dataset.runId !== runId) {
+          return;
+        }
+
+        const progress = Math.min((now - start) / duration, 1);
+        el.textContent = mask(chars, progress, type);
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+          return;
+        }
+
+        el.textContent = original;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    function playAllAnimeTitles() {
+      document.querySelectorAll("[data-anime-title]").forEach((el) => {
+        playShuffle(el);
+      });
+    }
+
+    window.__animeTitleSetupBound = true;
+    window.__playAnimeTitles = playAllAnimeTitles;
+    document.addEventListener("astro:page-load", window.__playAnimeTitles);
+    requestAnimationFrame(window.__playAnimeTitles);
+  })();
 </script>
 
 <style>

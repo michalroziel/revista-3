@@ -1,61 +1,166 @@
 ---
+import antarcticaMapRaw from '../assets/antarctica-map-cropped.svg?raw';
+import southAmericaMapRaw from '../assets/south-america-cropped.svg?raw';
+
 interface Props {
   caption?: string;
   class?: string;
 }
 
 const {
-  caption = 'A hand-drawn route from Ushuaia across the Drake Passage to the Antarctic Peninsula.',
+  caption = 'A pared-down route map from Ushuaia through the Drake Passage to the Antarctic Peninsula.',
   class: className = '',
 } = Astro.props;
+
+const antarcticaMapWidth = 1457.3938;
+const antarcticaMapHeight = 2193.0132;
+const southAmericaMapWidth = 651.3158;
+const southAmericaMapHeight = 448.6842;
+
+const antarcticaMapMarkup = antarcticaMapRaw
+  .replace(/<\?xml[\s\S]*?\?>\s*/i, '')
+  .replace(/<!--[\s\S]*?-->\s*/g, '')
+  .replace(/fill:#fefee9/g, 'fill:none')
+  .replace(/stroke:#000000/g, 'stroke:currentColor')
+  .replace(
+    /<svg\b([^>]*)>/i,
+    `<svg$1 viewBox="0 0 ${antarcticaMapWidth} ${antarcticaMapHeight}" class="drake-route__source-svg" color="currentColor">`
+  );
+
+const southAmericaMapMarkup = southAmericaMapRaw
+  .replace(/<\?xml[\s\S]*?\?>\s*/i, '')
+  .replace(/<!--[\s\S]*?-->\s*/g, '')
+  .replace(
+    /<style[\s\S]*?<\/style>/i,
+    `<style type="text/css">
+      .coastline,
+      .islands,
+      .islandCoastline {
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-miterlimit: 4;
+        stroke-opacity: 0.34;
+        stroke-dasharray: none;
+        vector-effect: non-scaling-stroke;
+      }
+      .coastline,
+      .islands { stroke-width: 0.2; }
+      .islandCoastline { stroke-width: 0.18; }
+      .river,
+      .river1,
+      .river2,
+      .river3,
+      .otherCountries,
+      .countries,
+      .country,
+      .disputedCountries,
+      .iBoundaries,
+      .rBoundaries,
+      .ocean,
+      .lake,
+      .islandLake,
+      .grid {
+        display: none;
+      }
+    </style>`
+  )
+  .replace(
+    /<svg\b([^>]*)>/i,
+    `<svg$1 viewBox="0 0 ${southAmericaMapWidth} ${southAmericaMapHeight}" class="drake-route__source-svg" color="currentColor">`
+  );
 ---
 
 <figure class={`drake-route not-prose ${className}`.trim()} data-drake-route>
-  <div class="drake-route__frame">
+  <div class="drake-route__meta-wrap">
     <div class="drake-route__meta">
       <p class="drake-route__eyebrow">Drake Passage</p>
       <p class="drake-route__subhead">Ushuaia to the Antarctic Peninsula</p>
     </div>
+  </div>
 
+  <div class="drake-route__bleed">
     <svg
       class="drake-route__svg"
-      viewBox="0 0 960 300"
+      viewBox="0 0 1440 980"
       role="img"
-      aria-label="Stylized route from Ushuaia across the Drake Passage to the Antarctic Peninsula."
+      aria-label="Immersive route map from Ushuaia across the Drake Passage to the Antarctic Peninsula."
     >
-      <g class="drake-route__grid" aria-hidden="true">
-        <path d="M86 86C233 69 388 71 546 89C666 102 779 118 890 114" />
-        <path d="M78 138C236 124 401 127 560 146C692 161 794 176 884 171" />
-        <path d="M91 205C247 192 403 196 546 215C658 229 762 235 863 228" />
+      <defs>
+        <radialGradient id="drake-route-focus" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="currentColor" stop-opacity="0.18" />
+          <stop offset="65%" stop-color="currentColor" stop-opacity="0.06" />
+          <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g class="drake-route__latitudes" aria-hidden="true">
+        <path d="M20 176C274 118 530 114 744 142C963 170 1178 190 1420 154" />
+        <path d="M10 346C268 300 544 302 778 336C1018 371 1232 393 1414 386" />
+        <path d="M12 530C294 494 578 500 824 548C1035 590 1228 620 1400 630" />
+        <path d="M22 714C320 694 630 722 886 784C1094 834 1266 878 1402 928" />
       </g>
 
-      <g class="drake-route__land" aria-hidden="true">
-        <path d="M149 47C127 59 116 84 121 107C126 128 141 136 158 145C177 155 184 173 181 193C179 212 187 227 205 241C185 237 166 224 150 205C135 187 128 167 130 149C132 129 123 112 108 98C94 85 90 61 103 44C116 28 134 26 149 47Z" />
-        <path d="M734 207C747 187 773 176 802 178C832 179 860 170 889 148C881 173 865 188 848 196C829 205 813 218 806 240C789 236 772 226 757 216C749 211 742 208 734 207Z" />
-        <path d="M700 222C711 209 728 201 747 202C734 214 724 229 717 247C708 242 703 234 700 222Z" />
+      <g class="drake-route__currents" aria-hidden="true">
+        <path d="M72 150C334 112 600 118 814 158C1004 194 1178 226 1352 222" />
+        <path d="M60 302C318 272 598 282 836 328C1036 366 1190 410 1330 432" />
+        <path d="M48 484C334 460 618 480 862 534C1056 578 1204 622 1322 668" />
+        <path d="M70 666C372 654 652 694 894 760C1086 812 1206 880 1290 944" />
       </g>
 
-      <path
-        class="drake-route__path drake-route__path--base"
-        d="M166 150C245 122 320 108 404 117C487 126 565 153 648 176C702 191 748 198 794 194"
-        aria-hidden="true"
-      />
-      <path
-        class="drake-route__path drake-route__path--animated"
-        d="M166 150C245 122 320 108 404 117C487 126 565 153 648 176C702 191 748 198 794 194"
-        data-route-path
-      />
+      <g class="drake-route__coords" aria-hidden="true">
+        <text class="drake-route__coord" x="138" y="184">56°S</text>
+        <text class="drake-route__coord" x="126" y="352">60°S</text>
+        <text class="drake-route__coord" x="124" y="548">64°S</text>
+        <text class="drake-route__coord" x="136" y="752">68°S</text>
+      </g>
 
-      <circle class="drake-route__anchor" cx="166" cy="150" r="4" aria-hidden="true" />
-      <circle class="drake-route__anchor" cx="794" cy="194" r="4" aria-hidden="true" />
-      <circle class="drake-route__marker" data-route-marker cx="166" cy="150" r="5" aria-hidden="true" />
+      <g
+        class="drake-route__camera-stage"
+        data-camera-stage
+        transform="matrix(1.16 0 0 1.16 462 14)"
+      >
+        <g class="drake-route__land" aria-hidden="true">
+          <g
+            class="drake-route__south-america"
+            transform="translate(-94 -228) scale(1.2)"
+            set:html={southAmericaMapMarkup}
+          />
 
-      <text class="drake-route__label" x="132" y="133">USHUAIA</text>
-      <text class="drake-route__label drake-route__label--mid" x="396" y="96">DRAKE PASSAGE</text>
-      <text class="drake-route__label drake-route__label--destination" x="692" y="165">
-        ANTARCTIC PENINSULA
-      </text>
-      <text class="drake-route__note" x="238" y="199">Roaring forties. Furious fifties. Southern Ocean.</text>
+          <g
+            class="drake-route__antarctica"
+            transform="translate(250 384) scale(0.118)"
+            set:html={antarcticaMapMarkup}
+          />
+        </g>
+
+        <path
+          class="drake-route__path drake-route__path--base"
+          d="M229 202C231 245 240 286 258 328C278 375 309 408 344 427C353 432 362 435 372 435"
+          aria-hidden="true"
+        />
+        <path
+          class="drake-route__path drake-route__path--animated"
+          d="M229 202C231 245 240 286 258 328C278 375 309 408 344 427C353 432 362 435 372 435"
+          data-route-path
+        />
+
+        <circle class="drake-route__anchor" cx="229" cy="202" r="4.5" aria-hidden="true" />
+        <circle class="drake-route__anchor" cx="372" cy="435" r="4.5" aria-hidden="true" />
+        <circle class="drake-route__focus" data-route-focus cx="229" cy="202" r="34" aria-hidden="true" />
+        <circle class="drake-route__marker" data-route-marker cx="229" cy="202" r="5.5" aria-hidden="true" />
+
+        <text class="drake-route__label" x="84" y="218" text-anchor="end">USHUAIA</text>
+        <text class="drake-route__label drake-route__label--minor" x="98" y="150" text-anchor="end">TIERRA DEL FUEGO</text>
+        <text class="drake-route__label drake-route__label--minor" x="146" y="286" text-anchor="end">CAPE HORN</text>
+        <text class="drake-route__label drake-route__label--mid" x="68" y="396" text-anchor="start">
+          DRAKE PASSAGE
+        </text>
+        <text class="drake-route__label drake-route__label--minor" x="392" y="388" text-anchor="start">SOUTH SHETLANDS</text>
+        <text class="drake-route__label drake-route__label--destination" x="340" y="634" text-anchor="start">
+          ANTARCTIC PENINSULA
+        </text>
+      </g>
     </svg>
   </div>
 
@@ -66,8 +171,10 @@ const {
 
 <script is:inline>
   (() => {
-    const setupDrakeRoutes = () => {
+      const setupDrakeRoutes = () => {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const overviewFrame = { scale: 1.16, tx: 462, ty: 14 };
+      const endFrame = { scale: 1.16, tx: 462, ty: 14 };
 
       document.querySelectorAll('[data-drake-route]').forEach((root) => {
         if (root.dataset.drakeReady === 'true') {
@@ -76,6 +183,8 @@ const {
 
         const path = root.querySelector('[data-route-path]');
         const marker = root.querySelector('[data-route-marker]');
+        const focus = root.querySelector('[data-route-focus]');
+        const stage = root.querySelector('[data-camera-stage]');
 
         if (!path || !marker) {
           return;
@@ -88,23 +197,57 @@ const {
         root.style.setProperty('--route-length', `${totalLength}`);
         root.classList.add('is-enhanced');
 
+        const setStageMatrix = (scale, tx, ty) => {
+          if (!stage) {
+            return;
+          }
+
+          stage.setAttribute(
+            'transform',
+            `matrix(${scale.toFixed(4)} 0 0 ${scale.toFixed(4)} ${tx.toFixed(2)} ${ty.toFixed(2)})`
+          );
+        };
+
         const placeMarker = (progress) => {
           const point = path.getPointAtLength(totalLength * progress);
           marker.setAttribute('cx', point.x.toFixed(2));
           marker.setAttribute('cy', point.y.toFixed(2));
+
+          if (focus) {
+            focus.setAttribute('cx', point.x.toFixed(2));
+            focus.setAttribute('cy', point.y.toFixed(2));
+          }
+
+          return point;
         };
 
+        const frameStageToProgress = (progress) => {
+          if (!stage) {
+            return;
+          }
+
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const scale = overviewFrame.scale + (endFrame.scale - overviewFrame.scale) * eased;
+          const tx = overviewFrame.tx + (endFrame.tx - overviewFrame.tx) * eased;
+          const ty = overviewFrame.ty + (endFrame.ty - overviewFrame.ty) * eased;
+          setStageMatrix(scale, tx, ty);
+        };
+
+        setStageMatrix(overviewFrame.scale, overviewFrame.tx, overviewFrame.ty);
+
         if (reduceMotion) {
-          path.style.strokeDasharray = `${totalLength}`;
+          path.style.strokeDasharray = 'none';
           path.style.strokeDashoffset = '0';
           placeMarker(1);
+          setStageMatrix(overviewFrame.scale, overviewFrame.tx, overviewFrame.ty);
           root.classList.add('is-visible', 'is-complete');
           return;
         }
 
-        path.style.strokeDasharray = `${totalLength}`;
-        path.style.strokeDashoffset = `${totalLength}`;
+        path.style.strokeDasharray = `0 ${totalLength}`;
+        path.style.strokeDashoffset = '0';
         placeMarker(0);
+        frameStageToProgress(0);
 
         const startAnimation = () => {
           if (root.dataset.drakeStarted === 'true') {
@@ -114,19 +257,26 @@ const {
           root.dataset.drakeStarted = 'true';
           root.classList.add('is-visible');
 
-          const duration = 2800;
+          const duration = 6200;
           const startedAt = performance.now();
 
           const tick = (now) => {
             const progress = Math.min((now - startedAt) / duration, 1);
-            path.style.strokeDashoffset = `${totalLength * (1 - progress)}`;
+            const drawnLength = totalLength * progress;
+            path.style.strokeDasharray = `${drawnLength} ${totalLength}`;
+            path.style.strokeDashoffset = '0';
             placeMarker(progress);
+            frameStageToProgress(progress);
 
             if (progress < 1) {
               requestAnimationFrame(tick);
               return;
             }
 
+            path.style.strokeDasharray = `${totalLength} ${totalLength}`;
+            path.style.strokeDashoffset = '0';
+            placeMarker(1);
+            frameStageToProgress(1);
             root.classList.add('is-complete');
           };
 
@@ -172,17 +322,16 @@ const {
     color: inherit;
   }
 
-  .drake-route__frame {
-    position: relative;
-    padding: 1rem 0 0.5rem;
+  .drake-route__meta-wrap {
+    max-width: 31rem;
+    margin: 0 auto;
+    padding: 1rem 0 0;
   }
 
   .drake-route__meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
+    display: grid;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
   }
 
   .drake-route__eyebrow,
@@ -204,7 +353,15 @@ const {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     opacity: 0.48;
-    text-align: right;
+  }
+
+  .drake-route__bleed {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin-top: 0.75rem;
+    margin-left: calc(50% - 50vw);
+    overflow: clip;
   }
 
   .drake-route__svg {
@@ -214,19 +371,44 @@ const {
     overflow: visible;
   }
 
-  .drake-route__grid path {
+  .drake-route__latitudes path,
+  .drake-route__currents path {
     fill: none;
     stroke: currentColor;
-    stroke-width: 1;
+    stroke-width: 1.1;
+  }
+
+  .drake-route__latitudes path {
     stroke-dasharray: 6 12;
+    opacity: 0.16;
+  }
+
+  .drake-route__currents path {
+    stroke-dasharray: 3 12;
     opacity: 0.12;
   }
 
-  .drake-route__land path {
+  .drake-route__camera-stage {
+    transform-origin: center;
+  }
+
+  .drake-route__coastline,
+  .drake-route__landmass,
+  .drake-route__island {
     fill: none;
     stroke: currentColor;
     stroke-width: 1.6;
-    opacity: 0.28;
+    opacity: 0.34;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .drake-route__detail {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    opacity: 0.2;
   }
 
   .drake-route__path {
@@ -239,11 +421,11 @@ const {
 
   .drake-route__path--base {
     stroke-width: 2.25;
-    opacity: 0.16;
+    opacity: 0.18;
   }
 
   .drake-route__path--animated {
-    stroke-width: 3.25;
+    stroke-width: 3.15;
     opacity: 0.88;
   }
 
@@ -252,17 +434,39 @@ const {
     opacity: 0.45;
   }
 
+  .drake-route__focus {
+    fill: url(#drake-route-focus);
+    opacity: 0;
+    transition: opacity 240ms ease-out;
+  }
+
   .drake-route__marker {
     fill: currentColor;
     opacity: 0;
     transition: opacity 180ms ease-out;
   }
 
+  .drake-route.is-visible .drake-route__focus,
   .drake-route.is-visible .drake-route__marker {
     opacity: 0.95;
   }
 
+  .drake-route.is-complete .drake-route__focus {
+    opacity: 0.85;
+    animation: drake-route-focus-pulse 2.6s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .drake-route.is-complete .drake-route__marker {
+    opacity: 1;
+    animation: drake-route-dot-pulse 2.6s ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
   .drake-route__label,
+  .drake-route__coord,
   .drake-route__note {
     fill: currentColor;
     font-family: var(--font-overpass-mono), 'Overpass Mono', monospace;
@@ -271,15 +475,28 @@ const {
   .drake-route__label {
     font-size: 13px;
     letter-spacing: 0.16em;
-    opacity: 0.58;
+    opacity: 0.62;
   }
 
   .drake-route__label--mid {
-    opacity: 0.72;
+    letter-spacing: 0.22em;
+    opacity: 0.76;
   }
 
   .drake-route__label--destination {
-    text-anchor: start;
+    letter-spacing: 0.12em;
+  }
+
+  .drake-route__label--minor {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    opacity: 0.48;
+  }
+
+  .drake-route__coord {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    opacity: 0.42;
   }
 
   .drake-route__note {
@@ -290,9 +507,36 @@ const {
 
   .drake-route__caption {
     margin-top: 0.5rem;
+    max-width: 31rem;
+    margin-right: auto;
+    margin-left: auto;
     font-size: 0.94rem;
     line-height: 1.5;
     opacity: 0.7;
+  }
+
+  @keyframes drake-route-dot-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.18);
+    }
+  }
+
+  @keyframes drake-route-focus-pulse {
+    0%,
+    100% {
+      opacity: 0.68;
+      transform: scale(0.92);
+    }
+
+    50% {
+      opacity: 0.92;
+      transform: scale(1.18);
+    }
   }
 
   @media (max-width: 720px) {
@@ -300,19 +544,23 @@ const {
       margin: 2rem 0 2.5rem;
     }
 
-    .drake-route__meta {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.3rem;
+    .drake-route__meta-wrap,
+    .drake-route__caption {
+      max-width: 100%;
     }
 
-    .drake-route__subhead {
-      text-align: left;
+    .drake-route__bleed {
+      margin-top: 0.5rem;
     }
 
     .drake-route__label {
       font-size: 11px;
       letter-spacing: 0.12em;
+    }
+
+    .drake-route__label--minor,
+    .drake-route__coord {
+      font-size: 9px;
     }
 
     .drake-route__note {
@@ -321,8 +569,10 @@ const {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .drake-route__focus,
     .drake-route__marker {
       transition: none;
+      animation: none;
     }
   }
 </style>
