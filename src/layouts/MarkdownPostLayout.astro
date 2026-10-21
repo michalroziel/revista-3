@@ -7,6 +7,7 @@ import { getImage } from 'astro:assets';
 import HeroImage from '../components/HeroImage.tsx';
 import NextPost from '../components/NextPost.astro';
 import { withBasePath } from '../utils/withBasePath';  // ← add this
+import { cloudinary } from '../utils/cloudinary';
 
 
 const { frontmatter, currentId, collection } = Astro.props;
@@ -20,7 +21,6 @@ const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;
 const positiony = frontmatter?.image?.positiony;
-let baseUrl = new URL(Astro.request.url).origin;
 
 // build helpers once
 const coll = (collection || '').replace(/^\/+|\/+$/g, '');
@@ -30,7 +30,7 @@ const tagHref = (t: string) => withBasePath(`/${coll}/tags/${encodeURIComponent(
 
 const backgroundImage = image
   ? await getImage({
-      src: image,
+      src: cloudinary(image, { width: 2560 }),
       alt: alt,
       width: 3840,
       height: 2160,
@@ -41,9 +41,10 @@ const backgroundImage = image
     })
   : null;
 
+// the mobile hero is portrait, so it's limited by height rather than width
 const mobileBackgroundImage = image
   ? await getImage({
-      src: image,
+      src: cloudinary(image, { height: 2000 }),
       alt: alt,
       width: 1920,
       height: 1080,
@@ -55,9 +56,10 @@ const mobileBackgroundImage = image
     })
   : null;
 
+// link previews want a JPEG at the exact size BaseLayout declares (1280x720)
 const metaImage = image
   ? await getImage({
-      src: image,
+      src: cloudinary(image, { width: 1280, height: 720, crop: 'fill', format: 'jpg' }),
       alt: alt,
       width: 1280,
       height: 720,
@@ -80,12 +82,12 @@ const tagsWithoutCollection = Array.isArray(frontmatter.tags)
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${metaImage?.src}` : ''}
+  image={metaImage ? new URL(metaImage.src, Astro.url).href : ''}
   alt={alt ? metaImage?.attributes.alt : ''}
   description={description}
   author={author}
-  pubDate={updatedDate}
-  updatedDate={publishedDate}
+  pubDate={publishedDate}
+  updatedDate={updatedDate}
   is404Page={false}
 >
 

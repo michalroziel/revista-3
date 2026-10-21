@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Prose from './Prose.astro';
+import { cloudinary } from '../utils/cloudinary';
 
 import mrPlaceholder from '../assets/mroziel_placeholder.png';
 
@@ -24,7 +25,7 @@ const shouldRender = otherPosts.length > 0;
 
 async function optimizeImage(src: string | ImageMetadata, alt: string) {
   return await getImage({
-    src,
+    src: typeof src === 'string' ? cloudinary(src, { width: 640, height: 360, crop: 'fill' }) : src,
     alt,
     width: 640,
     height: 360,

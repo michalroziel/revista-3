@@ -4,6 +4,7 @@ const { pageTitle } = Astro.props;
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import { withBasePath } from '../utils/withBasePath';
+import { cloudinary } from '../utils/cloudinary';
 
 const collections = ['long_form', 'short_form', 'moments', 'zeitweilig'];
 let allImages = { large: [], medium: [], small: [] };
@@ -17,7 +18,7 @@ for (let collection of collections) {
   const imagePromises = postsWithImages.map(async post => {
     const [largeImage, mediumImage, smallImage] = await Promise.all([
       getImage({
-        src: post.data.image.src,
+        src: cloudinary(post.data.image.src, { width: 1920 }),
         alt: post.data.image.alt,
         width: 1920,
         height: 1080,
@@ -26,7 +27,7 @@ for (let collection of collections) {
         quality: 65,
       }),
       getImage({
-        src: post.data.image.src,
+        src: cloudinary(post.data.image.src, { width: 1280 }),
         alt: post.data.image.alt,
         width: 1280,
         height: 720,
@@ -35,7 +36,7 @@ for (let collection of collections) {
         quality: 65,
       }),
       getImage({
-        src: post.data.image.src,
+        src: cloudinary(post.data.image.src, { width: 854 }),
         alt: post.data.image.alt,
         width: 854,
         height: 480,

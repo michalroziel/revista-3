@@ -35,21 +35,64 @@ export default function HeroImage({
     const parallaxEl = parallaxRef.current;
     if (!heroEl || !parallaxEl) return;
 
-    function updateParallax() {
-      const scrollPosition = window.pageYOffset;
-      const parallaxFactor = 0.3;
-      parallaxEl.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`;
-    }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const desktopBreakpoint = window.matchMedia('(min-width: 768px)');
+    let rafId: number | null = null;
+    let isActive = false;
+
+    const applyParallax = () => {
+      rafId = null;
+
+      if (!desktopBreakpoint.matches || prefersReducedMotion.matches) {
+        parallaxEl.style.transform = 'translate3d(0, 0, 0)';
+        return;
+      }
+
+      const rect = heroEl.getBoundingClientRect();
+      const heroHeight = rect.height || window.innerHeight;
+      const travel = Math.min(Math.max(-rect.top * 0.18, 0), heroHeight * 0.16);
+      parallaxEl.style.transform = `translate3d(0, ${travel.toFixed(2)}px, 0)`;
+    };
+
+    const requestParallax = () => {
+      if (!isActive || rafId !== null) {
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(applyParallax);
+    };
+
+    const enableParallax = () => {
+      if (isActive) {
+        return;
+      }
+
+      isActive = true;
+      parallaxEl.style.willChange = 'transform';
+      window.addEventListener('scroll', requestParallax, { passive: true });
+      window.addEventListener('resize', requestParallax, { passive: true });
+      requestParallax();
+    };
+
+    const disableParallax = () => {
+      isActive = false;
+      parallaxEl.style.willChange = 'auto';
+      window.removeEventListener('scroll', requestParallax);
+      window.removeEventListener('resize', requestParallax);
+
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            parallaxEl.style.willChange = 'transform';
-            window.addEventListener('scroll', updateParallax);
+            enableParallax();
           } else {
-            parallaxEl.style.willChange = 'auto';
-            window.removeEventListener('scroll', updateParallax);
+            disableParallax();
           }
         });
       },
@@ -57,8 +100,24 @@ export default function HeroImage({
     );
 
     observer.observe(heroEl);
+
+    const handleMotionPreference = () => {
+      if (!desktopBreakpoint.matches || prefersReducedMotion.matches) {
+        parallaxEl.style.transform = 'translate3d(0, 0, 0)';
+      }
+
+      if (isActive) {
+        requestParallax();
+      }
+    };
+
+    prefersReducedMotion.addEventListener('change', handleMotionPreference);
+    desktopBreakpoint.addEventListener('change', handleMotionPreference);
+
     return () => {
-      window.removeEventListener('scroll', updateParallax);
+      disableParallax();
+      prefersReducedMotion.removeEventListener('change', handleMotionPreference);
+      desktopBreakpoint.removeEventListener('change', handleMotionPreference);
       observer.disconnect();
     };
   }, []);
@@ -134,8 +193,12 @@ export default function HeroImage({
         </div>
       </div>
 
-      {/* ensure image is discoverable for crawlers/accessibility */}
-      <img src={backgroundImage} alt={alt} className="sr-only" />
+      {/* ensure image is discoverable for crawlers/accessibility;
+          same breakpoint as the backgrounds, so it reuses the image already loaded */}
+      <picture>
+        <source media="(min-width: 768px)" srcSet={backgroundImage} />
+        <img src={mobileBackgroundImage} alt={alt} className="sr-only" />
+      </picture>
     </div>
   );
 }

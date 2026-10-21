@@ -4,6 +4,7 @@ import GetRandomImage from '../components/getRandomImage.astro';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import { withBasePath } from '../utils/withBasePath';
+import { cloudinary } from '../utils/cloudinary';
 
 const { directory, title } = Astro.props;
 const allContent = await getCollection(directory);
@@ -18,7 +19,7 @@ for (const post of allContent) {
     if (post.data.image?.src) {
       const [largeImage, mediumImage, smallImage] = await Promise.all([
         getImage({
-          src: post.data.image.src,
+          src: cloudinary(post.data.image.src, { width: 1920 }),
           alt: post.data.image.alt,
           width: 1920,
           height: 1080,
@@ -27,7 +28,7 @@ for (const post of allContent) {
           quality: 65,
         }),
         getImage({
-          src: post.data.image.src,
+          src: cloudinary(post.data.image.src, { width: 1280 }),
           alt: post.data.image.alt,
           width: 1280,
           height: 720,
@@ -36,7 +37,7 @@ for (const post of allContent) {
           quality: 65,
         }),
         getImage({
-          src: post.data.image.src,
+          src: cloudinary(post.data.image.src, { width: 854 }),
           alt: post.data.image.alt,
           width: 854,
           height: 480,

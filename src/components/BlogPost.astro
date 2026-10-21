@@ -1,10 +1,11 @@
 ---
 import { Image } from 'astro:assets';
+import { cloudinary } from '../utils/cloudinary';
 
 const {
   title,
   url,
-  image,
+  image: imageSrc,
   alt,
   description,
   pubDate,
@@ -12,6 +13,8 @@ const {
   positiony,
   unoptimized = false,
 } = Astro.props;
+// the card is up to 480px tall and crops to fill, so limit by height
+const image = cloudinary(imageSrc, { height: 1080 });
 const publishedDate = new Date(pubDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',

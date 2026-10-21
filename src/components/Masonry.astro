@@ -1,22 +1,20 @@
 ---
 import '../styles/MasonryLayout.css';
-import { getImage } from 'astro:assets';
+import { cloudinary, isCloudinary } from '../utils/cloudinary';
 const { images } = Astro.props;
-const imageAssets = await Promise.all(
-  images.map(async image => {
-    if (image) {
-      return await getImage({
-        src: image.src,
+const thumbWidths = [400, 800, 1200];
+const imageAssets = images.map(image =>
+  image
+    ? {
+        src: cloudinary(image.src, { width: 800 }),
+        srcset: isCloudinary(image.src)
+          ? thumbWidths.map(w => `${cloudinary(image.src, { width: w })} ${w}w`).join(', ')
+          : undefined,
+        // full-size view in the lightbox
+        href: cloudinary(image.src, { width: 2400 }),
         alt: image.alt,
-        width: 3840,
-        height: 2160,
-        decoding: 'async',
-        format: 'avif',
-        loading: 'lazy',
-      });
-    }
-    return null;
-  })
+      }
+    : null
 );
 ---
 
@@ -30,14 +28,16 @@ const imageAssets = await Promise.all(
           id="gallery"
           style={`--stagger-index: ${index}`}
         >
-          <a href={imageAsset.src} class="image-link glightbox">
+          <a href={imageAsset.href} class="image-link glightbox">
             <img
               src={imageAsset.src}
-              alt={imageAsset.attributes.alt}
-              loading={imageAsset.attributes.loading}
-              decoding={imageAsset.attributes.decoding}
-              width={imageAsset.attributes.width}
-              height={imageAsset.attributes.height}
+              srcset={imageAsset.srcset}
+              sizes="(max-width: 768px) 50vw, 400px"
+              alt={imageAsset.alt}
+              loading="lazy"
+              decoding="async"
+              width="3840"
+              height="2160"
               class="image"
             />
           </a>

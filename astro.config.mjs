@@ -86,6 +86,7 @@ export default defineConfig({
         display: "swap",
         fallbacks: ["monospace"],
         weights: [200, 400, 700, 900],
+        subsets: ["latin", "latin-ext"],
         optimizedFallbacks: true,
       },
       {
@@ -95,6 +96,7 @@ export default defineConfig({
         display: "swap",
         fallbacks: ["monospace"],
         weights: [300, 400, 700],
+        subsets: ["latin", "latin-ext"],
         optimizedFallbacks: true,
       },
     ],
