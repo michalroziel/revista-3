@@ -1,5 +1,4 @@
 ---
-import Pagefind from './Pagefind.astro';
 import { withBasePath } from '../utils/withBasePath';
 ---
 
@@ -9,8 +8,8 @@ import { withBasePath } from '../utils/withBasePath';
   <a class="fade-effect" href={withBasePath('/short_form/')}> Short Form </a>
   <a class="fade-effect" href={withBasePath('/long_form/')}> Long Form </a>  <!-- changed -->
   <a class="fade-effect" href={withBasePath('/zeitweilig/')}> Zeitweilig </a>
+  <a class="fade-effect" href={withBasePath('/map/')}> Map </a>
   <!-- <a href="/tags/">Tags</a> -->
-  <Pagefind class="fade-effect" />
   <slot />
 </div>
 <style>
@@ -67,11 +66,5 @@ import { withBasePath } from '../utils/withBasePath';
 
   .fade-effect:hover {
     opacity: 0.5;
-  }
-  .nav-search {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    width: 100%; /* make the search box take up the whole width */
   }
 </style>

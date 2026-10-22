@@ -1,0 +1,517 @@
+---
+import { geoEqualEarth, geoGraticule, geoPath } from 'd3-geo';
+import { feature } from 'topojson-client';
+import type { GeometryCollection, Topology } from 'topojson-specification';
+import land110m from 'world-atlas/land-110m.json';
+import { cloudinary } from '../utils/cloudinary';
+
+export interface Place {
+  id: string;
+  title: string;
+  url: string;
+  collection: string;
+  place: string;
+  lat: number;
+  lng: number;
+  image?: { src: string; positionx?: string; positiony?: string };
+  pubDate: Date;
+}
+
+interface Props {
+  places: Place[];
+}
+
+const { places } = Astro.props;
+
+// The map is projected at build time, so the page ships plain SVG and no map library.
+const width = 1000;
+const sphere = { type: 'Sphere' } as const;
+const projection = geoEqualEarth().fitWidth(width, sphere);
+const path = geoPath(projection).digits(1);
+const [[, top], [, bottom]] = path.bounds(sphere);
+const height = Math.ceil(bottom - top);
+
+const topology = land110m as unknown as Topology<{ land: GeometryCollection }>;
+const landPath = path(feature(topology, topology.objects.land));
+const spherePath = path(sphere);
+const graticulePath = path(geoGraticule().step([30, 30])());
+
+const formatCoord = (value: number, positive: string, negative: string) =>
+  `${Math.abs(value).toFixed(2)}°${value >= 0 ? positive : negative}`;
+
+// north to south, so the numbering reads down the map
+const pins = [...places]
+  .sort((a, b) => b.lat - a.lat)
+  .map((place, index) => {
+    const [x, y] = projection([place.lng, place.lat]) ?? [0, 0];
+    const left = (x / width) * 100;
+    const topPct = ((y - top) / height) * 100;
+    return {
+      ...place,
+      number: String(index + 1).padStart(2, '0'),
+      left,
+      top: topPct,
+      // open the preview card towards the middle of the map so it stays on screen
+      flipX: left > 60,
+      flipY: topPct > 55,
+      coords: `${formatCoord(place.lat, 'N', 'S')} ${formatCoord(place.lng, 'E', 'W')}`,
+      cardImage: place.image && cloudinary(place.image.src, { width: 480 }),
+      thumbnail: place.image && cloudinary(place.image.src, { width: 192 }),
+      // keep the focal point the post's hero image uses
+      focus: `object-position: ${place.image?.positionx ?? '50%'} ${place.image?.positiony ?? '50%'}`,
+      kind: place.collection.replace('_', ' '),
+      year: place.pubDate.getFullYear(),
+    };
+  });
+---
+
+<figure class="photo-map not-prose" data-photo-map>
+  <div class="photo-map__stage">
+    <svg
+      class="photo-map__svg"
+      viewBox={`0 ${top.toFixed(1)} ${width} ${height}`}
+      role="img"
+      aria-label={`World map with ${pins.length} places where these photographs were taken.`}
+    >
+      <path class="photo-map__sphere" d={spherePath}></path>
+      <path class="photo-map__graticule" d={graticulePath}></path>
+      <path class="photo-map__land" d={landPath}></path>
+    </svg>
+
+    <ol class="photo-map__pins">
+      {
+        pins.map((pin, index) => (
+          <li
+            class="photo-map__pin"
+            style={`left: ${pin.left.toFixed(2)}%; top: ${pin.top.toFixed(2)}%; --stagger-index: ${index}`}
+            data-pin={pin.id}
+            data-flip-x={pin.flipX ? '' : undefined}
+            data-flip-y={pin.flipY ? '' : undefined}
+          >
+            <a class="photo-map__pin-link" href={pin.url} aria-label={`${pin.title}, ${pin.place}`}>
+              <span class="photo-map__dot" aria-hidden="true" />
+              <span class="photo-map__card" aria-hidden="true">
+                {pin.cardImage && (
+                  <img
+                    class="photo-map__card-image"
+                    src={pin.cardImage}
+                    alt=""
+                    width="480"
+                    height="320"
+                    loading="lazy"
+                    decoding="async"
+                    style={pin.focus}
+                  />
+                )}
+                <span class="photo-map__card-body">
+                  <span class="photo-map__card-title">{pin.title}</span>
+                  <span class="photo-map__card-meta">{pin.place}</span>
+                  <span class="photo-map__card-meta">{pin.coords}</span>
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <ol class="photo-map__index">
+    {
+      pins.map(pin => (
+        <li>
+          <a class="photo-map__entry" href={pin.url} data-pin-target={pin.id}>
+            <span class="photo-map__entry-number">{pin.number}</span>
+            {pin.thumbnail && (
+              <img
+                class="photo-map__entry-image"
+                src={pin.thumbnail}
+                alt=""
+                width="192"
+                height="128"
+                loading="lazy"
+                decoding="async"
+                style={pin.focus}
+              />
+            )}
+            <span class="photo-map__entry-text">
+              <span class="photo-map__entry-title">{pin.title}</span>
+              <span class="photo-map__entry-place">{pin.place}</span>
+            </span>
+            <span class="photo-map__entry-meta">
+              <span>{pin.coords}</span>
+              <span>
+                {pin.kind} · {pin.year}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</figure>
+
+<script>
+  function setupPhotoMaps() {
+    document.querySelectorAll<HTMLElement>('[data-photo-map]').forEach(root => {
+      if (root.dataset.ready === 'true') return;
+      root.dataset.ready = 'true';
+
+      const pins = Array.from(root.querySelectorAll<HTMLElement>('[data-pin]'));
+      const pinFor = (id: string | undefined) => pins.find(pin => pin.dataset.pin === id);
+      let lastPointer = 'mouse';
+
+      const setActive = (active?: HTMLElement) => {
+        pins.forEach(pin => pin.classList.toggle('is-active', pin === active));
+      };
+
+      // On touch screens the first tap on a pin shows its preview, the second follows the link.
+      pins.forEach(pin => {
+        const link = pin.querySelector('a');
+        const card = pin.querySelector<HTMLElement>('.photo-map__card');
+        link?.addEventListener('pointerdown', event => {
+          lastPointer = event.pointerType;
+        });
+        link?.addEventListener('click', event => {
+          const cardShown = card && getComputedStyle(card).display !== 'none';
+          if (lastPointer === 'touch' && cardShown && !pin.classList.contains('is-active')) {
+            event.preventDefault();
+            setActive(pin);
+          }
+        });
+      });
+
+      root.addEventListener('click', event => {
+        if (!(event.target as Element).closest('[data-pin]')) setActive();
+      });
+
+      // Hovering an entry in the index highlights its pin on the map.
+      root.querySelectorAll<HTMLElement>('[data-pin-target]').forEach(entry => {
+        const pin = pinFor(entry.dataset.pinTarget);
+        entry.addEventListener('pointerenter', () => pin?.classList.add('is-highlighted'));
+        entry.addEventListener('pointerleave', () => pin?.classList.remove('is-highlighted'));
+        entry.addEventListener('focus', () => pin?.classList.add('is-highlighted'));
+        entry.addEventListener('blur', () => pin?.classList.remove('is-highlighted'));
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupPhotoMaps);
+</script>
+
+<style>
+  .photo-map {
+    /* the body is a wrapping flex column, which measures items at their narrowest width;
+       without a definite width the map's height is undercounted and the footer overlaps the index */
+    width: 100%;
+    margin: 0;
+    color: inherit;
+  }
+
+  .photo-map__stage {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .photo-map__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .photo-map__sphere {
+    fill: none;
+    stroke: currentColor;
+    stroke-opacity: 0.22;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .photo-map__graticule {
+    fill: none;
+    stroke: currentColor;
+    stroke-opacity: 0.08;
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .photo-map__land {
+    fill: currentColor;
+    fill-opacity: 0.05;
+    stroke: currentColor;
+    stroke-opacity: 0.42;
+    stroke-width: 0.75;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    animation: photo-map-fade 1.2s ease-out both;
+  }
+
+  .photo-map__pins {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .photo-map__pin {
+    position: absolute;
+    width: 0;
+    height: 0;
+    animation: photo-map-fade 0.6s ease-out both;
+    animation-delay: calc(400ms + var(--stagger-index) * 120ms);
+  }
+
+  .photo-map__pin.is-active,
+  .photo-map__pin:hover,
+  .photo-map__pin:focus-within {
+    z-index: 2;
+  }
+
+  .photo-map__pin-link {
+    position: absolute;
+    left: -14px;
+    top: -14px;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 999px;
+  }
+
+  .photo-map__pin-link:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .photo-map__dot {
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 200ms ease;
+  }
+
+  .photo-map__dot::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: inherit;
+    border: 1px solid currentColor;
+    opacity: 0;
+    animation: photo-map-pulse 2.8s ease-out infinite;
+    animation-delay: calc(var(--stagger-index) * 400ms);
+  }
+
+  .photo-map__pin-link:hover .photo-map__dot,
+  .photo-map__pin-link:focus-visible .photo-map__dot,
+  .photo-map__pin.is-active .photo-map__dot,
+  .photo-map__pin.is-highlighted .photo-map__dot {
+    transform: scale(1.5);
+  }
+
+  .photo-map__card {
+    position: absolute;
+    left: 24px;
+    top: 4px;
+    width: clamp(160px, 20vw, 240px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 6px;
+    background: rgb(244, 242, 238);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+  }
+
+  :global(html.dark) .photo-map__card {
+    background: rgb(44, 43, 48);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  .photo-map__pin[data-flip-x] .photo-map__card {
+    left: auto;
+    right: 24px;
+  }
+
+  .photo-map__pin[data-flip-y] .photo-map__card {
+    top: auto;
+    bottom: 4px;
+  }
+
+  .photo-map__pin-link:hover .photo-map__card,
+  .photo-map__pin-link:focus-visible .photo-map__card,
+  .photo-map__pin.is-active .photo-map__card {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .photo-map__card-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .photo-map__card-body {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.6rem 0.75rem 0.7rem;
+  }
+
+  .photo-map__card-title,
+  .photo-map__card-meta,
+  .photo-map__entry-number,
+  .photo-map__entry-meta {
+    font-family: var(--font-overpass-mono), 'Overpass Mono', monospace;
+  }
+
+  .photo-map__card-title {
+    font-size: 0.95rem;
+  }
+
+  .photo-map__card-meta {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .photo-map__index {
+    list-style: none;
+    max-width: 1200px;
+    margin: 2.5rem auto 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  }
+
+  .photo-map__entry {
+    display: grid;
+    grid-template-columns: 2rem 96px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .photo-map__entry:hover {
+    opacity: 0.6;
+  }
+
+  .photo-map__entry-number {
+    font-size: 0.78rem;
+    opacity: 0.5;
+  }
+
+  .photo-map__entry-image {
+    width: 96px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .photo-map__entry-text {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .photo-map__entry-title {
+    font-size: 1.05rem;
+  }
+
+  .photo-map__entry-place {
+    font-size: 0.85rem;
+    opacity: 0.6;
+  }
+
+  .photo-map__entry-meta {
+    display: grid;
+    gap: 0.1rem;
+    justify-items: end;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    text-align: right;
+  }
+
+  @media (max-width: 639px) {
+    /* too little room for a floating preview; the index below does that job */
+    .photo-map__card {
+      display: none;
+    }
+
+    .photo-map__dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .photo-map__dot::after {
+      inset: -4px;
+    }
+
+    .photo-map__entry {
+      grid-template-columns: 72px 1fr;
+      gap: 0.85rem;
+    }
+
+    .photo-map__entry-number {
+      display: none;
+    }
+
+    .photo-map__entry-image {
+      width: 72px;
+      height: 48px;
+    }
+
+    .photo-map__entry-meta {
+      grid-column: 2;
+      justify-items: start;
+      text-align: left;
+    }
+  }
+
+  @keyframes photo-map-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes photo-map-pulse {
+    0% {
+      opacity: 0.6;
+      transform: scale(0.6);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-map__land,
+    .photo-map__pin,
+    .photo-map__dot::after {
+      animation: none;
+    }
+  }
+</style>
