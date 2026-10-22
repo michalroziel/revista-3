@@ -64,6 +64,8 @@ jobs:
 
 
   deploy-to-github-pages:
+    # pull requests only build; publishing happens once changes reach main
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read

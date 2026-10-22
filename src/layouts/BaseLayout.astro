@@ -66,11 +66,6 @@ const websiteSchema = {
   name: site_name || 'stoicopa',
   url: baseUrl,
   description: description || metaDescription,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${baseUrl}/search?q={search_term_string}`,
-    'query-input': 'required name=search_term_string',
-  },
 };
 
 const breadcrumbSchema = {

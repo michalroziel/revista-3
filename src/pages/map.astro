@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoMap, { type Place } from '../components/PhotoMap.astro';
+import { withBasePath } from '../utils/withBasePath';
+
+const pageTitle = 'Map';
+const collections = ['long_form', 'short_form', 'moments', 'zeitweilig'] as const;
+
+const places: Place[] = [];
+for (const collection of collections) {
+  for (const post of await getCollection(collection)) {
+    const location = post.data.location;
+    if (!location) continue;
+    places.push({
+      id: `${collection}-${post.id}`,
+      title: post.data.title,
+      url: withBasePath(`/${collection}/${post.id}/`),
+      collection,
+      place: location.name,
+      lat: location.lat,
+      lng: location.lng,
+      image: post.data.image,
+      pubDate: post.data.pubDate,
+    });
+  }
+}
+---
+
+<BaseLayout
+  title={pageTitle}
+  description="Where the photographs on this site were taken."
+  is404Page={false}
+>
+  <header class="map-header">
+    <p class="map-header__eyebrow">Map</p>
+    <p class="map-header__subhead">Where these photographs were made</p>
+  </header>
+  {places.length > 0 ? <PhotoMap places={places} /> : <p>No places yet.</p>}
+</BaseLayout>
+
+<style>
+  .map-header {
+    display: grid;
+    gap: 0.3rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0.5rem auto 1.5rem;
+  }
+
+  .map-header__eyebrow,
+  .map-header__subhead {
+    margin: 0;
+    font-family: var(--font-overpass-mono), 'Overpass Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .map-header__eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.24em;
+    opacity: 0.62;
+  }
+
+  .map-header__subhead {
+    font-size: 0.86rem;
+    letter-spacing: 0.1em;
+    opacity: 0.48;
+  }
+</style>
