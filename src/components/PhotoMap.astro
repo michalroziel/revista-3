@@ -1,10 +1,16 @@
 ---
-import { geoEqualEarth, geoGraticule, geoPath } from 'd3-geo';
-import { feature } from 'topojson-client';
-import type { MultiPolygon, Polygon } from 'geojson';
-import type { GeometryCollection, Topology } from 'topojson-specification';
-import land110m from 'world-atlas/land-110m.json';
 import { cloudinary } from '../utils/cloudinary';
+import {
+  HOME,
+  SIZE,
+  facing,
+  graticule,
+  land,
+  pathFor,
+  projection,
+  sphere,
+  type LngLat,
+} from '../scripts/globe';
 
 export interface Place {
   id: string;
@@ -15,6 +21,8 @@ export interface Place {
   lat: number;
   lng: number;
   image?: { src: string; positionx?: string; positiony?: string };
+  // [lat, lng] waypoints of the voyage, in order
+  route?: [number, number][];
   pubDate: Date;
 }
 
@@ -24,49 +32,31 @@ interface Props {
 
 const { places } = Astro.props;
 
-// The map is projected at build time, so the page ships plain SVG and no map library.
-const width = 1000;
-const sphere = { type: 'Sphere' } as const;
-const projection = geoEqualEarth().fitWidth(width, sphere);
-const path = geoPath(projection).digits(1);
-const [[, top], [, bottom]] = path.bounds(sphere);
-const height = Math.ceil(bottom - top);
-
-const topology = land110m as unknown as Topology<{ land: GeometryCollection }>;
-// one path per landmass, ordered west to east, so the coastlines can be drawn in a sweep
-const landPaths = feature(topology, topology.objects.land)
-  .features.flatMap(({ geometry }) =>
-    geometry.type === 'MultiPolygon'
-      ? (geometry as MultiPolygon).coordinates.map(
-          coordinates => ({ type: 'Polygon', coordinates }) as Polygon
-        )
-      : [geometry as Polygon]
-  )
-  .map(polygon => ({ d: path(polygon), x: path.centroid(polygon)[0] }))
-  .filter(({ d }) => d)
-  .sort((a, b) => a.x - b.x)
-  .map(({ d }) => d);
-const spherePath = path(sphere);
-const graticulePath = path(geoGraticule().step([30, 30])());
+// The globe at its starting view, drawn at build time. It's what shows before the
+// script takes over, and all that shows without JavaScript.
+const path = pathFor(HOME);
+const project = projection(HOME);
 
 const formatCoord = (value: number, positive: string, negative: string) =>
   `${Math.abs(value).toFixed(2)}°${value >= 0 ? positive : negative}`;
 
-// north to south, so the numbering reads down the map
+// north to south, so the numbering reads down the globe
 const pins = [...places]
   .sort((a, b) => b.lat - a.lat)
   .map((place, index) => {
-    const [x, y] = projection([place.lng, place.lat]) ?? [0, 0];
-    const left = (x / width) * 100;
-    const topPct = ((y - top) / height) * 100;
+    const at: LngLat = [place.lng, place.lat];
+    const [x, y] = project(at) ?? [0, 0];
+    const left = (x / SIZE) * 100;
+    const top = (y / SIZE) * 100;
     return {
       ...place,
       number: String(index + 1).padStart(2, '0'),
       left,
-      top: topPct,
-      // open the preview card towards the middle of the map so it stays on screen
+      top,
+      hidden: !facing(HOME, at),
+      // open the preview card towards the middle of the globe so it stays on screen
       flipX: left > 60,
-      flipY: topPct > 55,
+      flipY: top > 55,
       coords: `${formatCoord(place.lat, 'N', 'S')} ${formatCoord(place.lng, 'E', 'W')}`,
       cardImage: place.image && cloudinary(place.image.src, { width: 480 }),
       thumbnail: place.image && cloudinary(place.image.src, { width: 192 }),
@@ -76,67 +66,143 @@ const pins = [...places]
       year: place.pubDate.getFullYear(),
     };
   });
+
+const routes = places
+  .filter(place => place.route)
+  .map(place => ({
+    id: place.id,
+    coordinates: place.route!.map(([lat, lng]) => [lng, lat] as LngLat),
+  }));
 ---
 
 <figure class="photo-map not-prose" data-photo-map>
-  <div class="photo-map__stage">
-    <svg
-      class="photo-map__svg"
-      viewBox={`0 ${top.toFixed(1)} ${width} ${height}`}
-      role="img"
-      aria-label={`World map with ${pins.length} places where these photographs were taken.`}
+  <div class="photo-map__globe">
+    <div
+      class="photo-map__stage"
+      data-stage
+      tabindex="0"
+      role="region"
+      aria-label={`Globe with ${pins.length} places where these photographs were taken. Drag or use the arrow keys to turn it, plus and minus to zoom.`}
     >
-      <path class="photo-map__sphere" d={spherePath}></path>
-      <path class="photo-map__graticule" d={graticulePath}></path>
-      <g class="photo-map__land">
-        {landPaths.map(d => <path d={d} />)}
-      </g>
-    </svg>
+      <svg class="photo-map__svg" viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden="true">
+        <defs>
+          <radialGradient id="photo-map-shade" cx="50%" cy="50%" r="50%">
+            <stop offset="72%" stop-color="currentColor" stop-opacity="0"></stop>
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0.08"></stop>
+          </radialGradient>
+        </defs>
+        <path class="photo-map__shade" d={path(sphere)} data-sphere></path>
+        <path class="photo-map__graticule" d={path(graticule)} data-graticule></path>
+        <path class="photo-map__land" d={path(land)} data-land></path>
+        {
+          routes.map(route => (
+            <path
+              class="photo-map__route"
+              d={path({ type: 'LineString', coordinates: route.coordinates }) ?? ''}
+              data-route={JSON.stringify(route.coordinates)}
+            />
+          ))
+        }
+        {
+          routes.map(() => (
+            <g class="photo-map__boat" data-boat>
+              <path d="M0 -15 L0 1 L10 1 Z" />
+              <path class="photo-map__boat-jib" d="M-1.5 -12 L-1.5 1 L-8 1 Z" />
+              <path d="M-12 4 L12 4 L8 9 L-8 9 Z" />
+            </g>
+          ))
+        }
+        <path class="photo-map__outline" d={path(sphere)} data-sphere data-outline></path>
+      </svg>
 
-    <ol class="photo-map__pins">
-      {
-        pins.map((pin, index) => (
-          <li
-            class="photo-map__pin"
-            style={`left: ${pin.left.toFixed(2)}%; top: ${pin.top.toFixed(2)}%; --stagger-index: ${index}`}
-            data-pin={pin.id}
-            data-flip-x={pin.flipX ? '' : undefined}
-            data-flip-y={pin.flipY ? '' : undefined}
-          >
-            <a class="photo-map__pin-link" href={pin.url} aria-label={`${pin.title}, ${pin.place}`}>
-              <span class="photo-map__dot" aria-hidden="true" />
-              <span class="photo-map__card" aria-hidden="true">
-                {pin.cardImage && (
-                  <img
-                    class="photo-map__card-image"
-                    src={pin.cardImage}
-                    alt=""
-                    width="480"
-                    height="320"
-                    loading="lazy"
-                    decoding="async"
-                    style={pin.focus}
-                  />
-                )}
-                <span class="photo-map__card-body">
-                  <span class="photo-map__card-title">{pin.title}</span>
-                  <span class="photo-map__card-meta">{pin.place}</span>
-                  <span class="photo-map__card-meta">{pin.coords}</span>
+      <ol class="photo-map__pins">
+        {
+          pins.map((pin, index) => (
+            <li
+              class:list={['photo-map__pin', { 'is-hidden': pin.hidden }]}
+              style={`left: ${pin.left.toFixed(2)}%; top: ${pin.top.toFixed(2)}%; --stagger-index: ${index}`}
+              data-pin={pin.id}
+              data-lng={pin.lng}
+              data-lat={pin.lat}
+              data-flip-x={pin.flipX ? '' : undefined}
+              data-flip-y={pin.flipY ? '' : undefined}
+            >
+              <a
+                class="photo-map__pin-link"
+                href={pin.url}
+                aria-label={`${pin.title}, ${pin.place}`}
+                tabindex={pin.hidden ? -1 : undefined}
+              >
+                <span class="photo-map__dot" aria-hidden="true" />
+                <span class="photo-map__card" aria-hidden="true">
+                  {pin.cardImage && (
+                    <img
+                      class="photo-map__card-image"
+                      src={pin.cardImage}
+                      alt=""
+                      width="480"
+                      height="320"
+                      loading="lazy"
+                      decoding="async"
+                      style={pin.focus}
+                    />
+                  )}
+                  <span class="photo-map__card-body">
+                    <span class="photo-map__card-title">{pin.title}</span>
+                    <span class="photo-map__card-meta">{pin.place}</span>
+                    <span class="photo-map__card-meta">{pin.coords}</span>
+                  </span>
                 </span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="photo-map__toolbar">
+      <p class="photo-map__hint">
+        <span class="photo-map__hint-fine">Drag to turn · ctrl + scroll or +/− to zoom</span>
+        <span class="photo-map__hint-touch">Swipe sideways to turn · pinch or +/− to zoom</span>
+      </p>
+      <div class="photo-map__controls">
+        <button type="button" class="photo-map__control" data-zoom="in" aria-label="Zoom in">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        </button>
+        <button type="button" class="photo-map__control" data-zoom="out" aria-label="Zoom out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path></svg>
+        </button>
+        <button
+          type="button"
+          class="photo-map__control"
+          data-home
+          aria-label="Back to the starting view"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"
+            ><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"></path></svg
+          >
+        </button>
+      </div>
+    </div>
   </div>
 
   <ol class="photo-map__index">
     {
       pins.map(pin => (
-        <li>
-          <a class="photo-map__entry" href={pin.url} data-pin-target={pin.id}>
+        <li class="photo-map__entry" data-pin-target={pin.id}>
+          <button
+            type="button"
+            class="photo-map__locate"
+            data-locate={pin.id}
+            aria-label={`Show ${pin.title} on the globe`}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="7" />
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+            </svg>
             <span class="photo-map__entry-number">{pin.number}</span>
+          </button>
+          <a class="photo-map__entry-link" href={pin.url}>
             {pin.thumbnail && (
               <img
                 class="photo-map__entry-image"
@@ -167,7 +233,7 @@ const pins = [...places]
 </figure>
 
 <script is:inline>
-  // Hide the coastlines and pins until the draw-in starts, so they don't flash fully drawn first.
+  // Hide the globe's drawing until the intro starts, so it doesn't flash fully drawn first.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document
       .querySelectorAll('[data-photo-map]:not([data-ready])')
@@ -176,85 +242,428 @@ const pins = [...places]
 </script>
 
 <script>
-  import { createDrawable, createTimeline, spring, stagger, utils } from 'animejs';
+  import { animate, createDrawable, createTimeline, spring, stagger, utils } from 'animejs';
+  import {
+    HOME,
+    MAX_ZOOM,
+    MIN_ZOOM,
+    SIZE,
+    alongRoute,
+    facing,
+    graticule,
+    land,
+    pathFor,
+    projection,
+    sphere,
+    type LngLat,
+  } from '../scripts/globe';
 
-  // Coastlines draw themselves west to east, the land fills in, then the pins drop in one by one.
-  function drawIn(root: HTMLElement, pins: HTMLElement[]) {
-    if (!root.classList.contains('is-pending')) return;
-    const coastlines = createDrawable(
-      root.querySelectorAll<SVGPathElement>('.photo-map__land path')
+  // degrees of longitude per millisecond while the globe turns on its own: a turn every 90 s
+  const SPIN = 360 / 90000;
+  // fastest coast after a flick, in degrees per ms
+  const MAX_COAST = 0.25;
+  const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+  // undone before Astro swaps in the next page
+  let cleanups: (() => void)[] = [];
+
+  function setupGlobe(root: HTMLElement) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+    const svg = stage.querySelector('svg')!;
+    const sphereEls = Array.from(svg.querySelectorAll<SVGPathElement>('[data-sphere]'));
+    const graticuleEl = svg.querySelector<SVGPathElement>('[data-graticule]')!;
+    const landEl = svg.querySelector<SVGPathElement>('[data-land]')!;
+    const routes = Array.from(svg.querySelectorAll<SVGPathElement>('[data-route]')).map(el => ({
+      el,
+      coordinates: JSON.parse(el.dataset.route!) as LngLat[],
+    }));
+    const boats = Array.from(svg.querySelectorAll<SVGGElement>('[data-boat]'));
+    const pins = Array.from(root.querySelectorAll<HTMLElement>('[data-pin]')).map(el => ({
+      el,
+      link: el.querySelector('a')!,
+      at: [Number(el.dataset.lng), Number(el.dataset.lat)] as LngLat,
+    }));
+
+    const view = { lng: HOME[0], lat: HOME[1], zoom: 1 };
+    const voyage = { t: 1 };
+    let spinning = !reduceMotion;
+    let hovering = false;
+    let onScreen = true;
+    let velocity = 0; // degrees of longitude per ms, left over from a flick
+
+    // ---- drawing ----
+
+    let frame = 0;
+    let globeDirty = false;
+
+    function render() {
+      frame = 0;
+      const center: LngLat = [view.lng, view.lat];
+      const project = projection(center, view.zoom);
+
+      if (globeDirty) {
+        globeDirty = false;
+        const path = pathFor(center, view.zoom);
+        const spherePath = path(sphere) ?? '';
+        sphereEls.forEach(el => el.setAttribute('d', spherePath));
+        graticuleEl.setAttribute('d', path(graticule) ?? '');
+        landEl.setAttribute('d', path(land) ?? '');
+        routes.forEach(({ el, coordinates }) =>
+          el.setAttribute('d', path({ type: 'LineString', coordinates }) ?? '')
+        );
+        pins.forEach(({ el, link, at }) => {
+          const [x, y] = project(at) ?? [0, 0];
+          const left = (x / SIZE) * 100;
+          const top = (y / SIZE) * 100;
+          // behind the globe, or pushed off the edge by zooming in
+          const shown = facing(center, at) && left > 0 && left < 100 && top > 0 && top < 100;
+          el.style.left = `${left}%`;
+          el.style.top = `${top}%`;
+          el.classList.toggle('is-hidden', !shown);
+          link.tabIndex = shown ? 0 : -1;
+          el.toggleAttribute('data-flip-x', left > 60);
+          el.toggleAttribute('data-flip-y', top > 55);
+        });
+      }
+
+      // the boats move on their own, so they're redrawn without the (heavier) globe
+      routes.forEach(({ coordinates }, i) => {
+        const at = alongRoute(coordinates, voyage.t);
+        const [x, y] = project(at) ?? [0, 0];
+        boats[i]?.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+        boats[i]?.classList.toggle('is-hidden', !facing(center, at));
+      });
+    }
+
+    const draw = () => {
+      globeDirty = true;
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+    const drawBoats = () => {
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+
+    // ---- turning on its own, and coasting after a flick ----
+
+    let loop = 0;
+    let last = 0;
+    let lastDrawn = 0;
+    const stopSpinning = () => {
+      spinning = false;
+    };
+
+    function tick(now: number) {
+      const dt = last ? Math.min(now - last, 50) : 16;
+      last = now;
+      let moving = false;
+      if (Math.abs(velocity) > 0.0005) {
+        view.lng += velocity * dt;
+        velocity *= Math.pow(0.92, dt / 16);
+        moving = true;
+      } else {
+        velocity = 0;
+      }
+      if (spinning && !hovering && !drag && onScreen) {
+        view.lng -= SPIN * dt;
+        moving = true;
+      }
+      // turning on its own is slow enough that 30 redraws a second look smooth
+      if (moving && (velocity || now - lastDrawn >= 32)) {
+        lastDrawn = now;
+        draw();
+      }
+      loop = moving ? requestAnimationFrame(tick) : 0;
+      if (!moving) last = 0;
+    }
+    const wake = () => {
+      if (!loop) loop = requestAnimationFrame(tick);
+    };
+
+    // ---- flying to a place, zooming ----
+
+    function flyTo([lng, lat]: LngLat, zoom = view.zoom) {
+      stopSpinning();
+      velocity = 0;
+      // the short way round
+      const target = view.lng + ((((lng - view.lng) % 360) + 540) % 360) - 180;
+      if (reduceMotion) {
+        Object.assign(view, { lng: target, lat: clamp(lat, -80, 80), zoom });
+        draw();
+        return;
+      }
+      animate(view, {
+        lng: target,
+        lat: clamp(lat, -80, 80),
+        zoom,
+        duration: 1200,
+        ease: 'inOutCubic',
+        onUpdate: draw,
+      });
+    }
+
+    function zoomTo(zoom: number) {
+      stopSpinning();
+      zoom = clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+      if (reduceMotion) {
+        view.zoom = zoom;
+        draw();
+        return;
+      }
+      animate(view, { zoom, duration: 350, ease: 'outQuad', onUpdate: draw });
+    }
+
+    root
+      .querySelector('[data-zoom="in"]')
+      ?.addEventListener('click', () => zoomTo(view.zoom * 1.6));
+    root
+      .querySelector('[data-zoom="out"]')
+      ?.addEventListener('click', () => zoomTo(view.zoom / 1.6));
+    root.querySelector('[data-home]')?.addEventListener('click', () => flyTo(HOME, 1));
+
+    // ---- dragging, pinching ----
+
+    const pointers = new Map<number, { x: number; y: number }>();
+    let drag: {
+      x: number;
+      y: number;
+      lng: number;
+      lat: number;
+      lastX: number;
+      lastT: number;
+    } | null = null;
+    let pinch: { distance: number; zoom: number } | null = null;
+    // dragging across the globe's radius turns it about a radian, as if holding the surface
+    const degreesPerPixel = () => 180 / Math.PI / ((480 * view.zoom * stage.clientWidth) / SIZE);
+    const spread = () => {
+      const [a, b] = Array.from(pointers.values());
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+
+    stage.addEventListener('pointerdown', event => {
+      if ((event.target as Element).closest('a, button')) return;
+      stopSpinning();
+      utils.remove(view);
+      velocity = 0;
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      stage.setPointerCapture(event.pointerId);
+      if (pointers.size === 2) {
+        pinch = { distance: spread(), zoom: view.zoom };
+        drag = null;
+      } else {
+        drag = {
+          x: event.clientX,
+          y: event.clientY,
+          lng: view.lng,
+          lat: view.lat,
+          lastX: event.clientX,
+          lastT: event.timeStamp,
+        };
+      }
+    });
+
+    stage.addEventListener('pointermove', event => {
+      if (!pointers.has(event.pointerId)) return;
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pinch && pointers.size === 2) {
+        view.zoom = clamp((pinch.zoom * spread()) / pinch.distance, MIN_ZOOM, MAX_ZOOM);
+        draw();
+        return;
+      }
+      if (!drag) return;
+      const k = degreesPerPixel();
+      view.lng = drag.lng - (event.clientX - drag.x) * k;
+      // on touch screens an up/down swipe scrolls the page, so only sideways turns the globe
+      if (event.pointerType !== 'touch') {
+        view.lat = clamp(drag.lat + (event.clientY - drag.y) * k, -80, 80);
+      }
+      // flick speed over the last few frames, capped so a fast flick coasts for a moment, not ages
+      const dt = event.timeStamp - drag.lastT;
+      if (dt >= 8) {
+        velocity = clamp((-(event.clientX - drag.lastX) * k) / dt, -MAX_COAST, MAX_COAST);
+        drag.lastX = event.clientX;
+        drag.lastT = event.timeStamp;
+      }
+      draw();
+    });
+
+    const release = (event: PointerEvent) => {
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (pointers.size > 0) return;
+      // no coasting if the pointer stopped before letting go
+      if (!drag || event.timeStamp - drag.lastT > 80) velocity = 0;
+      drag = null;
+      wake();
+    };
+    stage.addEventListener('pointerup', release);
+    stage.addEventListener('pointercancel', release);
+
+    // a trackpad pinch arrives as ctrl + wheel; a plain wheel keeps scrolling the page
+    stage.addEventListener(
+      'wheel',
+      event => {
+        if (!event.ctrlKey) return;
+        event.preventDefault();
+        stopSpinning();
+        view.zoom = clamp(view.zoom * Math.exp(-event.deltaY * 0.01), MIN_ZOOM, MAX_ZOOM);
+        draw();
+      },
+      { passive: false }
     );
-    utils.set(coastlines, { fillOpacity: 0 });
-    utils.set(pins, { opacity: 0, translateY: -18, scale: 0.4 });
-    root.classList.remove('is-pending');
 
-    createTimeline()
-      .add(
-        coastlines,
-        { draw: ['0 0', '0 1'], duration: 1400, delay: stagger(6), ease: 'inOutSine' },
-        0
-      )
-      // 0.05 matches the resting fill in .photo-map__land path
-      .add(coastlines, { fillOpacity: [0, 0.05], duration: 900, ease: 'outQuad' }, 1300)
-      .add(
-        pins,
-        {
-          opacity: [0, 1],
-          translateY: [-18, 0],
-          scale: [0.4, 1],
-          delay: stagger(160),
-          ease: spring({ bounce: 0.45, duration: 700 }),
-        },
-        1500
-      );
-  }
-
-  function setupPhotoMaps() {
-    document.querySelectorAll<HTMLElement>('[data-photo-map]').forEach(root => {
-      if (root.dataset.ready === 'true') return;
-      root.dataset.ready = 'true';
-
-      const pins = Array.from(root.querySelectorAll<HTMLElement>('[data-pin]'));
-      drawIn(root, pins);
-      const pinFor = (id: string | undefined) => pins.find(pin => pin.dataset.pin === id);
-      let lastPointer = 'mouse';
-
-      const setActive = (active?: HTMLElement) => {
-        pins.forEach(pin => pin.classList.toggle('is-active', pin === active));
+    stage.addEventListener('keydown', event => {
+      const turns: Record<string, [number, number]> = {
+        ArrowLeft: [-20, 0],
+        ArrowRight: [20, 0],
+        ArrowUp: [0, 15],
+        ArrowDown: [0, -15],
       };
+      if (turns[event.key]) {
+        event.preventDefault();
+        const [dLng, dLat] = turns[event.key];
+        flyTo([view.lng + dLng, view.lat + dLat]);
+      } else if (event.key === '+' || event.key === '=') {
+        zoomTo(view.zoom * 1.6);
+      } else if (event.key === '-') {
+        zoomTo(view.zoom / 1.6);
+      }
+    });
 
-      // On touch screens the first tap on a pin shows its preview, the second follows the link.
-      pins.forEach(pin => {
-        const link = pin.querySelector('a');
-        const card = pin.querySelector<HTMLElement>('.photo-map__card');
-        link?.addEventListener('pointerdown', event => {
-          lastPointer = event.pointerType;
-        });
-        link?.addEventListener('click', event => {
-          const cardShown = card && getComputedStyle(card).display !== 'none';
-          if (lastPointer === 'touch' && cardShown && !pin.classList.contains('is-active')) {
-            event.preventDefault();
-            setActive(pin);
-          }
-        });
-      });
+    // hold still under the mouse so a pin doesn't slide away from the pointer
+    stage.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'mouse') hovering = true;
+    });
+    stage.addEventListener('pointerleave', () => {
+      hovering = false;
+      wake();
+    });
 
-      root.addEventListener('click', event => {
-        if (!(event.target as Element).closest('[data-pin]')) setActive();
-      });
+    // no turning while scrolled out of view
+    const visibility = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen) wake();
+    });
+    visibility.observe(stage);
 
-      // Hovering an entry in the index highlights its pin on the map.
-      root.querySelectorAll<HTMLElement>('[data-pin-target]').forEach(entry => {
-        const pin = pinFor(entry.dataset.pinTarget);
-        entry.addEventListener('pointerenter', () => pin?.classList.add('is-highlighted'));
-        entry.addEventListener('pointerleave', () => pin?.classList.remove('is-highlighted'));
-        entry.addEventListener('focus', () => pin?.classList.add('is-highlighted'));
-        entry.addEventListener('blur', () => pin?.classList.remove('is-highlighted'));
+    // ---- pins and the list of places ----
+
+    const pinFor = (id: string | undefined) => pins.find(pin => pin.el.dataset.pin === id);
+    const setActive = (active?: HTMLElement) => {
+      pins.forEach(({ el }) => el.classList.toggle('is-active', el === active));
+    };
+    let lastPointer = 'mouse';
+
+    // On touch screens the first tap on a pin shows its preview, the second follows the link.
+    pins.forEach(({ el, link }) => {
+      const card = el.querySelector<HTMLElement>('.photo-map__card');
+      link.addEventListener('pointerdown', event => {
+        lastPointer = event.pointerType;
       });
+      link.addEventListener('click', event => {
+        const cardShown = card && getComputedStyle(card).display !== 'none';
+        if (lastPointer === 'touch' && cardShown && !el.classList.contains('is-active')) {
+          event.preventDefault();
+          setActive(el);
+        }
+      });
+    });
+    root.addEventListener('click', event => {
+      if (!(event.target as Element).closest('[data-pin]')) setActive();
+    });
+
+    root.querySelectorAll<HTMLElement>('[data-pin-target]').forEach(entry => {
+      const pin = pinFor(entry.dataset.pinTarget);
+      if (!pin) return;
+      // hovering an entry highlights its pin
+      entry.addEventListener('pointerenter', () => pin.el.classList.add('is-highlighted'));
+      entry.addEventListener('pointerleave', () => pin.el.classList.remove('is-highlighted'));
+      entry.addEventListener('focusin', () => pin.el.classList.add('is-highlighted'));
+      entry.addEventListener('focusout', () => pin.el.classList.remove('is-highlighted'));
+      // the locate button turns the globe to it
+      entry.querySelector('[data-locate]')?.addEventListener('click', () => {
+        flyTo(pin.at);
+        const box = stage.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > window.innerHeight) {
+          stage.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // ---- the intro, then the boats ----
+
+    function sail() {
+      if (reduceMotion || !boats.length) return;
+      root.classList.add('is-sailing');
+      animate(voyage, {
+        t: [0, 1],
+        duration: 9000,
+        ease: 'inOutSine',
+        loop: true,
+        loopDelay: 2000,
+        onUpdate: drawBoats,
+      });
+    }
+
+    if (root.classList.contains('is-pending')) {
+      // The outline draws itself while the globe rolls round into view, then the
+      // routes draw, the pins drop in and the boats set off.
+      view.lng = HOME[0] + 110;
+      draw();
+      render();
+      const outline = createDrawable(svg.querySelector<SVGPathElement>('[data-outline]')!);
+      const routeLines = createDrawable(routes.map(route => route.el));
+      const pinLinks = pins.map(pin => pin.link);
+      utils.set([landEl, graticuleEl], { opacity: 0 });
+      utils.set(pinLinks, { opacity: 0, translateY: -18, scale: 0.4 });
+      root.classList.remove('is-pending');
+
+      const intro = createTimeline({
+        onComplete: () => {
+          wake();
+          sail();
+        },
+      })
+        .add(outline, { draw: ['0 0', '0 1'], duration: 1100, ease: 'inOutSine' }, 0)
+        .add([landEl, graticuleEl], { opacity: [0, 1], duration: 1200, ease: 'outQuad' }, 300)
+        .add(view, { lng: HOME[0], duration: 2600, ease: 'outCubic', onUpdate: draw }, 0)
+        .add(routeLines, { draw: ['0 0', '0 1'], duration: 1600, ease: 'inOutSine' }, 1600)
+        .add(
+          pinLinks,
+          {
+            opacity: [0, 1],
+            translateY: [-18, 0],
+            scale: [0.4, 1],
+            delay: stagger(160),
+            ease: spring({ bounce: 0.45, duration: 700 }),
+          },
+          1800
+        );
+      cleanups.push(() => intro.pause());
+    } else {
+      draw();
+      wake();
+    }
+
+    cleanups.push(() => {
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(loop);
+      utils.remove([view, voyage]);
+      visibility.disconnect();
     });
   }
 
-  document.addEventListener('astro:page-load', setupPhotoMaps);
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('[data-photo-map]').forEach(root => {
+      if (root.dataset.ready === 'true') return;
+      root.dataset.ready = 'true';
+      setupGlobe(root);
+    });
+  });
+  document.addEventListener('astro:before-swap', () => {
+    cleanups.forEach(cleanup => cleanup());
+    cleanups = [];
+  });
 </script>
 
 <style>
@@ -262,51 +671,112 @@ const pins = [...places]
     /* the body is a wrapping flex column, which measures items at their narrowest width;
        without a definite width the map's height is undercounted and the footer overlaps the index */
     width: 100%;
-    margin: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 2.5rem;
     color: inherit;
+  }
+
+  @media (min-width: 1024px) {
+    .photo-map {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+
+  .photo-map__globe {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
   }
 
   .photo-map__stage {
     position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 640px;
+    /* sideways swipes turn the globe; up/down swipes still scroll the page */
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    border-radius: 50%;
+  }
+
+  .photo-map__stage:active {
+    cursor: grabbing;
+  }
+
+  .photo-map__stage:focus-visible {
+    outline: 1px dashed currentColor;
+    outline-offset: 6px;
   }
 
   .photo-map__svg {
     display: block;
     width: 100%;
     height: auto;
-    overflow: visible;
+    overflow: hidden;
   }
 
-  .photo-map__sphere {
+  .photo-map__shade {
+    fill: url(#photo-map-shade);
+  }
+
+  .photo-map__outline {
     fill: none;
     stroke: currentColor;
-    stroke-opacity: 0.22;
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
+    stroke-opacity: 0.35;
+    stroke-width: 1.2;
   }
 
   .photo-map__graticule {
     fill: none;
     stroke: currentColor;
-    stroke-opacity: 0.08;
+    stroke-opacity: 0.1;
     stroke-width: 1;
     stroke-dasharray: 2 4;
-    vector-effect: non-scaling-stroke;
   }
 
-  .photo-map__land path {
+  .photo-map__land {
     fill: currentColor;
     fill-opacity: 0.05;
     stroke: currentColor;
-    stroke-opacity: 0.42;
-    stroke-width: 0.75;
+    stroke-opacity: 0.45;
+    stroke-width: 1.1;
     stroke-linejoin: round;
-    vector-effect: non-scaling-stroke;
   }
 
+  .photo-map__route {
+    fill: none;
+    stroke: currentColor;
+    stroke-opacity: 0.8;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .photo-map__boat {
+    display: none;
+    fill: currentColor;
+  }
+
+  .photo-map__boat-jib {
+    fill-opacity: 0.55;
+  }
+
+  .photo-map.is-sailing .photo-map__boat {
+    display: inline;
+  }
+
+  .photo-map__boat.is-hidden {
+    visibility: hidden;
+  }
+
+  .photo-map.is-pending .photo-map__outline,
+  .photo-map.is-pending .photo-map__graticule,
   .photo-map.is-pending .photo-map__land,
+  .photo-map.is-pending .photo-map__route,
   .photo-map.is-pending .photo-map__pin {
     visibility: hidden;
   }
@@ -321,6 +791,16 @@ const pins = [...places]
     position: absolute;
     width: 0;
     height: 0;
+    transition: opacity 200ms ease;
+  }
+
+  /* behind the globe */
+  .photo-map__pin.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 200ms ease,
+      visibility 0s 200ms;
   }
 
   .photo-map__pin.is-active,
@@ -433,7 +913,8 @@ const pins = [...places]
   .photo-map__card-title,
   .photo-map__card-meta,
   .photo-map__entry-number,
-  .photo-map__entry-meta {
+  .photo-map__entry-meta,
+  .photo-map__hint {
     font-family: var(--font-overpass-mono), 'Overpass Mono', monospace;
   }
 
@@ -448,33 +929,120 @@ const pins = [...places]
     opacity: 0.6;
   }
 
+  .photo-map__toolbar {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .photo-map__controls {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .photo-map__control {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    border-radius: 50%;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+    color: inherit;
+    cursor: pointer;
+    transition: background 200ms ease;
+  }
+
+  .photo-map__control:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .photo-map__control svg,
+  .photo-map__locate svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .photo-map__hint {
+    margin: 0;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.45;
+  }
+
+  .photo-map__hint-touch {
+    display: none;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .photo-map__hint-fine {
+      display: none;
+    }
+
+    .photo-map__hint-touch {
+      display: inline;
+    }
+  }
+
   .photo-map__index {
     list-style: none;
-    max-width: 1200px;
-    margin: 2.5rem auto 0;
+    margin: 0;
     padding: 0;
     border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
   }
 
   .photo-map__entry {
     display: grid;
-    grid-template-columns: 2rem 96px 1fr auto;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  }
+
+  .photo-map__locate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.25rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 200ms ease;
+  }
+
+  .photo-map__locate:hover,
+  .photo-map__locate:focus-visible {
+    opacity: 1;
+  }
+
+  .photo-map__entry-number {
+    font-size: 0.78rem;
+  }
+
+  .photo-map__entry-link {
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
     align-items: center;
     gap: 1rem;
     padding: 0.85rem 0;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
     color: inherit;
     text-decoration: none;
     transition: opacity 200ms ease;
   }
 
-  .photo-map__entry:hover {
+  .photo-map__entry-link:hover {
     opacity: 0.6;
-  }
-
-  .photo-map__entry-number {
-    font-size: 0.78rem;
-    opacity: 0.5;
   }
 
   .photo-map__entry-image {
@@ -511,27 +1079,27 @@ const pins = [...places]
   }
 
   @media (max-width: 639px) {
-    /* too little room for a floating preview; the index below does that job */
+    /* too little room for a floating preview; the list below does that job */
     .photo-map__card {
       display: none;
     }
 
     .photo-map__dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
     }
 
     .photo-map__dot::after {
       inset: -4px;
     }
 
-    .photo-map__entry {
-      grid-template-columns: 72px 1fr;
-      gap: 0.85rem;
-    }
-
     .photo-map__entry-number {
       display: none;
+    }
+
+    .photo-map__entry-link {
+      grid-template-columns: 72px 1fr;
+      gap: 0.85rem;
     }
 
     .photo-map__entry-image {

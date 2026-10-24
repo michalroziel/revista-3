@@ -9,6 +9,11 @@ const location = z
     lng: z.number().min(-180).max(180),
   })
   .optional();
+// A voyage drawn on the /map globe: [lat, lng] waypoints in the order sailed.
+const route = z
+  .array(z.tuple([z.number().min(-90).max(90), z.number().min(-180).max(180)]))
+  .min(2)
+  .optional();
 // 2. Define a `type` and `schema` for each collection
 const moments = defineCollection({
   // type: "content", // v2.5.0 and later
@@ -29,6 +34,7 @@ const moments = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     location,
+    route,
   }),
 });
 
@@ -51,6 +57,7 @@ const short_form = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     location,
+    route,
   }),
 });
 
@@ -73,6 +80,7 @@ const long_form = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     location,
+    route,
   }),
 });
 
@@ -95,6 +103,7 @@ const zeitweilig = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     location,
+    route,
   }),
 });
 

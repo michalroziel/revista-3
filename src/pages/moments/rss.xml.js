@@ -9,7 +9,7 @@ export async function GET(context) {
   const moments = await getCollection('moments');
   return rss({
     stylesheet: withBasePath('/rss/rss.xsl'),
-    title: 'stoicopa',
+    title: 'michalroziel',
     description: 'My personal hamster wheel.',
     site: context.site,
     items: moments.map(post => ({

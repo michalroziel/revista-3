@@ -10,7 +10,7 @@ function handlePageLoad() {
 
   if (collections.has(cleanPath)) {
     const rssLink = document.getElementById('rss-link');
-    rssLink.href = `${cleanPath}/rss.xml`;
+    rssLink.href = `${baseUrl.replace(/\/$/, '')}${cleanPath}/rss.xml`;
     rssLink.style.visibility = 'visible';
     rssLink.style.width = 'auto';
     rssLink.style.height = 'auto';

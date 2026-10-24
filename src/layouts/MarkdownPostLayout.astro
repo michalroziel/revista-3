@@ -16,7 +16,13 @@ const publishedDate = frontmatter?.pubDate.toDateString().split(' ').slice(1).jo
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 const authorFullName = frontmatter?.author;
-const author = authorFullName.split(' ')[0].toLowerCase();
+// "Michał Roziel" → "michal", the author page's slug
+const author = authorFullName
+  .split(' ')[0]
+  .toLowerCase()
+  .replace(/ł/g, 'l')
+  .normalize('NFD')
+  .replace(/\p{M}/gu, '');
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;

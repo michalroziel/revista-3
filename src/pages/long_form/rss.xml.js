@@ -9,7 +9,7 @@ export async function GET(context) {
   const long_form = await getCollection('long_form');
   return rss({
     stylesheet: withBasePath('/rss/rss.xsl'),
-    title: 'stoicopa',
+    title: 'michalroziel',
     description: 'My personal hamster wheel.',
     site: context.site,
     items: long_form.map(post => ({
