@@ -117,7 +117,6 @@ const southAmericaMapMarkup = southAmericaMapRaw
 
       <g
         class="drake-route__camera-stage"
-        data-camera-stage
         transform="matrix(1.16 0 0 1.16 462 14)"
       >
         <g class="drake-route__land" aria-hidden="true">
@@ -147,8 +146,10 @@ const southAmericaMapMarkup = southAmericaMapRaw
 
         <circle class="drake-route__anchor" cx="229" cy="202" r="4.5" aria-hidden="true" />
         <circle class="drake-route__anchor" cx="372" cy="435" r="4.5" aria-hidden="true" />
-        <circle class="drake-route__focus" data-route-focus cx="229" cy="202" r="34" aria-hidden="true" />
-        <circle class="drake-route__marker" data-route-marker cx="229" cy="202" r="5.5" aria-hidden="true" />
+        <g class="drake-route__mover" data-route-mover transform="translate(229 202)" aria-hidden="true">
+          <circle class="drake-route__focus" r="34" />
+          <circle class="drake-route__marker" r="5.5" />
+        </g>
 
         <text class="drake-route__label" x="84" y="218" text-anchor="end">USHUAIA</text>
         <text class="drake-route__label drake-route__label--minor" x="98" y="150" text-anchor="end">TIERRA DEL FUEGO</text>
@@ -157,7 +158,13 @@ const southAmericaMapMarkup = southAmericaMapRaw
           DRAKE PASSAGE
         </text>
         <text class="drake-route__label drake-route__label--minor" x="392" y="388" text-anchor="start">SOUTH SHETLANDS</text>
-        <text class="drake-route__label drake-route__label--destination" x="340" y="634" text-anchor="start">
+        <text
+          class="drake-route__label drake-route__label--destination"
+          x="340"
+          y="634"
+          text-anchor="start"
+          data-route-destination
+        >
           ANTARCTIC PENINSULA
         </text>
       </g>
@@ -169,151 +176,57 @@ const southAmericaMapMarkup = southAmericaMapRaw
   </figcaption>
 </figure>
 
-<script is:inline>
-  (() => {
-      const setupDrakeRoutes = () => {
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const overviewFrame = { scale: 1.16, tx: 462, ty: 14 };
-      const endFrame = { scale: 1.16, tx: 462, ty: 14 };
+<script>
+  import { createDrawable, createMotionPath, createTimeline, onScroll } from 'animejs';
+  import type { ScrollObserver } from 'animejs';
 
-      document.querySelectorAll('[data-drake-route]').forEach((root) => {
-        if (root.dataset.drakeReady === 'true') {
-          return;
-        }
+  // released when navigating away, so they stop listening to scroll on other pages
+  let observers: ScrollObserver[] = [];
 
-        const path = root.querySelector('[data-route-path]');
-        const marker = root.querySelector('[data-route-marker]');
-        const focus = root.querySelector('[data-route-focus]');
-        const stage = root.querySelector('[data-camera-stage]');
+  // The route draws itself as the figure scrolls up the screen and the marker sails
+  // along it; scrolling back reverses it. Once it arrives, the marker pulses.
+  function setupDrakeRoutes() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLElement>('[data-drake-route]').forEach(root => {
+      if (root.dataset.drakeReady === 'true') return;
+      const path = root.querySelector<SVGPathElement>('[data-route-path]');
+      const mover = root.querySelector<SVGGElement>('[data-route-mover]');
+      if (!path || !mover) return;
+      root.dataset.drakeReady = 'true';
+      root.classList.add('is-visible');
 
-        if (!path || !marker) {
-          return;
-        }
+      if (reduceMotion) {
+        const end = path.getPointAtLength(path.getTotalLength());
+        mover.setAttribute('transform', `translate(${end.x} ${end.y})`);
+        root.classList.add('is-complete');
+        return;
+      }
 
-        root.dataset.drakeReady = 'true';
-
-        const totalLength = path.getTotalLength();
-
-        root.style.setProperty('--route-length', `${totalLength}`);
-        root.classList.add('is-enhanced');
-
-        const setStageMatrix = (scale, tx, ty) => {
-          if (!stage) {
-            return;
-          }
-
-          stage.setAttribute(
-            'transform',
-            `matrix(${scale.toFixed(4)} 0 0 ${scale.toFixed(4)} ${tx.toFixed(2)} ${ty.toFixed(2)})`
-          );
-        };
-
-        const placeMarker = (progress) => {
-          const point = path.getPointAtLength(totalLength * progress);
-          marker.setAttribute('cx', point.x.toFixed(2));
-          marker.setAttribute('cy', point.y.toFixed(2));
-
-          if (focus) {
-            focus.setAttribute('cx', point.x.toFixed(2));
-            focus.setAttribute('cy', point.y.toFixed(2));
-          }
-
-          return point;
-        };
-
-        const frameStageToProgress = (progress) => {
-          if (!stage) {
-            return;
-          }
-
-          const eased = 1 - Math.pow(1 - progress, 3);
-          const scale = overviewFrame.scale + (endFrame.scale - overviewFrame.scale) * eased;
-          const tx = overviewFrame.tx + (endFrame.tx - overviewFrame.tx) * eased;
-          const ty = overviewFrame.ty + (endFrame.ty - overviewFrame.ty) * eased;
-          setStageMatrix(scale, tx, ty);
-        };
-
-        setStageMatrix(overviewFrame.scale, overviewFrame.tx, overviewFrame.ty);
-
-        if (reduceMotion) {
-          path.style.strokeDasharray = 'none';
-          path.style.strokeDashoffset = '0';
-          placeMarker(1);
-          setStageMatrix(overviewFrame.scale, overviewFrame.tx, overviewFrame.ty);
-          root.classList.add('is-visible', 'is-complete');
-          return;
-        }
-
-        path.style.strokeDasharray = `0 ${totalLength}`;
-        path.style.strokeDashoffset = '0';
-        placeMarker(0);
-        frameStageToProgress(0);
-
-        const startAnimation = () => {
-          if (root.dataset.drakeStarted === 'true') {
-            return;
-          }
-
-          root.dataset.drakeStarted = 'true';
-          root.classList.add('is-visible');
-
-          const duration = 6200;
-          const startedAt = performance.now();
-
-          const tick = (now) => {
-            const progress = Math.min((now - startedAt) / duration, 1);
-            const drawnLength = totalLength * progress;
-            path.style.strokeDasharray = `${drawnLength} ${totalLength}`;
-            path.style.strokeDashoffset = '0';
-            placeMarker(progress);
-            frameStageToProgress(progress);
-
-            if (progress < 1) {
-              requestAnimationFrame(tick);
-              return;
-            }
-
-            path.style.strokeDasharray = `${totalLength} ${totalLength}`;
-            path.style.strokeDashoffset = '0';
-            placeMarker(1);
-            frameStageToProgress(1);
-            root.classList.add('is-complete');
-          };
-
-          requestAnimationFrame(tick);
-        };
-
-        if (!('IntersectionObserver' in window)) {
-          startAnimation();
-          return;
-        }
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) {
-                return;
-              }
-
-              startAnimation();
-              observer.disconnect();
-            });
-          },
-          { threshold: 0.4 }
+      const [route] = createDrawable(path);
+      const { translateX, translateY } = createMotionPath(path);
+      // starts when the figure's top is 85% down the screen, done when its middle is at 45%
+      const observer = onScroll({ target: root, enter: '85% top', leave: '45% center', sync: 0.5 });
+      observers.push(observer);
+      createTimeline({
+        defaults: { ease: 'linear', duration: 1000 },
+        autoplay: observer,
+        onUpdate: self => root.classList.toggle('is-complete', self.progress >= 0.999),
+      })
+        .add(route, { draw: ['0 0', '0 1'] }, 0)
+        .add(mover, { translateX, translateY }, 0)
+        .add(
+          root.querySelectorAll('[data-route-destination]'),
+          { opacity: { from: 0.12 }, duration: 250 },
+          750
         );
+    });
+  }
 
-        observer.observe(root);
-      });
-    };
-
-    if (!window.__drakeRouteSetupBound) {
-      window.__drakeRouteSetupBound = true;
-      window.__drakeRouteSetup = setupDrakeRoutes;
-      document.addEventListener('astro:page-load', window.__drakeRouteSetup);
-    }
-
-    window.__drakeRouteSetup();
-  })();
+  document.addEventListener('astro:page-load', setupDrakeRoutes);
+  document.addEventListener('astro:before-swap', () => {
+    observers.forEach(observer => observer.revert());
+    observers = [];
+  });
 </script>
 
 <style>
