@@ -1,15 +1,14 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import '../styles/glightbox.css';
+import '../styles/lightbox.css';
 import Prose from '../components/Prose.astro';
 const { frontmatter } = Astro.props;
-const updatedDate = frontmatter?.updatedDate.toDateString().split(' ').slice(1).join(' ');
+const updatedDate = frontmatter?.updatedDate?.toDateString().split(' ').slice(1).join(' ');
 const publishedDate = frontmatter?.pubDate.toDateString().split(' ').slice(1).join(' ');
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 // const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 const authorFullName = frontmatter?.author;
-const author = authorFullName.split(' ')[0].toLowerCase();
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 ---
@@ -19,7 +18,7 @@ const alt = frontmatter.image?.alt;
   image={image || ''}
   alt={alt || ''}
   description={description}
-  author={author}
+  author={authorFullName}
   pubDate={publishedDate}
   updatedDate={updatedDate}
   is404Page={false}

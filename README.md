@@ -524,7 +524,7 @@ The site uses Tailwind CSS v4.0.8 for styling, with carefully configured setting
    - **Component-specific CSS**:
      - `MasonryLayout.css`: Custom grid-based implementation
      - `cv-print.css`: Print-specific styles for the CV page
-     - `glightbox.css`: Customized styling for the image lightbox
+     - `lightbox.css`: Styling for the image lightbox
 
 3. **CSS-in-JS Integration**
    - The project uses minimal CSS-in-JS, primarily in the React components like `ThemeToggle.tsx` and `HeroImage.tsx`, where dynamic styling is needed
@@ -555,12 +555,12 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Implements touch events for mobile devices
 
 ### Media Management
-- **`lightbox.js`**: Implements image gallery lightbox functionality using GLightbox:
+- **`lightbox.ts`**: Custom image gallery lightbox (ported from erfianugrah/revista-3):
   - Enables fullscreen image viewing
-  - Supports keyboard navigation
-  - Provides zoom and pan capabilities for images
+  - Supports keyboard navigation (arrows, Escape)
+  - Zooms by click, scroll wheel, pinch or button, with drag/pan when zoomed
+  - Loads a higher-resolution copy (`data-zoom-src`) the first time a photo is zoomed
   - Implements swipe navigation on touch devices
-  - Shows image captions when available
 
 - **`getrandomimage.js`**: Helper utility used by components to select random featured images
   - Used in both the homepage and tag pages
@@ -999,9 +999,9 @@ The photo gallery displays use a custom masonry layout implementation:
    }
    ```
 
-4. **Lightbox Integration**: The masonry gallery integrates with GLightbox for fullscreen viewing:
+4. **Lightbox Integration**: The masonry gallery links each image to the custom lightbox (`src/scripts/lightbox.ts`) for fullscreen viewing:
    ```astro
-   <a href={imageAsset.src} class="image-link glightbox">
+   <a href={imageAsset.href} class="image-link lightbox-link" data-zoom-src={imageAsset.zoomSrc}>
      <img src={imageAsset.src} alt={imageAsset.attributes.alt} loading="lazy" />
    </a>
    ```

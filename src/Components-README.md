@@ -29,7 +29,7 @@ This project uses Astro v5.7.0 with enhanced component features and Tailwind CSS
 
 ### Content Presentation Components
 
-- **[Masonry.astro](components/Masonry.astro)**: Photo gallery layout used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) to display images from [Content Collections](content/). Uses [masonry.css](styles/MasonryLayout.css) and [glightbox.js](scripts/lightbox.js) for the gallery lightbox functionality.
+- **[Masonry.astro](components/Masonry.astro)**: Photo gallery layout used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) to display images from [Content Collections](content/). Uses [masonry.css](styles/MasonryLayout.css) and [lightbox.ts](scripts/lightbox.ts) for the gallery lightbox functionality.
 
 - **[getRandomImage.astro](components/getRandomImage.astro)**: Used in [TagLayout.astro](layouts/TagLayout.astro) to randomize featured images from content collections.
 

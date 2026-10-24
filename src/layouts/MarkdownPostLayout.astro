@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import '../styles/glightbox.css';
+import '../styles/lightbox.css';
 import 'katex/dist/katex.min.css';
 import Prose from '../components/Prose.astro';
 import { getImage } from 'astro:assets';
@@ -11,7 +11,7 @@ import { cloudinary } from '../utils/cloudinary';
 
 
 const { frontmatter, currentId, collection } = Astro.props;
-const updatedDate = frontmatter?.updatedDate.toDateString().split(' ').slice(1).join(' ');
+const updatedDate = frontmatter?.updatedDate?.toDateString().split(' ').slice(1).join(' ');
 const publishedDate = frontmatter?.pubDate.toDateString().split(' ').slice(1).join(' ');
 const title = frontmatter?.title;
 const description = frontmatter?.description;
@@ -85,7 +85,7 @@ const tagsWithoutCollection = Array.isArray(frontmatter.tags)
   image={metaImage ? new URL(metaImage.src, Astro.url).href : ''}
   alt={alt ? metaImage?.attributes.alt : ''}
   description={description}
-  author={author}
+  author={authorFullName}
   pubDate={publishedDate}
   updatedDate={updatedDate}
   is404Page={false}
@@ -145,9 +145,7 @@ const tagsWithoutCollection = Array.isArray(frontmatter.tags)
           <div>
             Published: {publishedDate}
           </div>
-          <div>
-            Updated: {updatedDate}
-          </div>
+          {updatedDate && <div>Updated: {updatedDate}</div>}
         </div>
       </div>
     </Prose>

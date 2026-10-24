@@ -43,17 +43,17 @@ jobs:
           MAX_ATTEMPTS: 3
           RETRY_INTERVAL: 30
         run: |
-          attempt=1
-          until bun run build || [ $attempt -eq $MAX_ATTEMPTS ]; do
-            echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
-            sleep $RETRY_INTERVAL
-            attempt=$((attempt + 1))
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            if bun run build; then
+              exit 0
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
+              sleep "$RETRY_INTERVAL"
+            fi
           done
-          
-          if [ $attempt -eq $MAX_ATTEMPTS ] && ! bun run build; then
-            echo "Build failed after $MAX_ATTEMPTS attempts."
-            exit 1
-          fi
+          echo "Build failed after $MAX_ATTEMPTS attempts."
+          exit 1
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

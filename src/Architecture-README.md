@@ -144,7 +144,7 @@ graph TD
    - Sets loading="lazy" for performance
    - Handles proper width/height attributes for CLS prevention
 3. **Rendering**: Images are placed in the grid with CSS handling the layout
-4. **Lightbox Integration**: GLightbox is attached for fullscreen viewing
+4. **Lightbox Integration**: The custom lightbox (`scripts/lightbox.ts`) is attached for fullscreen viewing with zoom and pan
 
 ## Custom Tailwind Configuration
 
