@@ -12,7 +12,7 @@ import mrFaviconPng from '../assets/favicon-mroziel-512x512.png' ;
 let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
   src: mrPlaceholderPng,
-  alt: 'Cover image for stoicopa website',
+  alt: 'Cover image for michalroziel',
   height: 720,
   width: 1280,
   decoding: 'async',
@@ -53,7 +53,6 @@ const personSchema = {
   url: baseUrl,
   image: `${baseUrl}${favicon_webp.src}`,
   sameAs: [
-    'https://mastodon.social/@stoicopa',
     'https://github.com/michalroziel',
     'https://linkedin.com/in/michalroziel',
     'https://instagram.com/michalroziel',
@@ -63,7 +62,7 @@ const personSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: site_name || 'stoicopa',
+  name: site_name || 'michalroziel',
   url: baseUrl,
   description: description || metaDescription,
 };
@@ -110,9 +109,9 @@ const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toISOString() :
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title || pageTitle} />
     <meta property="og:description" content={description || metaDescription} />
-    <meta property="og:site_name" content={site_name || 'stoicopa'} />
+    <meta property="og:site_name" content={site_name || 'michalroziel'} />
     <meta property="og:image" content={image || `${baseUrl}${metaImage?.src}`} />
-    <meta property="og:image:alt" content={alt || 'Cover image for stoicopa website'} />
+    <meta property="og:image:alt" content={alt || 'Cover image for michalroziel'} />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="720" />
     <meta property="og:locale" content="en_US" />
@@ -122,7 +121,7 @@ const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toISOString() :
     <meta name="twitter:title" content={title || pageTitle} />
     <meta name="twitter:description" content={description || metaDescription} />
     <meta name="twitter:image" content={image || `${baseUrl}${metaImage?.src}`} />
-    <meta name="twitter:image:alt" content={alt || 'Cover image for stoicopa website'} />
+    <meta name="twitter:image:alt" content={alt || 'Cover image for michalroziel'} />
 
     <!-- Article-specific metadata -->
     {pubDate && <meta property="article:published_time" content={formattedPubDate} />}

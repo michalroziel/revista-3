@@ -31,7 +31,7 @@ program
   .version('1.0.0')
   .option(
     '-t, --type <type>',
-    'content type (muses, short_form, long_form, zeitweilig, authors, cv)'
+    'content type (moments, short_form, long_form, zeitweilig, authors)'
   )
   .option('-d, --dry-run', 'preview frontmatter without creating the file')
   .option('--debug', 'show debug information')

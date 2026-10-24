@@ -15,7 +15,11 @@ const allAuthors = await getCollection('authors');
       .map(post => (
         <BlogPost
           url={withBasePath(`/authors/${post.id}/`)}
-          image={post.data?.image?.src || ''}
+          image={
+            post.data?.image?.src && !/^https?:\/\//.test(post.data.image.src)
+              ? withBasePath(post.data.image.src)
+              : post.data?.image?.src || ''
+          }
           alt={post.data?.image?.alt || ''}
           title={post.data?.title || ''}
           description={post.data?.description || ''}

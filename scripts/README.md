@@ -42,7 +42,7 @@ node scripts/create-content.js
 
 The interactive mode will guide you through the process of creating a new content file with a series of prompts:
 
-1. Select content type (muses, short_form, long_form, zeitweilig, authors, cv)
+1. Select content type (moments, short_form, long_form, zeitweilig, authors)
 2. Enter title (required)
 3. Enter tags (comma-separated, defaults to the collection type)
 4. Enter author name (defaults to "Erfi Anugrah")
@@ -78,7 +78,7 @@ bun run create --version
 
 ```bash
 # Specify content type directly
-bun run create -t muses
+bun run create -t moments
 bun run create --type short_form
 ```
 
@@ -104,11 +104,11 @@ The non-interactive mode is useful for scripts, CI/CD pipelines, or environments
 
 ```bash
 # Minimal required options for non-interactive mode
-bun run create --non-interactive --type muses --title "My Post" --description "Description"
+bun run create --non-interactive --type moments --title "My Post" --description "Description"
 
 # With all available options
 bun run create --non-interactive \
-  --type muses \
+  --type moments \
   --title "My Post" \
   --description "Description" \
   --tags "tag1,tag2,tag3" \
@@ -119,14 +119,14 @@ bun run create --non-interactive \
   --updated-date "2024-05-20T15:30:00.000Z"
 
 # Combined with dry-run
-bun run create --non-interactive --type muses --title "Test" --description "Test" --dry-run
+bun run create --non-interactive --type moments --title "Test" --description "Test" --dry-run
 ```
 
 ### Option Reference
 
 | Option                        | Shorthand | Description                            | Required for Non-Interactive |
 | ----------------------------- | --------- | -------------------------------------- | ---------------------------- |
-| `--type <type>`               | `-t`      | Content type (muses, short_form, etc.) | Yes                          |
+| `--type <type>`               | `-t`      | Content type (moments, short_form, etc.) | Yes                          |
 | `--dry-run`                   | `-d`      | Preview without creating file          | No                           |
 | `--debug`                     |           | Show debug information                 | No                           |
 | `--non-interactive`           |           | Run without prompts                    | N/A                          |
@@ -143,7 +143,7 @@ bun run create --non-interactive --type muses --title "Test" --description "Test
 
 The tool automatically detects all content collections defined in `content.config.ts`:
 
-- **muses** - Photography collections with image frontmatter
+- **moments** - Photography collections with image frontmatter
 - **short_form** - Brief posts
 - **long_form** - In-depth articles
 - **zeitweilig** - Ephemeral content
@@ -156,7 +156,7 @@ The tool automatically detects all content collections defined in `content.confi
 
    ```
    ? Select content type: (Use arrow keys)
-   > muses
+   > moments
      short_form
      long_form
      zeitweilig
@@ -205,7 +205,7 @@ The tool automatically detects all content collections defined in `content.confi
    slug: stockholm-urban-reflections
    ---
 
-   ? Create file at /home/erfi/revista-3/src/content/muses/2025-05-19-stockholm-urban-reflections.mdx? Yes
+   ? Create file at src/content/moments/2025-05-19-stockholm-urban-reflections.mdx? Yes
    ```
 
 5. File is created and next steps are shown
@@ -232,7 +232,7 @@ The tool validates user input according to the schema requirements:
 ### Creating a Photography Post
 
 ```bash
-bun run create -t muses
+bun run create -t moments
 ```
 
 ### Creating a Long-Form Article
@@ -270,7 +270,7 @@ The Post Update Tool allows you to modify frontmatter in existing content files 
 
 ```bash
 # Basic usage (requires at least the --file parameter)
-bun run update-post --file muses/2025-05-19-commodification.mdx --updated-date "2025-05-20T12:00:00Z"
+bun run update-post --file moments/2025-05-19-commodification.mdx --updated-date "2025-05-20T12:00:00Z"
 
 # Preview changes without writing to file
 bun run update-post --file short_form/2025-05-19-the-essence-of-light.mdx --tags "photography,light,art,philosophy" --dry-run
@@ -283,7 +283,7 @@ bun run update-post --file zeitweilig/2022-06-03-who-is-michal.mdx \
   --updated-date "2025-05-20T15:30:00Z"
 
 # Remove the updated date field
-bun run update-post --file muses/2017-09-02-the-beginning.mdx --remove-updated-date
+bun run update-post --file moments/2017-09-02-the-beginning.mdx --remove-updated-date
 
 # Update image properties
 bun run update-post --file short_form/2021-03-08-hypnagogia.mdx \
@@ -316,10 +316,10 @@ bun run update-post --file short_form/2021-03-08-hypnagogia.mdx \
 1. Create a new post with the creation tool
 
    ```bash
-   bun run create -t muses
+   bun run create -t moments
    ```
 
 2. Later, update the post with new tags and set an updated date
    ```bash
-   bun run update-post --file muses/2025-05-19-commodification.mdx --tags "photography,art,economics,critique" --updated-date "2025-05-20T08:15:00Z"
+   bun run update-post --file moments/2025-05-19-commodification.mdx --tags "photography,art,economics,critique" --updated-date "2025-05-20T08:15:00Z"
    ```

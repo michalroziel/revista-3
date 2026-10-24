@@ -14,14 +14,13 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: process.env.GITHUB_PAGES === "true"
     ? "https://michalroziel.github.io/revista-3"
-    : "https://www.erfianugrah.com",
+    : "http://localhost:4321", // local builds and previews
   base: process.env.GITHUB_PAGES === "true" ? "/revista-3" : "",
   trailingSlash: "never",
   image: {
     // responsiveStyles: true,
     // layout: "full-width",
     // objectFit: "contain",
-    domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
       entrypoint: "astro/assets/services/sharp",
       config: {
