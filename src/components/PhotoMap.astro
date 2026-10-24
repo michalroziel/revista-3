@@ -1,6 +1,7 @@
 ---
 import { geoEqualEarth, geoGraticule, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
+import type { MultiPolygon, Polygon } from 'geojson';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import land110m from 'world-atlas/land-110m.json';
 import { cloudinary } from '../utils/cloudinary';
@@ -32,7 +33,19 @@ const [[, top], [, bottom]] = path.bounds(sphere);
 const height = Math.ceil(bottom - top);
 
 const topology = land110m as unknown as Topology<{ land: GeometryCollection }>;
-const landPath = path(feature(topology, topology.objects.land));
+// one path per landmass, ordered west to east, so the coastlines can be drawn in a sweep
+const landPaths = feature(topology, topology.objects.land)
+  .features.flatMap(({ geometry }) =>
+    geometry.type === 'MultiPolygon'
+      ? (geometry as MultiPolygon).coordinates.map(
+          coordinates => ({ type: 'Polygon', coordinates }) as Polygon
+        )
+      : [geometry as Polygon]
+  )
+  .map(polygon => ({ d: path(polygon), x: path.centroid(polygon)[0] }))
+  .filter(({ d }) => d)
+  .sort((a, b) => a.x - b.x)
+  .map(({ d }) => d);
 const spherePath = path(sphere);
 const graticulePath = path(geoGraticule().step([30, 30])());
 
@@ -75,7 +88,9 @@ const pins = [...places]
     >
       <path class="photo-map__sphere" d={spherePath}></path>
       <path class="photo-map__graticule" d={graticulePath}></path>
-      <path class="photo-map__land" d={landPath}></path>
+      <g class="photo-map__land">
+        {landPaths.map(d => <path d={d} />)}
+      </g>
     </svg>
 
     <ol class="photo-map__pins">
@@ -151,13 +166,56 @@ const pins = [...places]
   </ol>
 </figure>
 
+<script is:inline>
+  // Hide the coastlines and pins until the draw-in starts, so they don't flash fully drawn first.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document
+      .querySelectorAll('[data-photo-map]:not([data-ready])')
+      .forEach(el => el.classList.add('is-pending'));
+  }
+</script>
+
 <script>
+  import { createDrawable, createTimeline, spring, stagger, utils } from 'animejs';
+
+  // Coastlines draw themselves west to east, the land fills in, then the pins drop in one by one.
+  function drawIn(root: HTMLElement, pins: HTMLElement[]) {
+    if (!root.classList.contains('is-pending')) return;
+    const coastlines = createDrawable(
+      root.querySelectorAll<SVGPathElement>('.photo-map__land path')
+    );
+    utils.set(coastlines, { fillOpacity: 0 });
+    utils.set(pins, { opacity: 0, translateY: -18, scale: 0.4 });
+    root.classList.remove('is-pending');
+
+    createTimeline()
+      .add(
+        coastlines,
+        { draw: ['0 0', '0 1'], duration: 1400, delay: stagger(6), ease: 'inOutSine' },
+        0
+      )
+      // 0.05 matches the resting fill in .photo-map__land path
+      .add(coastlines, { fillOpacity: [0, 0.05], duration: 900, ease: 'outQuad' }, 1300)
+      .add(
+        pins,
+        {
+          opacity: [0, 1],
+          translateY: [-18, 0],
+          scale: [0.4, 1],
+          delay: stagger(160),
+          ease: spring({ bounce: 0.45, duration: 700 }),
+        },
+        1500
+      );
+  }
+
   function setupPhotoMaps() {
     document.querySelectorAll<HTMLElement>('[data-photo-map]').forEach(root => {
       if (root.dataset.ready === 'true') return;
       root.dataset.ready = 'true';
 
       const pins = Array.from(root.querySelectorAll<HTMLElement>('[data-pin]'));
+      drawIn(root, pins);
       const pinFor = (id: string | undefined) => pins.find(pin => pin.dataset.pin === id);
       let lastPointer = 'mouse';
 
@@ -238,7 +296,7 @@ const pins = [...places]
     vector-effect: non-scaling-stroke;
   }
 
-  .photo-map__land {
+  .photo-map__land path {
     fill: currentColor;
     fill-opacity: 0.05;
     stroke: currentColor;
@@ -246,7 +304,11 @@ const pins = [...places]
     stroke-width: 0.75;
     stroke-linejoin: round;
     vector-effect: non-scaling-stroke;
-    animation: photo-map-fade 1.2s ease-out both;
+  }
+
+  .photo-map.is-pending .photo-map__land,
+  .photo-map.is-pending .photo-map__pin {
+    visibility: hidden;
   }
 
   .photo-map__pins {
@@ -259,8 +321,6 @@ const pins = [...places]
     position: absolute;
     width: 0;
     height: 0;
-    animation: photo-map-fade 0.6s ease-out both;
-    animation-delay: calc(400ms + var(--stagger-index) * 120ms);
   }
 
   .photo-map__pin.is-active,
@@ -486,15 +546,6 @@ const pins = [...places]
     }
   }
 
-  @keyframes photo-map-fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   @keyframes photo-map-pulse {
     0% {
       opacity: 0.6;
@@ -508,8 +559,6 @@ const pins = [...places]
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .photo-map__land,
-    .photo-map__pin,
     .photo-map__dot::after {
       animation: none;
     }
