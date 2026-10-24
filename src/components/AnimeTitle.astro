@@ -42,7 +42,10 @@ const {
 
       for (let i = 0; i < chars.length; i++) {
         const position = (i + 1) / chars.length;
-        masked.push(position > progress ? getRandomChar(type) : chars[i]);
+        // spaces stay spaces, so the scrambled title wraps exactly like the finished one;
+        // replacing them made one long unbreakable word that pushed phone screens sideways
+        const isSpace = chars[i].trim() === "";
+        masked.push(position > progress && !isSpace ? getRandomChar(type) : chars[i]);
       }
 
       return masked.join("");
@@ -61,6 +64,8 @@ const {
 
       el.dataset.original = original;
       el.dataset.runId = runId;
+      // hold the finished title's height while it scrambles, so the page below can't jump
+      el.style.minHeight = `${el.offsetHeight}px`;
 
       const start = performance.now();
 
@@ -78,12 +83,17 @@ const {
         }
 
         el.textContent = original;
+        el.style.minHeight = "";
       }
 
       requestAnimationFrame(tick);
     }
 
     function playAllAnimeTitles() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
       document.querySelectorAll("[data-anime-title]").forEach((el) => {
         playShuffle(el);
       });
@@ -103,5 +113,7 @@ const {
     margin: 0;
     font-family: monospace;
     line-height: 1.2;
+    /* a word too long for a narrow screen breaks instead of widening the page */
+    overflow-wrap: anywhere;
   }
 </style>
