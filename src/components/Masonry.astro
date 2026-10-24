@@ -10,8 +10,9 @@ const imageAssets = images.map(image =>
         srcset: isCloudinary(image.src)
           ? thumbWidths.map(w => `${cloudinary(image.src, { width: w })} ${w}w`).join(', ')
           : undefined,
-        // full-size view in the lightbox
+        // full-size view in the lightbox, and a larger copy fetched when zooming in
         href: cloudinary(image.src, { width: 2400 }),
+        zoomSrc: cloudinary(image.src, { width: 4000 }),
         alt: image.alt,
       }
     : null
@@ -25,10 +26,13 @@ const imageAssets = images.map(image =>
         <div
           key={index}
           class="image-container"
-          id="gallery"
           style={`--stagger-index: ${index}`}
         >
-          <a href={imageAsset.href} class="image-link glightbox">
+          <a
+            href={imageAsset.href}
+            class="image-link lightbox-link"
+            data-zoom-src={imageAsset.zoomSrc}
+          >
             <img
               src={imageAsset.src}
               srcset={imageAsset.srcset}
@@ -47,7 +51,7 @@ const imageAssets = images.map(image =>
   }
 </div>
 
-<script src="../scripts/lightbox.js"></script>
+<script src="../scripts/lightbox.ts"></script>
 
 <style>
   .image-container {
