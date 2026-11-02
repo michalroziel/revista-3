@@ -1,0 +1,138 @@
+---
+// A line drawing traced from a photo, prepared with `bun run trace` (scripts/prepare-trace.mjs).
+// When it comes into view the hand-drawn lines draw themselves, then the traced detail lights
+// up floor by floor from the bottom, like windows switching on.
+interface Props {
+  // the drawing's file in src/assets/traces/, without .svg
+  name: string;
+  alt: string;
+  caption?: string;
+}
+
+const { name, alt, caption } = Astro.props;
+
+const drawings = import.meta.glob<string>('../assets/traces/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const svg = drawings[`../assets/traces/${name}.svg`];
+if (!svg) throw new Error(`No traced drawing called "${name}" in src/assets/traces/`);
+
+const viewBox = svg.match(/viewBox="([^"]+)"/)![1];
+const paths = Array.from(svg.matchAll(/<path data-trace="(line|floor)" d="([^"]+)"\/>/g), m => ({
+  kind: m[1],
+  d: m[2],
+}));
+---
+
+<figure class="trace-drawing not-prose" data-trace-drawing>
+  <svg viewBox={viewBox} role="img" aria-label={alt}>
+    {paths.map(({ kind, d }) => <path class={`trace-drawing__${kind}`} d={d} />)}
+  </svg>
+  {caption && <figcaption class="trace-drawing__caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline>
+  // Hide the drawing until its animation is set up, so it doesn't flash finished first.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document
+      .querySelectorAll('[data-trace-drawing]:not([data-ready])')
+      .forEach(el => el.classList.add('is-pending'));
+  }
+</script>
+
+<script>
+  import { createDrawable, createTimeline, stagger, utils } from 'animejs';
+
+  // undone before Astro swaps in the next page
+  let cleanups: (() => void)[] = [];
+
+  function setupDrawings() {
+    document.querySelectorAll<HTMLElement>('[data-trace-drawing]').forEach(root => {
+      if (root.dataset.ready === 'true') return;
+      root.dataset.ready = 'true';
+      // with reduced motion it's left as the finished drawing
+      if (!root.classList.contains('is-pending')) return;
+
+      const lines = createDrawable(root.querySelectorAll<SVGPathElement>('.trace-drawing__line'));
+      const floors = root.querySelectorAll<SVGPathElement>('.trace-drawing__floor');
+      utils.set(floors, { opacity: 0 });
+      root.classList.remove('is-pending');
+
+      const drawing = createTimeline({ autoplay: false })
+        .add(
+          lines,
+          { draw: ['0 0', '0 1'], duration: 1400, delay: stagger(150), ease: 'inOutSine' },
+          0
+        )
+        // the paths are stored bottom floor first
+        .add(floors, { opacity: [0, 1], duration: 180, delay: stagger(90), ease: 'outQuad' }, 1000);
+
+      // plays once, when a third of it is on screen
+      const visibility = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          drawing.play();
+          visibility.disconnect();
+        },
+        { threshold: 0.3 }
+      );
+      visibility.observe(root);
+      cleanups.push(() => {
+        visibility.disconnect();
+        drawing.pause();
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupDrawings);
+  document.addEventListener('astro:before-swap', () => {
+    cleanups.forEach(cleanup => cleanup());
+    cleanups = [];
+  });
+</script>
+
+<style>
+  .trace-drawing {
+    width: 100%;
+    margin: 2rem 0;
+    color: inherit;
+  }
+
+  .trace-drawing svg {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .trace-drawing__floor {
+    fill: currentColor;
+  }
+
+  .trace-drawing__line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .trace-drawing.is-pending .trace-drawing__line,
+  .trace-drawing.is-pending .trace-drawing__floor {
+    visibility: hidden;
+  }
+
+  .trace-drawing__caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-family: var(--font-overpass-mono), 'Overpass Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+</style>

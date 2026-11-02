@@ -14,6 +14,7 @@
     "update": "node scripts/update-post.js",
     "update-interactive": "node scripts/update-post-interactive.js",
     "ui": "node scripts/update-post-interactive.js",
+    "trace": "node scripts/prepare-trace.mjs",
     "format": "prettier --write \"**/*.{astro,js,mjs,ts,tsx,jsx}\" --ignore-path .gitignore"
   },
   "dependencies": {
@@ -69,6 +70,7 @@
     "inquirer-autocomplete-prompt": "^3.0.1",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
+    "svgpath": "^2.6.0",
     "yaml": "^2.8.0"
   }
 }
