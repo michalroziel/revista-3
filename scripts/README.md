@@ -323,3 +323,24 @@ bun run update-post --file short_form/2021-03-08-hypnagogia.mdx \
    ```bash
    bun run update-post --file moments/2025-05-19-commodification.mdx --tags "photography,art,economics,critique" --updated-date "2025-05-20T08:15:00Z"
    ```
+
+## Traced drawings (`prepare-trace.mjs`)
+
+Turns a drawing traced in Inkscape (Path → Trace Bitmap, plus any lines drawn on top with the
+Pen tool) into an SVG a post can animate with `<TraceDrawing>`.
+
+```bash
+bun run trace ~/Desktop/website/waldhaus/building-trace.svg waldhaus
+```
+
+This writes `src/assets/traces/waldhaus.svg`. Save the drawing from Inkscape in any SVG format;
+the script leaves out an embedded photo, Inkscape's editor data and needless decimals. The
+traced detail is grouped into floors from the bottom of the picture up, and lines drawn by hand
+are kept separate, so that in the post the lines draw themselves and then the windows light up
+floor by floor:
+
+```mdx
+import TraceDrawing from '../../components/TraceDrawing.astro';
+
+<TraceDrawing name="waldhaus" alt="Line drawing of …" caption="Optional caption" />
+```
