@@ -334,7 +334,8 @@ bun run trace ~/Desktop/website/waldhaus/building-trace.svg waldhaus
 ```
 
 This writes `src/assets/traces/waldhaus.svg`. Save the drawing from Inkscape in any SVG format;
-the script leaves out an embedded photo, Inkscape's editor data and needless decimals. The
+the script leaves out an embedded photo, Inkscape's editor data and needless decimals, and
+crops the picture to the drawing. The
 traced detail is grouped into floors from the bottom of the picture up, and lines drawn by hand
 are kept separate, so that in the post the lines draw themselves and then the windows light up
 floor by floor:

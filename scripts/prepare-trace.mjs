@@ -10,7 +10,8 @@
  * - A path made of many separate pieces is the Trace Bitmap result. Its pieces are sorted into
  *   floors by how low they sit in the picture, so the drawing can light up from the bottom.
  * - Any other path is a line drawn by hand, which the page draws stroke by stroke.
- * - Embedded photos, Inkscape's editor data and needless decimals are left out.
+ * - Embedded photos, Inkscape's editor data and needless decimals are left out, and the
+ *   picture is cropped to the drawing, so empty page around it doesn't push the post apart.
  */
 
 import fs from 'node:fs';
@@ -46,6 +47,30 @@ const width = Number(viewBox.trim().split(/[\s,]+/)[2]);
 const digits = width > 1000 ? 0 : 1;
 const compact = d => svgpath(d).rel().round(digits).toString();
 
+// the drawing's extent, so the picture can be cropped to it
+const extent = [Infinity, Infinity, -Infinity, -Infinity];
+function grow(d) {
+  svgpath(d)
+    .abs()
+    .unarc()
+    .unshort()
+    .iterate(([cmd, ...args], _, x, y) => {
+      // H and V give one coordinate; the other commands list x, y pairs (Z lists none)
+      const points =
+        cmd === 'H'
+          ? [[args[0], y]]
+          : cmd === 'V'
+            ? [[x, args[0]]]
+            : Array.from({ length: args.length / 2 }, (_, i) => args.slice(2 * i, 2 * i + 2));
+      for (const [px, py] of points) {
+        extent[0] = Math.min(extent[0], px);
+        extent[1] = Math.min(extent[1], py);
+        extent[2] = Math.max(extent[2], px);
+        extent[3] = Math.max(extent[3], py);
+      }
+    });
+}
+
 // Splits a path into its separate pieces, noting how low each one reaches.
 function pieces(d) {
   const found = [];
@@ -73,6 +98,7 @@ function pieces(d) {
 const lines = [];
 const traced = [];
 for (const [, d] of source.matchAll(/<path\b[^>]*?\sd="([^"]+)"/g)) {
+  grow(d);
   const parts = pieces(d);
   if (parts.length >= TRACE_MIN_PIECES) traced.push(...parts);
   else lines.push(compact(d));
@@ -90,8 +116,15 @@ const floorPaths = floors
   .filter(floor => floor.length)
   .map(floor => compact(floor.flatMap(p => p.segments.map(seg => seg.join(' '))).join(' ')));
 
+// a margin of 1% keeps strokes along the edge from being clipped
+const margin = Math.round(width / 100);
+const [left, top, right, bottom] = extent;
+const cropped = [left - margin, top - margin, right - left + 2 * margin, bottom - top + 2 * margin]
+  .map(n => Math.round(n))
+  .join(' ');
+
 const svg = [
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">`,
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${cropped}">`,
   ...lines.map(d => `<path data-trace="line" d="${d}"/>`),
   ...floorPaths.map(d => `<path data-trace="floor" d="${d}"/>`),
   '</svg>',
