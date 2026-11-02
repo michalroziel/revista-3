@@ -668,8 +668,7 @@ const routes = places
 
 <style>
   .photo-map {
-    /* the body is a wrapping flex column, which measures items at their narrowest width;
-       without a definite width the map's height is undercounted and the footer overlaps the index */
+    /* the auto side margins would otherwise shrink this flex item to fit its content */
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
